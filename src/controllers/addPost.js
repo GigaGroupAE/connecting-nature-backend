@@ -1,19 +1,19 @@
 const post = require("../models/post");
 const user = require("../models/Register");
 const addpost = async (req, res) => {
-  if (!req.file) {
-    return res.send({ statusCode: 500, message: "no images found" });
-  }
-  const postedbyUser = await post.findOne({
+  // if (!req.file) {
+  //   return res.send({ statusCode: 500, message: "no images found" });
+  // }
+  const postedbyUser = await user.findOne({
     phoneNumber: req.body.postedby,
   });
   if (!postedbyUser) {
     res.status(400).send("Posted by invalid user");
   }
   const newpost = new post({
-    postedby: req.body.postedby,
+    postedby: postedbyUser,
     description: req.body.description,
-    media: req.file.path,
+    media: req.body.path,
     reactions: req.body.reactions,
     comments: req.body.comments,
   });

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const dbSchema = new mongoose.Schema({
   postedby: {
-    type: String,
+    type: (User = {}),
     required: true,
   },
   description: {

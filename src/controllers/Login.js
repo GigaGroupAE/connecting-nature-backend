@@ -6,10 +6,10 @@ const login = async (req, res) => {
       phoneNumber: req.body.phoneNumber,
     });
     if (!User) {
-      res.status(400).send("user not found");
+      res.send({ status: 400, message: "user not found" });
     } else {
       const token = jwt.sign({ _id: User.id }, process.env.TOKEN_SECRET);
-      res.header("auth-token", token).send(token);
+      res.header("auth_token", token).send(User);
     }
   } catch (err) {
     res.status(400).send(err);

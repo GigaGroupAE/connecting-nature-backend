@@ -5,7 +5,7 @@ const todayroutes = require("./src/routes/to-day-routes");
 require("./src/config/connection");
 const app = express();
 app.use(express.json());
-app.use("/user/", authroutes);
+app.use("/user", authroutes);
 app.use("/posts", postroutes);
 app.use("/today", todayroutes);
 app.listen(3000, () => {

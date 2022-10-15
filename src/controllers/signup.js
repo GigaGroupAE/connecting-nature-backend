@@ -1,19 +1,23 @@
 const register = require("../models/Register");
 const signup = async (req, res) => {
-  if (!req.file)
+  if (!req.body.fd._parts[0])
     return res.send({ statusCode: 500, message: "no images found" });
   const newuser = new register({
     email: req.body.email,
-    phoneNumber: req.body.phoneNumber,
-    fullName: req.body.fullName,
-    type: req.body.type,
-    profile: req.file.path,
+    phoneNumber: req.body.fd._parts[2][1],
+    fullName: req.body.fd._parts[1][1],
+    type: req.body.fd._parts[3][1],
+    profile: req.body.fd._parts[0][1].uri,
   });
   const phoneExist = await register.findOne({
-    phoneNumber: req.body.phoneNumber,
+    phoneNumber: newuser.phoneNumber,
   });
-  if (phoneExist) {
-    return res.status(400).send("Phone Number Already Exists");
+  if (phoneExist !== null) {
+    console.log(phoneExist);
+    return res.send({
+      statusCode: 400,
+      message: "Phone Number Already Exists",
+    });
   }
   try {
     const savedUser = await newuser.save();
