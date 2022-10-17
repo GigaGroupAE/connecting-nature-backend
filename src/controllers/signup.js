@@ -1,13 +1,12 @@
 const register = require("../models/Register");
 const signup = async (req, res) => {
-  if (!req.body.fd._parts[0])
-    return res.send({ statusCode: 500, message: "no images found" });
+  console.log("this is the file", req.body);
   const newuser = new register({
     email: req.body.email,
-    phoneNumber: req.body.fd._parts[2][1],
-    fullName: req.body.fd._parts[1][1],
-    type: req.body.fd._parts[3][1],
-    profile: req.body.fd._parts[0][1].uri,
+    phoneNumber: req.body.phoneNumber,
+    fullName: req.body.fullName,
+    type: req.body.type,
+    profile: req.body.profile,
   });
   const phoneExist = await register.findOne({
     phoneNumber: newuser.phoneNumber,
@@ -23,7 +22,7 @@ const signup = async (req, res) => {
     const savedUser = await newuser.save();
     res.send(savedUser);
   } catch (err) {
-    res.status(400).send(err);
+    res.send({ message: err, status: 400 });
   }
 };
 
