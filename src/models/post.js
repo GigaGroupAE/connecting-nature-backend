@@ -13,7 +13,7 @@ const dbSchema = new mongoose.Schema({
     required: false,
   },
   reactions: {
-    type: Number,
+    type: (reactions = {}),
     required: false,
   },
   comments: {
