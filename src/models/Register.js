@@ -26,6 +26,26 @@ const dbSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  reactions: {
+    type: Array,
+    required: true,
+  },
+  comments: {
+    type: Array,
+    required: true,
+  },
+  posts: {
+    type: Array,
+    required: true,
+  },
+  followers: {
+    type: Array,
+    required: true,
+  },
+  following: {
+    type: Array,
+    required: true,
+  },
 });
 
 const NewUsers = new mongoose.model("NewUsers", dbSchema);

@@ -5,9 +5,11 @@ const signup = require("../controllers/signup");
 const storage = require("../middlewares/ImageUploader/ImageUploader");
 const multer = require("multer");
 const verify = require("../middlewares/Auth");
+const OTPGen = require("../controllers/OTPGen");
 const upload = multer({ storage: storage });
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
+router.get("/otp", verify, OTPGen);
 module.exports = router;
