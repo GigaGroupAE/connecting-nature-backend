@@ -9,7 +9,7 @@ const dbSchema = new mongoose.Schema({
     required: true,
   },
   date: { type: String, required: true },
-  radius: { type: Number, required: true },
+  radius: { type: String, required: true },
 });
 
 const Data = new mongoose.model("todays", dbSchema);
