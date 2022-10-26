@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const dbSchema = new mongoose.Schema({
-  exptoken: {
+  user: {
     type: String,
     required: true,
   },

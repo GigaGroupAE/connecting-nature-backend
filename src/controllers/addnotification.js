@@ -2,7 +2,7 @@ const notification = require("../models/notification");
 
 const addnotification = async (req, res) => {
   const newnotify = new notification({
-    exptoken: req.body.exptoken,
+    user: req.body.user,
     body: req.body.body,
   });
   if (!newnotify) {
