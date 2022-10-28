@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const login = require("../controllers/Login");
-const getusers = require("../controllers/getusers");
-const signup = require("../controllers/signup");
+const login = require("../controllers/user/Login");
+const getusers = require("../controllers/user/getusers");
+const signup = require("../controllers/user/signup");
 const storage = require("../middlewares/ImageUploader/ImageUploader");
 const multer = require("multer");
 const verify = require("../middlewares/Auth");
-const OTPGen = require("../controllers/OTPGen");
+const OTPGen = require("../controllers/user/OTPGen");
 const upload = multer({ storage: storage });
 
 router.post("/login", login);

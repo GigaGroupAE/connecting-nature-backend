@@ -1,4 +1,4 @@
-const signup = require("../models/Register");
+const signup = require("../../models/Register");
 const jwt = require("jsonwebtoken");
 const login = async (req, res) => {
   try {

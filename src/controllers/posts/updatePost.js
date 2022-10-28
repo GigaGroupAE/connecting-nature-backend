@@ -1,4 +1,4 @@
-const model = require("../models/post");
+const model = require("../../models/post");
 const updatepost = async (req, res) => {
   if (!req.params.id) {
     res.status(400).send("Invalid id");

@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const addpost = require("../controllers/addPost");
+const addpost = require("../controllers/posts/addPost");
 const multer = require("multer");
 const verify = require("../middlewares/Auth");
 const storage = require("../middlewares/ImageUploader/ImageUploader");
-const getposts = require("../controllers/GetPosts");
-const updatepost = require("../controllers/updatePost");
+const getposts = require("../controllers/posts/GetPosts");
+const updatepost = require("../controllers/posts/updatePost");
 const upload = multer({ storage: storage });
 
 router.post("/addpost", verify, upload.single("media"), addpost);

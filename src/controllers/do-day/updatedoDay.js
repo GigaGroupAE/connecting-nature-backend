@@ -1,4 +1,4 @@
-const model = require("../models/To-Day");
+const model = require("../../models/To-Day");
 const updatedoday = async (req, res) => {
   if (!req.params.id) {
     res.status(400).send("Invalid id");

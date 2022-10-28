@@ -1,5 +1,5 @@
-const post = require("../models/post");
-const user = require("../models/Register");
+const post = require("../../models/post");
+const user = require("../../models/Register");
 const addpost = async (req, res) => {
   // if (!req.file) {
   //   return res.send({ statusCode: 500, message: "no images found" });

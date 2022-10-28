@@ -1,4 +1,4 @@
-const users = require("../models/Register");
+const users = require("../../models/Register");
 
 const getusers = async (req, res) => {
   try {

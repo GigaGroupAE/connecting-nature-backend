@@ -1,4 +1,4 @@
-const todays = require("../models/To-Day");
+const todays = require("../../models/To-Day");
 
 const getodays = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-const register = require("../models/Register");
+const register = require("../../models/Register");
 const signup = async (req, res) => {
   console.log("this is the file", req.body);
   const newuser = new register({

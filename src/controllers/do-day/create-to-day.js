@@ -1,4 +1,4 @@
-const todaymodel = require("../models/To-Day");
+const todaymodel = require("../../models/To-Day");
 
 const createtoday = async (req, res) => {
   const newtoday = new todaymodel({
