@@ -11,6 +11,6 @@ const dbSchema = new mongoose.Schema({
   },
 });
 
-const NewUsers = new mongoose.model("Notifications", dbSchema);
+const newnotification = new mongoose.model("Notifications", dbSchema);
 
-module.exports = NewUsers;
+module.exports = newnotification;
