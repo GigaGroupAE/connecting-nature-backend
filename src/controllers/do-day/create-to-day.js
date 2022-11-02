@@ -9,6 +9,8 @@ const createtoday = async (req, res) => {
     location: req.body.location,
     TeamA: req.body.TeamA,
     TeamB: req.body.TeamB,
+    messages: req.body.messages,
+    volunteers: req.body.volunteers,
   });
   if (newtoday) {
     const savedtoday = await newtoday.save();

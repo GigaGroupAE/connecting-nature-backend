@@ -9,17 +9,25 @@ const dbSchema = new mongoose.Schema({
     required: true,
   },
   date: { type: String, required: true },
-  radius: { type: String, required: true },
+  radius: { type: String, required: false },
   location: {
     type: String,
     required: true,
   },
   TeamA: {
-    type: (TeamA = {}),
+    type: (TeamB = {}),
     required: true,
   },
   TeamB: {
-    type: (TeamB = {}),
+    type: (TeamA = {}),
+    required: true,
+  },
+  volunteers: {
+    type: Array,
+    required: true,
+  },
+  messages: {
+    type: Array,
     required: true,
   },
 });

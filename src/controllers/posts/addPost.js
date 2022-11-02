@@ -4,18 +4,13 @@ const addpost = async (req, res) => {
   // if (!req.file) {
   //   return res.send({ statusCode: 500, message: "no images found" });
   // }
-  const postedbyUser = await user.findOne({
-    phoneNumber: req.body.postedby,
-  });
-  if (!postedbyUser) {
-    res.status(400).send("Posted by invalid user");
-  }
   const newpost = new post({
-    postedby: postedbyUser,
+    postedby: req.body.postedby,
     description: req.body.description,
     media: req.body.path,
     reactions: req.body.reactions,
     comments: req.body.comments,
+    shares: req.body.shares,
   });
 
   try {
