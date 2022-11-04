@@ -11,5 +11,5 @@ const upload = multer({ storage: storage });
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
-router.get("/otp", OTPGen);
+router.post("/otp", OTPGen);
 module.exports = router;
