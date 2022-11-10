@@ -1,6 +1,7 @@
 const todaymodel = require("../../models/To-Day");
 
 const createtoday = async (req, res) => {
+  console.log(req.body);
   const newtoday = new todaymodel({
     campaignName: req.body.campaignName,
     description: req.body.description,

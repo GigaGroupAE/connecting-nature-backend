@@ -5,15 +5,27 @@ const todayroutes = require("./src/routes/to-day-routes");
 const notification = require("./src/routes/notifications");
 const groups = require("./src/routes/groups");
 const chats = require("./src/routes/chatroute");
+const http = require("http");
+const cors = require("cors");
+const { Server } = require("socket.io");
+
 require("./src/config/connection");
 const app = express();
-app.use(express.json());
+const server = http.createServer(app);
+app.use(cors());
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "PATCH"],
+  },
+});
+//app.use(express.json());
 app.use("/user", authroutes);
 app.use("/posts", postroutes);
 app.use("/today", todayroutes);
 app.use("/notify", notification);
 app.use("/chat", chats);
 app.use("/groups", groups);
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log("Server is running");
 });
