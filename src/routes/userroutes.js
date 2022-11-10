@@ -6,10 +6,12 @@ const storage = require("../middlewares/ImageUploader/ImageUploader");
 const multer = require("multer");
 const verify = require("../middlewares/Auth");
 const OTPGen = require("../controllers/user/OTPGen");
-const upload = multer({ storage: storage });
+const upload = require("../middlewares/ImageUploader/ImageUploader");
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
 router.post("/otp", OTPGen);
+
+
 module.exports = router;
