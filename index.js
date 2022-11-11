@@ -27,7 +27,6 @@ const client = new Server(server, {
 
 //TEMPORARY IMPORTS
 const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
-const cors = require("cors");
 
 app.use(express.json());
 app.use(cors());

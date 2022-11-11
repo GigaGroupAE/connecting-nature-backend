@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const Users = require("../models/Register");
+const Posts = require("../models/post");
 
 //get users
 router.get("/getallusers", async (req, res) => {
@@ -35,7 +36,42 @@ router.delete("/deleteuser/:id", async (req, res) => {
       message: "user deleted sucessfully",
     });
   } catch (error) {
-    return res.json({ success: true, message: error });
+    return res.json({ success: false, message: error });
+  }
+});
+
+//get posts
+router.get("/getallposts", async (req, res) => {
+  try {
+    let posts = await Posts.find();
+    return res.json({ success: true, posts });
+  } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+});
+
+//delete post
+
+router.delete("/deletepost/:id", async (req, res) => {
+  try {
+    //find user to be deleted
+    let postToBeDeleted = await Posts.findById(req.params.id);
+
+    if (!postToBeDeleted) {
+      return res.status(500).json({
+        success: false,
+        message: "Post does not exist",
+      });
+    }
+    //deleting the user
+
+    await Posts.findByIdAndDelete(req.params.id);
+    return res.json({
+      success: true,
+      message: "Post deleted sucessfully",
+    });
+  } catch (error) {
+    return res.json({ success: false, message: error });
   }
 });
 
