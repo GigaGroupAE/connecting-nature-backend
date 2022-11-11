@@ -5,7 +5,7 @@ const verify = require("../middlewares/Auth");
 const storage = require("../middlewares/ImageUploader/ImageUploader");
 const getposts = require("../controllers/posts/GetPosts");
 const updatepost = require("../controllers/posts/updatePost");
-const upload = multer({ storage: storage });
+const upload = require("../middlewares/ImageUploader/ImageUploader");
 
 router.post("/addpost", verify, upload.single("media"), addpost);
 router.get("/getposts", verify, getposts);
