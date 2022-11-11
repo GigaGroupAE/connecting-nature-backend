@@ -5,20 +5,24 @@ const todayroutes = require("./src/routes/to-day-routes");
 const notification = require("./src/routes/notifications");
 const groups = require("./src/routes/groups");
 const chats = require("./src/routes/chatroute");
+const disconnect = require("./src/sockets/disconnect");
 const http = require("http");
 const cors = require("cors");
+
 const { Server } = require("socket.io");
 
 require("./src/config/connection");
 const app = express();
 const server = http.createServer(app);
 app.use(cors());
-const io = new Server(server, {
+const client = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "PATCH"],
+    methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
   },
 });
+//cross origin cors dependency
+// methods: ["GET", "POST", "PUT", "PATCH"],
 //app.use(express.json());
 app.use("/user", authroutes);
 app.use("/posts", postroutes);
@@ -26,6 +30,11 @@ app.use("/today", todayroutes);
 app.use("/notify", notification);
 app.use("/chat", chats);
 app.use("/groups", groups);
+client.on("connection", (socket) => {
+  console.log(`connection is made ${socket.id}`);
+  socket.on("disconnect", disconnect);
+  socket.on("chat", () => {});
+});
 server.listen(3000, () => {
   console.log("Server is running");
 });
