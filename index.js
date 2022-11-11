@@ -14,7 +14,7 @@ const { Server } = require("socket.io");
 require("./src/config/connection");
 const app = express();
 const server = http.createServer(app);
-app.use(cors());
+
 const client = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -24,6 +24,19 @@ const client = new Server(server, {
 //cross origin cors dependency
 // methods: ["GET", "POST", "PUT", "PATCH"],
 //app.use(express.json());
+
+//TEMPORARY IMPORTS
+const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
+const cors = require("cors");
+
+app.use(express.json());
+app.use(cors());
+
+//static configuration
+app.use(express.static("./uploads"));
+//send a req to this route along with the image name to get image
+app.use("/images", express.static("uploads"));
+
 app.use("/user", authroutes);
 app.use("/posts", postroutes);
 app.use("/today", todayroutes);
@@ -35,6 +48,7 @@ client.on("connection", (socket) => {
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
 });
+app.use("/temporary", TEMPORARY_ROUTES);
 server.listen(3000, () => {
   console.log("Server is running");
 });

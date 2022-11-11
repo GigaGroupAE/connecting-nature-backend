@@ -1,12 +1,12 @@
 const register = require("../../models/Register");
 const signup = async (req, res) => {
-  console.log("this is the file", req.body);
   const newuser = new register({
-    email: req.body.email,
+    email: "",
     phoneNumber: req.body.phoneNumber,
     fullName: req.body.fullName,
     type: req.body.type,
-    profile: req.body.profile,
+    //this picture shall be retrieve by sending network request to {HOSTNAME/images/:profile}
+    profile: req.file.filename, //saving the name of the file to the database
   });
   const phoneExist = await register.findOne({
     phoneNumber: newuser.phoneNumber,
