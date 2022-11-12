@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 const Users = require("../models/Register");
 const Posts = require("../models/post");
+const Groups = require("../models/groups");
 
 //get users
 router.get("/getallusers", async (req, res) => {
@@ -70,6 +71,16 @@ router.delete("/deletepost/:id", async (req, res) => {
       success: true,
       message: "Post deleted sucessfully",
     });
+  } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+});
+
+//get all groups
+router.get("/getallgroups", async (req, res) => {
+  try {
+    let groups = await Groups.find();
+    return res.json({ success: true, groups });
   } catch (error) {
     return res.json({ success: false, message: error });
   }

@@ -17,6 +17,10 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  groupPic: {
+    type: String,
+    required: true,
+  },
 });
 
 const Data = new mongoose.model("groups", dbSchema);

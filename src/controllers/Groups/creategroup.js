@@ -6,6 +6,7 @@ const createchat = async (req, res) => {
     type: req.body.type,
     title: req.body.title,
     members: req.body.members,
+    groupPic: req.file.filename,
   });
   if (!newgroup) {
     res.send({ message: "Invalid data body", status: 400 });
