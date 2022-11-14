@@ -7,6 +7,7 @@ const todayroutes = require("./src/routes/to-day-routes");
 const notification = require("./src/routes/notifications");
 const groups = require("./src/routes/groups");
 const chats = require("./src/routes/chatroute");
+const invitesms = require("./src/routes/inviteroutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -46,7 +47,7 @@ app.use("/notify", notification);
 app.use("/chat", chats);
 app.use("/groups", groups);
 app.use("/temporary", TEMPORARY_ROUTES);
-
+app.use("/sms", invitesms);
 //socket apis
 client.on("connection", (socket) => {
   console.log(`connection is made ${socket.id}`);
