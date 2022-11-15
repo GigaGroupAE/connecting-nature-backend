@@ -1,11 +1,12 @@
 const group = require("../../models/groups");
 
 const createchat = async (req, res) => {
+  console.log(req.body.members);
   const newgroup = new group({
     messages: req.body.messages,
     type: req.body.type,
     title: req.body.title,
-    members: req.body.members,
+    members: JSON.parse(req.body.members),
     groupPic: req.file.filename,
   });
   if (!newgroup) {

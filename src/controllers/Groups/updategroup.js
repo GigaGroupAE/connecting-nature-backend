@@ -1,5 +1,6 @@
 const model = require("../../models/groups");
 const updategroup = async (req, res) => {
+  console.log(req.body);
   if (!req.params.id) {
     res.status(400).send("Invalid id");
   } else {
@@ -14,6 +15,7 @@ const updategroup = async (req, res) => {
         res.status(200).send(updategroup);
       }
     } catch (e) {
+      console.log(e);
       res.status(400).send("Invalid data body");
     }
   }

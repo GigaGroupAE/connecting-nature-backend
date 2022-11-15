@@ -1,12 +1,17 @@
 const register = require("../../models/Register");
 const signup = async (req, res) => {
+  let path = "";
+  if (req.file === undefined) {
+    path = "no-profile-picture-placeholder.png";
+  } else {
+  }
   const newuser = new register({
     email: "",
     phoneNumber: req.body.phoneNumber,
     fullName: req.body.fullName,
     type: req.body.type,
     //this picture shall be retrieve by sending network request to {HOSTNAME/images/:profile}
-    profile: req.file.filename, //saving the name of the file to the database
+    profile: path, //saving the name of the file to the database
   });
   const phoneExist = await register.findOne({
     phoneNumber: newuser.phoneNumber,

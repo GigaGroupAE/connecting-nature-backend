@@ -13,7 +13,7 @@ const SMsApi = async (req, res) => {
     .then((response) => {
       console.log(response.status);
       if (response.status === 200) {
-        res.send({ message: randomOTP, status: 200 });
+        res.send({ message: message, status: 200 });
       }
     })
     .catch((e) => console.log(e));
