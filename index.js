@@ -39,6 +39,9 @@ app.use(express.static("./uploads"));
 //send a req to this route along with the image name to get image
 app.use("/images", express.static("uploads"));
 
+//to get audio
+app.use("/messageMedia" , express.static("uploads/messageMedia"))
+
 //traditional crud
 app.use("/user", authroutes);
 app.use("/posts", postroutes);
