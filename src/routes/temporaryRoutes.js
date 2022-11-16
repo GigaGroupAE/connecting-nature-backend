@@ -3,6 +3,8 @@ const router = require("express").Router();
 const Users = require("../models/Register");
 const Posts = require("../models/post");
 const Groups = require("../models/groups");
+const Dodays = require("../models/To-Day");
+const MessageMediaUploader = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 
 //get users
 router.get("/getallusers", async (req, res) => {
@@ -82,6 +84,56 @@ router.get("/getallgroups", async (req, res) => {
     let groups = await Groups.find();
     return res.json({ success: true, groups });
   } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+});
+
+//get all do days
+router.get("/getalldodays", async (req, res) => {
+  console.log("get all todays called")
+  try {
+    let dodays = await Dodays.find();
+    return res.json({ success: true, dodays });
+  } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+});
+
+//delete do day
+
+router.delete("/deletedoday/:id", async (req, res) => {
+  try {
+    //find user to be deleted
+    let dodayToBeDeleted = await Dodays.findById(req.params.id);
+
+    if (!dodayToBeDeleted) {
+      return res.status(500).json({
+        success: false,
+        message: "do day does not exist",
+      });
+    }
+    //deleting the user
+
+    await Dodays.findByIdAndDelete(req.params.id);
+    return res.json({
+      success: true,
+      message: "do-day deleted sucessfully",
+    });
+  } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+});
+
+//uploading audios
+router.post("/uploadDocuments", MessageMediaUploader.single("document"), async (req, res) => {
+  try {
+    return res.json({
+      success: true,
+      message: "fie uploaded sucessfully ",
+      path: req.file.filename,
+    });
+  } catch (error) {
+    console.log(error)
     return res.json({ success: false, message: error });
   }
 });
