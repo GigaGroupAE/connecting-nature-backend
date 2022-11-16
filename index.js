@@ -11,7 +11,10 @@ const invitesms = require("./src/routes/inviteroutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
-const handlemessages = require("./src/sockets/messages");
+
+//Services
+
+const sendmessage = require("./src/sockets/sendmessage");
 
 //TEMPORARY IMPORTS
 const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
@@ -40,7 +43,7 @@ app.use(express.static("./uploads"));
 app.use("/images", express.static("uploads"));
 
 //to get audio
-app.use("/messageMedia" , express.static("uploads/messageMedia"))
+app.use("/messageMedia", express.static("uploads/messageMedia"));
 
 //traditional crud
 app.use("/user", authroutes);
@@ -56,7 +59,9 @@ client.on("connection", (socket) => {
   console.log(`connection is made ${socket.id}`);
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
-  socket.on("send_message", (data) => {
+  socket.on("send_message", async (data) => {
+    const result = await sendmessage(data);
+    console.log(result.messages);
     socket.emit("receive_message", data);
   });
 });
