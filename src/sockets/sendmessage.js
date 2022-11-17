@@ -2,31 +2,34 @@ const group = require("../models/groups");
 
 const sendmessage = async (data) => {
   console.log(data);
-  let tempdata = [];
-  tempdata.push(data);
-  if (!data.id) {
-    console.log("invalid data");
-  } else {
-    try {
-      const _id = data.id;
-      const updategroup = await group.findByIdAndUpdate(
-        _id,
-        { messages: tempdata },
-        {
-          new: true,
+  try {
+    const groupdata = await group.findById(data.id);
+    const messages = groupdata.messages;
+    messages.push(data);
+    if (!data.id) {
+      console.log("invalid data");
+    } else {
+      try {
+        const _id = data.id;
+        const updategroup = await group.findByIdAndUpdate(
+          _id,
+          { messages: messages },
+          {
+            new: true,
+          }
+        );
+        if (!updategroup) {
+          return "internal server error";
+        } else {
+          return updategroup;
         }
-      );
-      if (!updategroup) {
-        return "internal server error";
-      } else {
-        return updategroup;
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
-      //   res.status(400).send("Invalid data body");
     }
+  } catch (e) {
+    console.log(e);
   }
-  //   socket.emit("receive_message", data);
 };
 
 module.exports = sendmessage;
