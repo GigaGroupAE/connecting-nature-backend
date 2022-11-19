@@ -90,7 +90,7 @@ router.get("/getallgroups", async (req, res) => {
 
 //get all do days
 router.get("/getalldodays", async (req, res) => {
-  console.log("get all todays called")
+  console.log("get all todays called");
   try {
     let dodays = await Dodays.find();
     return res.json({ success: true, dodays });
@@ -125,16 +125,50 @@ router.delete("/deletedoday/:id", async (req, res) => {
 });
 
 //uploading audios
-router.post("/uploadDocuments", MessageMediaUploader.single("document"), async (req, res) => {
+router.post(
+  "/uploadDocuments",
+  MessageMediaUploader.single("document"),
+  async (req, res) => {
+    try {
+      return res.json({
+        success: true,
+        message: "fie uploaded sucessfully ",
+        path: req.file.filename,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.json({ success: false, message: error });
+    }
+  }
+);
+
+//update user
+router.put("/updateUserLocation/:id", async (req, res) => {
   try {
-    return res.json({
-      success: true,
-      message: "fie uploaded sucessfully ",
-      path: req.file.filename,
-    });
+    let user = await Users.findById(req.params.id);
+
+    if (!user) {
+      return res.json({ success: false, message: "user doesnt exist" });
+    }
+
+    await Users.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          location: req.body.location,
+        },
+      }
+    );
+
+    return res.json({ success: true, message: "updated successfully" });
   } catch (error) {
-    console.log(error)
-    return res.json({ success: false, message: error });
+    console.log("error is ", error.message);
+    return res.status(500).json({
+      success: false,
+      messaage: error.message,
+    });
   }
 });
 

@@ -46,6 +46,7 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  location: {},
 });
 
 const NewUsers = new mongoose.model("NewUsers", dbSchema);

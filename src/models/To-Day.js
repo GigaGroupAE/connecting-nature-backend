@@ -10,10 +10,7 @@ const dbSchema = new mongoose.Schema({
   },
   date: { type: String, required: true },
   radius: { type: String, required: false },
-  location: {
-    type: String,
-    required: true,
-  },
+  location: {},
   TeamA: {
     type: (TeamB = {}),
     required: true,
