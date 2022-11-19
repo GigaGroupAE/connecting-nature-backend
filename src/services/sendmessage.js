@@ -1,7 +1,6 @@
 const group = require("../models/groups");
 
 const sendmessage = async (data) => {
-  console.log(data);
   try {
     const groupdata = await group.findById(data.id);
     const messages = groupdata.messages;

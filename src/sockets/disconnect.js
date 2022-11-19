@@ -1,5 +1,5 @@
 const disconnect = (socket) => {
-  console.log("User Disconnected", socket.id);
+  console.log("Disconnected");
 };
 
 module.exports = disconnect;
