@@ -14,7 +14,8 @@ const invitesms = require("./src/routes/inviteroutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
-
+const axios = require("axios");
+const FormData = require("form-data");
 //testing writefile
 
 const uploaddocument = require("./src/middlewares/socketmediaupload/socketmediaupload");
@@ -70,9 +71,18 @@ client.on("connection", (socket) => {
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("test", (data) => {
-    // console.log(data);
-    const result = uploaddocument(data);
-    console.log(result);
+    const id = data.id;
+    axios
+      .patch(
+        `http://192.168.100.8:3000/groups/updateMessages/${id}`,
+        data.image
+      )
+      .then((res) => {
+        console.log("response", res.data);
+      })
+      .catch((e) => {
+        console.log("working but error", e);
+      });
   });
   socket.on("send_message", async (data) => {
     socket.join(data.id);
