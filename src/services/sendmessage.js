@@ -4,7 +4,7 @@ const sendmessage = async (data) => {
   try {
     const groupdata = await group.findById(data.id);
     const messages = groupdata.messages;
-    messages.push(data);
+    messages.push(data.message);
     if (!data.id) {
       console.log("invalid data");
     } else {

@@ -11,5 +11,5 @@ router.post("/creategroup", verify, upload.single("groupPic"), creategroup);
 router.get("/getgroups", verify, getgroups);
 router.patch("/updategroup/:id", verify, updategroup);
 router.get("/getgroupbyid/:id", verify, getgroupbyid);
-router.patch("/updateMessages/:id", upload.single("media"), updatemessages);
+router.patch("/saveMedia", upload.single("media"), updatemessages);
 module.exports = router;

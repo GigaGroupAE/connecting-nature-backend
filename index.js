@@ -70,20 +70,6 @@ client.on("connection", (socket) => {
   console.log("connected");
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
-  socket.on("test", (data) => {
-    const id = data.id;
-    axios
-      .patch(
-        `http://192.168.100.8:3000/groups/updateMessages/${id}`,
-        data.image
-      )
-      .then((res) => {
-        console.log("response", res.data);
-      })
-      .catch((e) => {
-        console.log("working but error", e);
-      });
-  });
   socket.on("send_message", async (data) => {
     socket.join(data.id);
     const result = await sendmessage(data);
