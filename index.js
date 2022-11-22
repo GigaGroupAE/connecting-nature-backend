@@ -14,12 +14,6 @@ const invitesms = require("./src/routes/inviteroutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
-const axios = require("axios");
-const FormData = require("form-data");
-//testing writefile
-
-const uploaddocument = require("./src/middlewares/socketmediaupload/socketmediaupload");
-
 //Services
 const socketauth = require("./src/middlewares/socketauthentication/socketauth");
 const sendmessage = require("./src/services/sendmessage");
