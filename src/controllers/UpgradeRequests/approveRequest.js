@@ -27,9 +27,12 @@ exports.approveRequest = async (req, res) => {
 
     await UpgradeRequests.findByIdAndDelete(request._id);
 
+    let requests = await UpgradeRequests.find().populate('user')
+
     return res.json({
       success: true,
       message: "User type updated successfully",
+      requests
     });
   } catch (error) {
     return res.json({ success: false, message: "internal server error" });

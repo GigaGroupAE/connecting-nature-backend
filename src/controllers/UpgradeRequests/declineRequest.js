@@ -13,9 +13,12 @@ exports.declineRequest = async (req, res) => {
     //deleting request
 
     await UpgradeRequests.findByIdAndDelete(request._id);
+    let requests = await UpgradeRequests.find().populate('user')
+
     return res.json({
       succes: true,
       message: " request declined successfully",
+      requests
     });
   } catch (error) {
     console.log("error is ", error);
