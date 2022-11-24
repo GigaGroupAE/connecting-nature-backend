@@ -11,6 +11,7 @@ const notification = require("./src/routes/notifications");
 const groups = require("./src/routes/groups");
 const chats = require("./src/routes/chatroute");
 const invitesms = require("./src/routes/inviteroutes");
+const upgradeRequest = require("./src/routes/upgradeRequestRoutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -57,6 +58,7 @@ app.use("/chat", chats);
 app.use("/groups", groups);
 app.use("/temporary", TEMPORARY_ROUTES);
 app.use("/sms", invitesms);
+app.use("/upgradeRequests", upgradeRequest);
 
 client.use(socketauth);
 //socket apis
