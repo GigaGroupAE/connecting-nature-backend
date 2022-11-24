@@ -2,12 +2,18 @@ const group = require("../../models/groups");
 
 const createchat = async (req, res) => {
   console.log(req.body.members);
+  let path = "";
+  if (req.file === undefined) {
+    path = "no-profile-picture-placeholder.png";
+  } else {
+    path = req.file.filename;
+  }
   const newgroup = new group({
     messages: req.body.messages,
     type: req.body.type,
     title: req.body.title,
     members: JSON.parse(req.body.members),
-    groupPic: req.file.filename,
+    groupPic: path,
   });
   if (!newgroup) {
     res.send({ message: "Invalid data body", status: 400 });
