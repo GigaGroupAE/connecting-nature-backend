@@ -24,6 +24,10 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: false,
   },
+  createdAT: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Data = new mongoose.model("post", dbSchema);
