@@ -73,6 +73,18 @@ client.on("connection", (socket) => {
     socket.emit("receive_message", data);
   });
 });
+client.of("/CN").on("connection", (socket) => {
+  console.log("connected in CN");
+  socket.on("send_comments", (data) => {
+    socket.emit("receive_comments", data);
+  });
+  socket.on("send_posts", (data) => {
+    socket.emit("receive_posts", data);
+  });
+  socket.on("send_message", (data) => {
+    socket.emit("receive_message", data);
+  });
+});
 instrument(client, {
   auth: false,
 });
