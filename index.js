@@ -26,6 +26,7 @@ const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 const http = require("http");
 const cors = require("cors");
 require("./src/config/connection");
+require("dotenv/config");
 const { Server } = require("socket.io");
 
 //server configuration
@@ -36,7 +37,7 @@ const server = http.createServer(app);
 const client = new Server(server, {
   maxHttpBufferSize: 1e8,
   cors: {
-    origin: ["http://localhost:3000", "https://admin.socket.io/"],
+    origin: ["*", "https://admin.socket.io/"],
     methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
   },
 });
@@ -88,6 +89,6 @@ client.of("/CN").on("connection", (socket) => {
 instrument(client, {
   auth: false,
 });
-server.listen(3000, () => {
+server.listen(process.env.PORT || 3000, () => {
   console.log("Server is running");
 });
