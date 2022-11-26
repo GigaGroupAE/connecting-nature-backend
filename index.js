@@ -28,6 +28,9 @@ const cors = require("cors");
 require("./src/config/connection");
 require("dotenv/config");
 const { Server } = require("socket.io");
+const {
+  sendGroupMessageNotifications,
+} = require("./src/services/sendGroupMessageNotifications");
 
 //server configuration
 const app = express();
@@ -68,9 +71,15 @@ client.on("connection", (socket) => {
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("send_message", async (data) => {
+    //here send notifications
+    try {
+      sendGroupMessageNotifications(data);
+    } catch (error) {
+      console.log("error inside send_message notification:::", error);
+    }
     socket.join(data.id);
     const result = await sendmessage(data);
-    console.log(result.messages);
+    //console.log(result.messages);
     socket.emit("receive_message", data);
   });
 });
