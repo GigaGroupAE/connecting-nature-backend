@@ -172,4 +172,30 @@ router.put("/updateUserLocation/:id", async (req, res) => {
   }
 });
 
+//update user expo token
+router.put("/updateUserExpoToken/:id" ,async (req,res) => {
+  try {
+    let user = await Users.findById(req.params.id);
+
+    if (!user) {
+      return res.json({ success: false, message: "user doesnt exist" });
+    }
+
+    await Users.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          expoPushToken: req.body.expoPushToken,
+        },
+      }
+    );
+
+    return res.json({ success: true, message: "updated successfully" });
+  } catch (error) {
+   return res.json({success:false,error}) 
+  }
+})
+
 module.exports = router;

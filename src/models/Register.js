@@ -47,6 +47,9 @@ const dbSchema = new mongoose.Schema({
     required: true,
   },
   location: {},
+  expoPushToken: {
+    type: String,
+  },
 });
 
 const NewUsers = new mongoose.model("NewUsers", dbSchema);

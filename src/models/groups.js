@@ -7,7 +7,7 @@ const dbSchema = new mongoose.Schema({
   },
   members: {
     type: Array,
-    required: true,
+    required: true,//name,type,photo,phone
   },
   type: {
     type: String,
