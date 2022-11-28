@@ -79,8 +79,8 @@ client.on("connection", (socket) => {
     }
     socket.join(data.id);
     const result = await sendmessage(data);
-    //console.log(result.messages);
-    socket.emit("receive_message", data);
+    console.log(result.messages[result.messages.length - 1]);
+    socket.emit("receive_message", result.messages[result.messages.length - 1]);
   });
 });
 client.of("/CN").on("connection", (socket) => {
