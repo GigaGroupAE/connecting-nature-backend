@@ -173,7 +173,7 @@ router.put("/updateUserLocation/:id", async (req, res) => {
 });
 
 //update user expo token
-router.put("/updateUserExpoToken/:id" ,async (req,res) => {
+router.put("/updateUserExpoToken/:id", async (req, res) => {
   try {
     let user = await Users.findById(req.params.id);
 
@@ -194,8 +194,17 @@ router.put("/updateUserExpoToken/:id" ,async (req,res) => {
 
     return res.json({ success: true, message: "updated successfully" });
   } catch (error) {
-   return res.json({success:false,error}) 
+    return res.json({ success: false, error });
   }
-})
+});
+//drop do-day
 
+router.delete("/dropDoDay", async (req, res) => {
+  try {
+    await Dodays.remove({});
+    return res.json({ success: true, message: "doday deleted succsesfully" });
+  } catch (error) {
+    return res.json({ success: false, message: "internal server error" });
+  }
+});
 module.exports = router;

@@ -2,6 +2,7 @@ const todaymodel = require("../../models/To-Day");
 
 const createtoday = async (req, res) => {
   console.log(req.body);
+  let user = req.user._id;
   const newtoday = new todaymodel({
     campaignName: req.body.campaignName,
     description: req.body.description,
@@ -12,6 +13,8 @@ const createtoday = async (req, res) => {
     TeamB: req.body.TeamB,
     messages: req.body.messages,
     volunteers: req.body.volunteers,
+    createdBy: user,
+    endTime: req.body.endTime,
   });
   if (newtoday) {
     const savedtoday = await newtoday.save();

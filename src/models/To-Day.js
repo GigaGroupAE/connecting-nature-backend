@@ -8,7 +8,7 @@ const dbSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  date: { type: String, required: true },
+  date: { type: String, required: true }, //this will hold the start date and time
   radius: { type: String, required: false },
   location: {},
   TeamA: {
@@ -26,6 +26,20 @@ const dbSchema = new mongoose.Schema({
   messages: {
     type: Array,
     required: true,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "NewUsers",
+    required: true,
+  },
+  locked: {
+    type: Boolean,
+    default: true,
+  },
+
+  endTime: {
+    type: String,
+    require: true,
   },
 });
 

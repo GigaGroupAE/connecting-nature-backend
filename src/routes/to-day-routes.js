@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const createtoday = require("../controllers/do-day/create-to-day");
 const getodays = require("../controllers/do-day/gettodays");
+const { LockUnlockDoday } = require("../controllers/do-day/unlockDoDay");
 const updatedoday = require("../controllers/do-day/updatedoDay");
 const verify = require("../middlewares/Auth");
 router.post("/createtoday", verify, createtoday);
 router.get("/getoday", verify, getodays);
 router.patch("/updatedoday/:id", updatedoday);
+router.put("/unlockDoDay/:id", verify,LockUnlockDoday);
 module.exports = router;
