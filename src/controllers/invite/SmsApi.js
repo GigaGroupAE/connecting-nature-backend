@@ -1,7 +1,8 @@
 const axios = require("axios");
 
 const SMsApi = async (req, res) => {
-  const message = `You have been invited to join connecting nature with the designation of ${req.body.designation}`;
+  const message = req.body.message;
+
   const path =
     "https://api.veevotech.com/sendsms?hash=f4f05f33e9fdf3c9ecc9f95db89b67af&receivernum=" +
     req.body.phoneNumber +
