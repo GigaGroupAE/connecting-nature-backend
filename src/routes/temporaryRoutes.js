@@ -207,4 +207,13 @@ router.delete("/dropDoDay", async (req, res) => {
     return res.json({ success: false, message: "internal server error" });
   }
 });
+
+router.delete("/dropPosts", async (req, res) => {
+  try {
+    await Posts.remove({});
+    return res.json({ success: true, message: "posts deleted" });
+  } catch (error) {
+    return res.json({ success: false, message: "internal server error" });
+  }
+});
 module.exports = router;
