@@ -18,7 +18,7 @@ const disconnect = require("./src/sockets/disconnect");
 //Services
 const socketauth = require("./src/middlewares/socketauthentication/socketauth");
 const sendmessage = require("./src/services/sendmessage");
-
+const sendmessageCN = require("./src/services/sendMessageCN");
 //TEMPORARY IMPORTS
 const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
@@ -79,6 +79,23 @@ client.on("connection", (socket) => {
     }
     socket.join(data.id);
     const result = await sendmessage(data);
+    console.log(result.messages[result.messages.length - 1]);
+    socket.emit("receive_message", result.messages[result.messages.length - 1]);
+  });
+});
+client.of("/chatCN").on("connection", (socket) => {
+  console.log("connected in /chatcn");
+  socket.on("disconnect", disconnect);
+  socket.on("chat", () => {});
+  socket.on("send_message", async (data) => {
+    //here send notifications
+    try {
+      //sendGroupMessageNotifications(data);
+    } catch (error) {
+      console.log("error inside send_message notification:::", error);
+    }
+    socket.join(data.id);
+    const result = await sendmessageCN(data);
     console.log(result.messages[result.messages.length - 1]);
     socket.emit("receive_message", result.messages[result.messages.length - 1]);
   });
