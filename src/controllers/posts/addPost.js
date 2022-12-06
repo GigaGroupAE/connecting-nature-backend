@@ -1,6 +1,6 @@
 const Posts = require("../../models/post");
-const user = require("../../models/Register");
 const addpost = async (req, res) => {
+  console.log(req.body);
   try {
     //parsing the postedby object
     let parsed = JSON.parse(req.body.postedby);
