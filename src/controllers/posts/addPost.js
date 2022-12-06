@@ -2,16 +2,25 @@ const Posts = require("../../models/post");
 const user = require("../../models/Register");
 const addpost = async (req, res) => {
   try {
+    let media = {};
+    if (req.file) {
+      media = {
+        name: req.file.filename,
+        type: req.file.mimetype,
+      };
+    }
+
     //parsing the postedby object
     let parsed = JSON.parse(req.body.postedby);
     const { description, reactions, comments, shares } = req.body;
+
     const savedpost = await Posts.create({
       postedby: parsed,
       description,
-      reactions: JSON.parse(reactions),
-      comments: JSON.parse(comments),
-      shares: JSON.parse(shares),
-      media: req.file.filename,
+      reactions: [],
+      comments: [],
+      shares: [],
+      media: media,
     });
     console.log(savedpost);
     res.send(savedpost);

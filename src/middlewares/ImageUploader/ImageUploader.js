@@ -1,6 +1,5 @@
 const multer = require("multer");
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     console.log("destination called");
@@ -21,7 +20,8 @@ const upload = multer({
     if (
       file.mimetype === "image/jpeg" ||
       file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg"
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "video/mp4"
     ) {
       cb(null, true);
     } else {
@@ -31,4 +31,3 @@ const upload = multer({
 });
 
 module.exports = upload;
-

@@ -47,7 +47,8 @@ router.delete("/deleteuser/:id", async (req, res) => {
 router.get("/getallposts", async (req, res) => {
   try {
     let posts = await Posts.find();
-    return res.json({ success: true, posts });
+    let count = await Posts.find().count();
+    return res.json({ success: true, count, posts });
   } catch (error) {
     return res.json({ success: false, message: error });
   }
