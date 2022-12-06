@@ -9,7 +9,7 @@ const dbSchema = new mongoose.Schema({
     required: false,
   },
   media: {
-    type: String,
+    type: {},
     required: false,
   },
   reactions: {
