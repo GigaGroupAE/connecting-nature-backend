@@ -11,13 +11,16 @@ exports.sendGroupMessageNotifications = async (data) => {
     console.log("from is ", from);
 
     let group = await Groups.findById(groupId).select("members");
+    if (!group) {
+      return;
+    }
     console.log("group members are ", group);
     //including everyone except the sender of message
 
     //filter only the receipiants
     //then returns phone numbers of those users
     ///these phone numbers will be used to query users databse to find push tokens
-    
+
     let phoneNumbers = group.members
       .filter((m) => m.phoneNumber !== from.phoneNumber)
       .map((m) => m.phoneNumber);
@@ -25,7 +28,6 @@ exports.sendGroupMessageNotifications = async (data) => {
 
     //now finding complete users details from user models to have access to the ExpoPushToken
     let users = await Users.find({ phoneNumber: { $in: phoneNumbers } });
-
 
     //filters uses who have push token
     //then return array of those tokens
