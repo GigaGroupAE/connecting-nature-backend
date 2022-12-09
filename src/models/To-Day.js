@@ -39,8 +39,9 @@ const dbSchema = new mongoose.Schema({
 
   endTime: {
     type: String,
-    require: true,
+    required: true,
   },
+  color: { type: String, required: true },
 });
 
 const Data = new mongoose.model("todays", dbSchema);

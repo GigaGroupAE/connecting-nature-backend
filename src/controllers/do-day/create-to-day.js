@@ -15,6 +15,7 @@ const createtoday = async (req, res) => {
     volunteers: req.body.volunteers,
     createdBy: user,
     endTime: req.body.endTime,
+    color:req.body.color
   });
   if (newtoday) {
     const savedtoday = await newtoday.save();
