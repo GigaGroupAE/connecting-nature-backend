@@ -1,18 +1,20 @@
 const notification = require("../../models/notification");
 
 const addnotification = async (req, res) => {
+  const data = req.body.data || {};
   const newnotify = new notification({
     user: req.body.user,
     body: req.body.body,
+    data,
   });
   if (!newnotify) {
-    res.send({ message: "Invalid data body", status: 400 });
+    return res.json({ message: "Invalid data body", success: false });
   }
   try {
     const savednoti = await newnotify.save();
-    res.send(savednoti);
+    return res.json({ success: true, savednoti });
   } catch (err) {
-    res.send({ message: err, status: 400 });
+    return res.status({ success: false, message: "some error occured" });
   }
 };
 
