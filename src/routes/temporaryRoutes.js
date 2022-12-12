@@ -4,6 +4,7 @@ const Users = require("../models/Register");
 const Posts = require("../models/post");
 const Groups = require("../models/groups");
 const Dodays = require("../models/To-Day");
+const Notifications = require("../models/notification");
 const MessageMediaUploader = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 
 //get users
@@ -215,6 +216,15 @@ router.delete("/dropPosts", async (req, res) => {
     return res.json({ success: true, message: "posts deleted" });
   } catch (error) {
     return res.json({ success: false, message: "internal server error" });
+  }
+});
+
+router.delete("/dropNotifications", async (req, res) => {
+  try {
+    await Notifications.remove({});
+    return res.json({ success: true, message: "notifications cleard " });
+  } catch (error) {
+    return res.json({ success: false, message: "Internal server error" });
   }
 });
 module.exports = router;

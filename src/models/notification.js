@@ -9,6 +9,7 @@ const dbSchema = new mongoose.Schema({
     type: (body = {}),
     required: true,
   },
+  data: {},
 });
 
 const newnotification = new mongoose.model("Notifications", dbSchema);
