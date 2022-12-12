@@ -12,7 +12,7 @@ const addpost = async (req, res) => {
 
     //parsing the postedby object
     let parsed = JSON.parse(req.body.postedby);
-    const { description, reactions, comments, shares } = req.body;
+    const { description } = req.body;
 
     const savedpost = await Posts.create({
       postedby: parsed,
