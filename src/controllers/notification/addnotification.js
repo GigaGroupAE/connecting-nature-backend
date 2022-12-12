@@ -1,6 +1,7 @@
 const notification = require("../../models/notification");
 
 const addnotification = async (req, res) => {
+  console.log("add notification called")
   const data = req.body.data || {};
   const newnotify = new notification({
     user: req.body.user,
@@ -14,6 +15,7 @@ const addnotification = async (req, res) => {
     const savednoti = await newnotify.save();
     return res.json({ success: true, savednoti });
   } catch (err) {
+    console.log(err)
     return res.status({ success: false, message: "some error occured" });
   }
 };
