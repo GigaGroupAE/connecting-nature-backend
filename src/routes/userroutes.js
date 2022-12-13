@@ -10,6 +10,7 @@ const {
   updateExpoPushToken,
 } = require("../controllers/user/updateExpoPushToken");
 const { followUnfollowUser } = require("../controllers/user/followUnfollowUser");
+const { blockUser, unblockUser } = require("../controllers/user/blockUnblock");
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
@@ -18,4 +19,6 @@ router.post("/otp", OTPGen);
 router.put("/updateUserExpoToken", verify, updateExpoPushToken);
 router.patch("/updateUser/:id", verify, updateuser);
 router.patch("/toggleFollow/:id", verify, followUnfollowUser);
+router.patch("/block-user/:id",verify,blockUser)
+router.patch("/unblock-user/:id",verify,unblockUser)
 module.exports = router;

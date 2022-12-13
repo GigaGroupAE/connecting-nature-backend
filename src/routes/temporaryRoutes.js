@@ -7,6 +7,7 @@ const Dodays = require("../models/To-Day");
 const Notifications = require("../models/notification");
 const MessageMediaUploader = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 
+const verify = require("../middlewares/Auth");
 //get users
 router.get("/getallusers", async (req, res) => {
   console.log("get all usres called");
@@ -45,11 +46,24 @@ router.delete("/deleteuser/:id", async (req, res) => {
 });
 
 //get posts
-router.get("/getallposts", async (req, res) => {
+router.get("/getallposts", verify, async (req, res) => {
   try {
     let posts = await Posts.find();
     let count = await Posts.find().count();
-    return res.json({ success: true, count, posts });
+    let user = await Users.findById(req.user._id);
+    let blockedList = user.blockedUsers;
+    let blockedBy = user.blockedByUsers;
+
+    let newPosts = posts.filter((post) => {
+      if (
+        blockedList.includes(post.postedby.phoneNumber) ||
+        blockedBy.includes(post.postedby.phoneNumber)
+      ) {
+        return false;
+      }
+      return true;
+    });
+    return res.json({ success: true, count, newPosts });
   } catch (error) {
     return res.json({ success: false, message: error });
   }

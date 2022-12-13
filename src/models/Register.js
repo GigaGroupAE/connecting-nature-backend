@@ -46,6 +46,12 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  blockedUsers: {
+    type: Array,
+  },
+  blockedByUsers: {
+    type: Array,
+  },
   location: {},
   expoPushToken: {
     type: String,
