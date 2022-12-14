@@ -11,6 +11,7 @@ const {
 } = require("../controllers/user/updateExpoPushToken");
 const { followUnfollowUser } = require("../controllers/user/followUnfollowUser");
 const { blockUser, unblockUser } = require("../controllers/user/blockUnblock");
+const { newChatContacts } = require("../controllers/user/newChatContacts");
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
@@ -21,4 +22,5 @@ router.patch("/updateUser/:id", verify, updateuser);
 router.patch("/toggleFollow/:id", verify, followUnfollowUser);
 router.patch("/block-user/:id",verify,blockUser)
 router.patch("/unblock-user/:id",verify,unblockUser)
+router.get("/new-chat-contacts",verify,newChatContacts)
 module.exports = router;
