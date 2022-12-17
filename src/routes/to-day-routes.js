@@ -13,8 +13,10 @@ const {
 } = require("../controllers/do-day/updateMultipleVolunteers");
 const { updateVolunteers } = require("../controllers/do-day/updateVolunteer");
 const verify = require("../middlewares/Auth");
+const { getBYId } = require("../controllers/do-day/getById");
 router.post("/createtoday", verify, createtoday);
 router.get("/getoday", verify, getodays);
+router.get("/getById/:id",verify,getBYId)
 router.patch("/updatedoday/:id", updatedoday);
 router.put("/unlockDoDay/:id", verify, LockUnlockDoday);
 router.put("/update-volunteer/:id", verify, updateVolunteers); //id of the doday

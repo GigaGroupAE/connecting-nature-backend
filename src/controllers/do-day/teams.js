@@ -2,7 +2,7 @@ const Campaigns = require("../../models/To-Day");
 
 //this function will take campaign id as param
 //and will also take a volunteer object and team name as req.body
-//it will push the volunteer to that teams members list 
+//it will push the volunteer to that teams members list
 //and update the volunteers list and add team name feild to that volunteer
 exports.addVolunteerToTeam = async (req, res) => {
   try {
@@ -60,6 +60,13 @@ exports.removeVolunteerFromTeam = async (req, res) => {
     let team = doday[teamName];
     let members = team.members;
     let volunteers = doday.volunteers;
+
+    //check if the person being removed is the team leader
+    //if he is then first make the leader to null then remove him
+
+    if (team.leader === volunteer.number) {
+      team.leader = null;
+    }
 
     //updating members
     let updatedMembers = members.filter((m) => m.number !== volunteer.number);
