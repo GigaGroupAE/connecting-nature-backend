@@ -12,7 +12,7 @@ exports.notifyPostAuthor = async (req, res) => {
     // #2
     let post = await Posts.findById(req.params.id);
     let user = await Users.findOne({ phoneNumber: post.postedby.phoneNumber }); //this is the user who was the author of post
-    
+
     if (user.expoPushToken) {
       //send notification
       sendNotifications([user.expoPushToken], req.body.title);
@@ -22,9 +22,8 @@ exports.notifyPostAuthor = async (req, res) => {
 
     await Notifications.create({
       user: post.postedby.phoneNumber,
-      body: {
-        title: req.body.title,
-      },
+      body: req.body.body,
+      data: req.body.data,
     });
 
     return res.json({

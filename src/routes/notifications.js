@@ -8,9 +8,13 @@ const {
 const {
   addMultipleNotifications,
 } = require("../controllers/notification/addMultipleNotifications");
+const {
+  changeNotificationType,
+} = require("../controllers/notification/changeNotificationType");
 router.post("/addnotification", verify, addnotification);
 router.get("/getnoties", verify, getnoties);
 router.post("/addMultipleNotifications", verify, addMultipleNotifications);
 
 router.post("/commentNotification/:id", verify, notifyPostAuthor);
+router.patch("/change-notification-type/:id", verify, changeNotificationType);
 module.exports = router;
