@@ -12,6 +12,7 @@ const {
 const { followUnfollowUser } = require("../controllers/user/followUnfollowUser");
 const { blockUser, unblockUser } = require("../controllers/user/blockUnblock");
 const { newChatContacts } = require("../controllers/user/newChatContacts");
+const { getUserByPhone } = require("../controllers/user/getUserByPhone");
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
@@ -23,4 +24,5 @@ router.patch("/toggleFollow/:id", verify, followUnfollowUser);
 router.patch("/block-user/:id",verify,blockUser)
 router.patch("/unblock-user/:id",verify,unblockUser)
 router.get("/new-chat-contacts",verify,newChatContacts)
+router.get("/get-user/:phoneNumber",verify,getUserByPhone)
 module.exports = router;
