@@ -14,6 +14,7 @@ const invitesms = require("./src/routes/inviteroutes");
 const upgradeRequest = require("./src/routes/upgradeRequestRoutes");
 const archives = require("./src/routes/arhiveRoutes");
 const storyroutes = require("./src/routes/storyroutes");
+const productRoutes = require("./src/routes/productRoutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -67,6 +68,7 @@ app.use("/sms", invitesms);
 app.use("/upgradeRequests", upgradeRequest);
 app.use("/archives", archives);
 app.use("/story", storyroutes);
+app.use("/product", productRoutes);
 
 client.use(socketauth);
 //socket apis
