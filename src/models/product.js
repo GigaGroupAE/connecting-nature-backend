@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-//product .. image, name, price, product id , posted_by , quantity, available_quantity
 const dbSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -8,6 +7,9 @@ const dbSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, "please enter some price"],
+  },
+  deal_quantity: {
+    type: Number,
   },
   posted_by: {
     type: mongoose.Schema.Types.ObjectId,
