@@ -7,12 +7,13 @@ exports.createProduct = async (req, res) => {
     if (req.file) {
       image = `/images/${req.file.filename}`;
     }
-    const { title, price, stock } = req.body;
+    const { title, price, stock, deal_quantity } = req.body;
     const product = await ProductsModel.create({
       title,
       price,
       stock,
       image,
+      deal_quantity,
       posted_by: req.user._id,
     });
     return res.status(200).json({ success: true, product });
@@ -33,7 +34,7 @@ exports.getProducts = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const productToUpdate = await ProductsModel.findById(req.params.id);
-    const { title, price, stock } = req.body;
+    const { title, price, stock, deal_quantity } = req.body;
     if (!productToUpdate) {
       return res
         .status(400)
@@ -44,7 +45,7 @@ exports.updateProduct = async (req, res) => {
     if (title) update.title = title;
     if (price) update.price = price;
     if (stock) update.stock = stock;
-
+    if (deal_quantity) update.deal_quantity = deal_quantity;
     const updatedProduct = await ProductsModel.findOneAndUpdate(
       { _id: productToUpdate._id },
       { $set: update },
@@ -52,6 +53,20 @@ exports.updateProduct = async (req, res) => {
     );
     return res.status(200).json({ success: true, updatedProduct });
   } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//ROUTE : 4  /product/delete/:id
+
+exports.deleteProduct = async (req, res, next) => {
+  try {
+    await ProductsModel.findByIdAndDelete(req.params.id);
+    return res
+      .status(200)
+      .json({ success: true, message: "deleted successfully" });
+  } catch (error) {
+    console.log("error from deleteProduct", error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -3,6 +3,7 @@ const {
   createProduct,
   getProducts,
   updateProduct,
+  deleteProduct,
 } = require("../controllers/products/productController");
 const verify = require("../middlewares/Auth");
 const upload = require("../middlewares/ImageUploader/ImageUploader");
@@ -10,5 +11,6 @@ const upload = require("../middlewares/ImageUploader/ImageUploader");
 router.post("/create", verify, upload.single("image"), createProduct);
 router.get("/get", verify, getProducts);
 router.patch("/update/:id", verify, updateProduct);
+router.delete("/delete/:id",verify,deleteProduct)
 
 module.exports = router;
