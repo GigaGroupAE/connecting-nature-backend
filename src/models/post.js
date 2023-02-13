@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const dbSchema = new mongoose.Schema({
   postedby: {
-    type: (User = {}),
+    type: Schema.Types.ObjectId,
     required: true,
+    ref: "NewUsers",
   },
   description: {
     type: String,

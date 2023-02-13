@@ -2,7 +2,17 @@ const posts = require("../../models/post");
 const Users = require("../../models/Register");
 
 const getPosts = async (req, res) => {
-  const getposts = await posts.find();
+  const getposts = await posts
+    .find()
+    .populate("postedby", {
+      fullName: 1,
+      phoneNumber: 1,
+      profile: 1,
+      type: 1,
+      followers: 1,
+      following: 1,
+    });
+  console.log("posts", getposts);
   let user = await Users.findById(req.user._id);
 
   //filtering posts i.e checking if the post is from someone who is blocked by user
