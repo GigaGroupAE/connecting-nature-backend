@@ -4,8 +4,7 @@ const Users = require("../../models/Register");
 const getPosts = async (req, res) => {
   const getposts = await posts
     .find()
-    .populate("shares")
-    .populate("postedby reactions", {
+    .populate("postedby reactions shares", {
       fullName: 1,
       phoneNumber: 1,
       profile: 1,
