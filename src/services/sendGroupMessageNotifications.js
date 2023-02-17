@@ -8,13 +8,13 @@ exports.sendGroupMessageNotifications = async (data) => {
       id: groupId,
       message: { from },
     } = data;
-    console.log("from is ", from);
+    // console.log("from is ", from);
 
     let group = await Groups.findById(groupId).select("members");
     if (!group) {
       return;
     }
-    console.log("group members are ", group);
+    //  console.log("group members are ", group);
     //including everyone except the sender of message
 
     //filter only the receipiants
@@ -24,7 +24,7 @@ exports.sendGroupMessageNotifications = async (data) => {
     let phoneNumbers = group.members
       .filter((m) => m.phoneNumber !== from.phoneNumber)
       .map((m) => m.phoneNumber);
-    console.log("phone numbers are ", phoneNumbers);
+    //  console.log("phone numbers are ", phoneNumbers);
 
     //now finding complete users details from user models to have access to the ExpoPushToken
     let users = await Users.find({ phoneNumber: { $in: phoneNumbers } });
@@ -34,8 +34,8 @@ exports.sendGroupMessageNotifications = async (data) => {
     let tokens = users
       .filter((u) => u.expoPushToken)
       .map((u) => u.expoPushToken);
-    console.log("users are ", users);
-    console.log("tokens are ", tokens);
+    // console.log("users are ", users);
+    // console.log("tokens are ", tokens);
 
     //finally sending notifications
 

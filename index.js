@@ -75,7 +75,13 @@ app.use("/order", orderRoutes);
 client.use(socketauth);
 //socket apis
 client.on("connection", (socket) => {
-  console.log("connected");
+  socket.on("join", async (data) => {
+    socket.join(data.id);
+    console.log(`connected in chat ${data.id} using id ${socket.id}`);
+    // console.log(
+    //   `Rooms: ${Array.from(client.sockets.adapter.rooms.get(data.id))}`
+    // );
+  });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("send_message", async (data) => {
@@ -85,10 +91,12 @@ client.on("connection", (socket) => {
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
-    socket.join(data.id);
     const result = await sendmessage(data);
-    console.log(result.messages[result.messages.length - 1]);
-    socket.emit("receive_message", result.messages[result.messages.length - 1]);
+    console.log(data.id);
+    //this is the line causing the issue because .to is not working on it
+    client
+      .to(data.id)
+      .emit("receive_message", result.messages[result.messages.length - 1]);
   });
 });
 client.of("/chatCN").on("connection", (socket) => {
