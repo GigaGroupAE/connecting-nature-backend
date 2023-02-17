@@ -14,18 +14,36 @@ const dbSchema = new mongoose.Schema({
     type: {},
     required: false,
   },
-  reactions: {
-    type: (reactions = {}),
-    required: false,
-  },
-  comments: {
-    type: Array,
-    required: false,
-  },
-  shares: {
-    type: Array,
-    required: false,
-  },
+  reactions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
+  comments: [
+    {
+      commented_by: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "NewUsers",
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  shares: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
   createdAT: {
     type: Date,
     default: Date.now,
