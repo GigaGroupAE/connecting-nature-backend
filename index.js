@@ -3,6 +3,10 @@ const express = require("express");
 //admin-ui setup
 const { instrument } = require("@socket.io/admin-ui");
 
+//testing
+
+const postModal = require("./src/models/post");
+
 //Routes
 const authroutes = require("./src/routes/userroutes");
 const postroutes = require("./src/routes/postroutes");
@@ -118,8 +122,16 @@ client.of("/chatCN").on("connection", (socket) => {
 });
 client.of("/CN").on("connection", (socket) => {
   console.log("connected in CN");
-  socket.on("send_comments", (data) => {
-    socket.emit("receive_comments", data);
+  socket.on("send_comments", async (data) => {
+    const post = await postModal.find({ _id: data._id }).populate({
+      path: "comments",
+      populate: {
+        path: "commented_by",
+        select: "profile fullName phoneNumber type",
+      },
+    });
+    console.log(post[0].comments);
+    socket.emit("receive_comments", post[0].comments);
   });
   socket.on("send_posts", (data) => {
     socket.emit("receive_posts", data);
