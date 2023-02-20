@@ -15,7 +15,7 @@ const getPosts = async (req, res) => {
     .populate({
       path: "comments",
       populate: {
-        path: "commented",
+        path: "commented_by",
         select: "profile fullName phoneNumber type",
       },
     });

@@ -78,9 +78,6 @@ client.on("connection", (socket) => {
   socket.on("join", async (data) => {
     socket.join(data.id);
     console.log(`connected in chat ${data.id} using id ${socket.id}`);
-    // console.log(
-    //   `Rooms: ${Array.from(client.sockets.adapter.rooms.get(data.id))}`
-    // );
   });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
@@ -100,9 +97,11 @@ client.on("connection", (socket) => {
   });
 });
 client.of("/chatCN").on("connection", (socket) => {
-  console.log("connected in /chatcn");
+  socket.on("join", async (data) => {
+    socket.join(data.id);
+    console.log(`connected in chat ${data.id} using id ${socket.id}`);
+  });
   socket.on("disconnect", disconnect);
-  socket.on("chat", () => {});
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
@@ -110,10 +109,11 @@ client.of("/chatCN").on("connection", (socket) => {
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
-    socket.join(data.id);
     const result = await sendmessageCN(data);
     console.log(result.messages[result.messages.length - 1]);
-    socket.emit("receive_message", result.messages[result.messages.length - 1]);
+    client
+      .to(data.id)
+      .emit("receive_message", result.messages[result.messages.length - 1]);
   });
 });
 client.of("/CN").on("connection", (socket) => {
