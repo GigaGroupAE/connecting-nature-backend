@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const dbSchema = new mongoose.Schema({
   postedby: {
-    type: (User = {}),
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: "NewUsers",
   },
   media: {
     type: {},
@@ -12,10 +13,13 @@ const dbSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  reactions: {
-    type: (reactions = {}),
-    required: false,
-  },
+  reactions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
   createdAT: {
     type: Date,
     default: Date.now,
