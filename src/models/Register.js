@@ -46,12 +46,18 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
-  blockedUsers: {
-    type: Array,
-  },
-  blockedByUsers: {
-    type: Array,
-  },
+  blockedUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
+  blockedByUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
   location: {},
   expoPushToken: {
     type: String,

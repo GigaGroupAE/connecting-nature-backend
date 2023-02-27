@@ -9,8 +9,14 @@ const updateuser = require("../controllers/user/updateuser");
 const {
   updateExpoPushToken,
 } = require("../controllers/user/updateExpoPushToken");
-const { followUnfollowUser } = require("../controllers/user/followUnfollowUser");
-const { blockUser, unblockUser } = require("../controllers/user/blockUnblock");
+const {
+  followUnfollowUser,
+} = require("../controllers/user/followUnfollowUser");
+const {
+  blockUser,
+  unblockUser,
+  getBlockedUsers,
+} = require("../controllers/user/blockUnblock");
 const { newChatContacts } = require("../controllers/user/newChatContacts");
 const { getUserByPhone } = require("../controllers/user/getUserByPhone");
 
@@ -21,8 +27,9 @@ router.post("/otp", OTPGen);
 router.put("/updateUserExpoToken", verify, updateExpoPushToken);
 router.patch("/updateUser/:id", verify, updateuser);
 router.patch("/toggleFollow/:id", verify, followUnfollowUser);
-router.patch("/block-user/:id",verify,blockUser)
-router.patch("/unblock-user/:id",verify,unblockUser)
-router.get("/new-chat-contacts",verify,newChatContacts)
-router.get("/get-user/:phoneNumber",verify,getUserByPhone)
+router.patch("/block-user/:id", verify, blockUser);
+router.patch("/unblock-user/:id", verify, unblockUser);
+router.get("/new-chat-contacts", verify, newChatContacts);
+router.get("/get-user/:phoneNumber", verify, getUserByPhone);
+router.get("/get-blockedUsers", verify, getBlockedUsers);
 module.exports = router;
