@@ -26,8 +26,8 @@ const getPosts = async (req, res) => {
   let blockedBy = user.blockedByUsers;
   let newPosts = getposts.filter((post) => {
     if (
-      blockedList.includes(post.postedby.phoneNumber) ||
-      blockedBy.includes(post.postedby.phoneNumber)
+      blockedList?.includes(post.postedby._id) ||
+      blockedBy?.includes(post.postedby._id)
     ) {
       return false;
     }

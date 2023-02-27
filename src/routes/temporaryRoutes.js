@@ -241,4 +241,10 @@ router.delete("/dropNotifications", async (req, res) => {
     return res.json({ success: false, message: "Internal server error" });
   }
 });
+
+//reset blocked and unblocked of all the users
+
+router.patch("/reset-blockedList", async (req, res) => {
+  await Users.updateMany({}, { blockedUsers: [], blockedByUsers: [] });
+});
 module.exports = router;

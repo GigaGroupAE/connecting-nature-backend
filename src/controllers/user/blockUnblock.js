@@ -15,12 +15,14 @@ exports.blockUser = async (req, res) => {
     console.log("user to block ==>", userToBlock);
     console.log("user who is blocking ==> ", userWhoIsBlocking);
 
-    let blockedUsersList = userWhoIsBlocking.blockedUsers;
-    let blockedByUsersList = userToBlock.blockedByUsers;
+    let blockedUsersList = userWhoIsBlocking.blockedUsers || [];
+    let blockedByUsersList = userToBlock.blockedByUsers || [];
 
+    console.log(userToBlock._id);
+    console.log(userWhoIsBlocking._id);
     //add the user to the blocked list
-    blockedUsersList.push(userToBlock.phoneNumber);
-    blockedByUsersList.push(userWhoIsBlocking.phoneNumber);
+    blockedUsersList.push(userToBlock._id);
+    blockedByUsersList.push(userWhoIsBlocking._id);
 
     //updating user who is Blocking
     let test1 = await Users.findByIdAndUpdate(
@@ -54,24 +56,25 @@ exports.blockUser = async (req, res) => {
 };
 
 exports.unblockUser = async (req, res) => {
+  console.log("unblocked called");
   try {
-    let userToUnblock = await Users.findById(req.params.id); // user who is to be blocked
+    let userToUnblock = await Users.findById(req.params.id); // user who is to be unblocked
     let userWhoIsUnblocking = await Users.findById(req.user._id); // this is user who is making request
 
     let blockedUsersList = userWhoIsUnblocking.blockedUsers;
     let blockedByUsersList = userToUnblock.blockedByUsers;
 
     //updating blockedList
-    blockedUsersList = blockedUsersList.filter(
-      (p) => p !== userToUnblock.phoneNumber
-    );
+    blockedUsersList = blockedUsersList.filter((p) => {
+      return p.toString() !== userToUnblock._id.toString();
+    });
 
     //updating blocedByUsers list
     blockedByUsersList = blockedByUsersList.filter(
-      (p) => p !== userWhoIsUnblocking.phoneNumber
+      (p) => p.toString() !== userWhoIsUnblocking._id.toString()
     );
 
-    //updating user who is Blocking
+    //updating user who is unBlocking
     let test1 = await Users.findByIdAndUpdate(
       userWhoIsUnblocking._id,
 
@@ -82,7 +85,7 @@ exports.unblockUser = async (req, res) => {
       },
       { new: true }
     );
-    //updating user who is to be blocked
+    //updating user who is to be unblocked
     let test2 = await Users.findByIdAndUpdate(
       userToUnblock._id,
 
@@ -96,9 +99,23 @@ exports.unblockUser = async (req, res) => {
       }
     );
 
-    return res.json({ success: true, test1, test2 });
+    return res.json({ success: true, blockedList: test1.blockedUsers });
   } catch (error) {
     console.log("BLOCK USER CONTROLLER ERROR === ", error);
+    return res.json({ success: false, message: "internal server error" });
+  }
+};
+
+//getting list of blocked users
+exports.getBlockedUsers = async (req, res) => {
+  try {
+    const user = await Users.findById(req.user._id)
+      .populate("blockedUsers", "fullName phoneNumber profile")
+      .select("blockedUsers");
+
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.log("get blocked USER CONTROLLER ERROR === ", error);
     return res.json({ success: false, message: "internal server error" });
   }
 };
