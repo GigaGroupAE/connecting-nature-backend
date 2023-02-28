@@ -6,16 +6,21 @@ exports.getchats = async (req, res) => {
   return res.status(200).send(getchats);
 };
 
-
 //this route will return chats of the user who has requested
 
 exports.getMyChats = async (req, res) => {
   try {
-    let activeUser = await Users.findById(req.user._id);
-    let blockedUsers = activeUser.blockedUsers
-    let blockedByUsers = activeUser.blockedByUsers
+    let activeUser = await Users.findById(req.user._id).populate(
+      "blockedUsers blockedByUsers",
+      "phoneNumber -_id"
+    );
+    let blockedUsers = activeUser?.blockedUsers?.map((val) => val.phoneNumber);
+    let blockedByUsers = activeUser?.blockedByUsers?.map(
+      (val) => val.phoneNumber
+    );
 
-    let exculde = [...blockedByUsers,...blockedUsers]
+    let exculde = [...blockedByUsers, ...blockedUsers];
+  
     let myChats = await chats.find({
       $and: [
         { "members.phoneNumber": activeUser.phoneNumber }, // this lines gives us our chats only
