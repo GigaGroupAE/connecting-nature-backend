@@ -1,7 +1,7 @@
 const posts = require("../../models/post");
 const Users = require("../../models/Register");
 
-const getPosts = async (req, res) => {
+exports.getPosts = async (req, res) => {
   const getposts = await posts
     .find()
     .populate("postedby shares", {
@@ -36,4 +36,47 @@ const getPosts = async (req, res) => {
   return res.status(200).send(newPosts);
 };
 
-module.exports = getPosts;
+exports.postsExperiment = async (req, res) => {
+  try {
+    let user = await Users.findById(req.user._id);
+    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers];
+
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const startIndex = (page - 1) * limit;
+    const newPosts = await posts
+      .find({ postedby: { $nin: blockedUserIds } })
+      .sort({ createdAT: "desc" })
+      .populate("postedby shares", {
+        fullName: 1,
+        phoneNumber: 1,
+        profile: 1,
+        type: 1,
+        followers: 1,
+        following: 1,
+      })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "commented_by",
+          select: "profile fullName phoneNumber type",
+        },
+      })
+      .skip(startIndex)
+      .limit(limit)
+      .exec();
+    const postsToCount = await posts.find({
+      postedby: { $nin: blockedUserIds },
+    });
+    const count = postsToCount.length;
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = page;
+
+
+    // Return the posts and pagination info as JSON response
+    return res.json({ totalPages, currentPage, newPosts });
+  } catch (err) {
+    console.error("error inside get posts is  ", err.message);
+    return res.status(500).send("Server error");
+  }
+};
