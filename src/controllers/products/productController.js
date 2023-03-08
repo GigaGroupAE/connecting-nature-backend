@@ -46,6 +46,12 @@ exports.updateProduct = async (req, res) => {
     if (price) update.price = price;
     if (stock) update.stock = stock;
     if (deal_quantity) update.deal_quantity = deal_quantity;
+    let image;
+    if (req.file) {
+      image = `/images/${req.file.filename}`;
+      update.image = image;
+    }
+
     const updatedProduct = await ProductsModel.findOneAndUpdate(
       { _id: productToUpdate._id },
       { $set: update },
@@ -61,7 +67,9 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res, next) => {
   try {
-    await ProductsModel.findByIdAndDelete(req.params.id);
+    const deletedProd = await ProductsModel.findByIdAndDelete(req.params.id);
+
+    console.log(filePath);
     return res
       .status(200)
       .json({ success: true, message: "deleted successfully" });
