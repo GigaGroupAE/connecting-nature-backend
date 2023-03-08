@@ -10,7 +10,7 @@ const upload = require("../middlewares/ImageUploader/ImageUploader");
 
 router.post("/create", verify, upload.single("image"), createProduct);
 router.get("/get", verify, getProducts);
-router.patch("/update/:id", verify, updateProduct);
-router.delete("/delete/:id",verify,deleteProduct)
+router.patch("/update/:id", verify, upload.single("image"), updateProduct);
+router.delete("/delete/:id", verify, deleteProduct);
 
 module.exports = router;
