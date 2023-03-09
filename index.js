@@ -37,7 +37,7 @@ require("./src/config/connection");
 require("dotenv/config");
 
 //cron job
-require("./src/controllers/do-day/archiveDodaysCronJob")
+require("./src/controllers/do-day/archiveDodaysCronJob");
 const { Server } = require("socket.io");
 const {
   sendGroupMessageNotifications,
@@ -102,14 +102,7 @@ client.on("connection", (socket) => {
       .to(data.id)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
-});
-client.of("/chatCN").on("connection", (socket) => {
-  socket.on("join", async (data) => {
-    socket.join(data.id);
-    console.log(`connected in chat ${data.id} using id ${socket.id}`);
-  });
-  socket.on("disconnect", disconnect);
-  socket.on("send_message", async (data) => {
+  socket.on("send_messageCN", async (data) => {
     //here send notifications
     try {
       //sendGroupMessageNotifications(data);
@@ -123,6 +116,27 @@ client.of("/chatCN").on("connection", (socket) => {
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
 });
+// client.of("/chatCN").on("connection", (socket) => {
+//   socket.on("join", async (data) => {
+//     socket.join(data.id);
+//     console.log(`connected in chat ${data.id} using id ${socket.id}`);
+//   });
+//   socket.on("disconnect", disconnect);
+//   socket.on("send_message", async (data) => {
+//     //here send notifications
+//     try {
+//       //sendGroupMessageNotifications(data);
+//     } catch (error) {
+//       console.log("error inside send_message notification:::", error);
+//     }
+//     const result = await sendmessageCN(data);
+//     console.log(result.messages[result.messages.length - 1]);
+//     client
+//       .of("/chatCN")
+//       .to(data.id)
+//       .emit("receive_message", result.messages[result.messages.length - 1]);
+//   });
+// });
 client.of("/CN").on("connection", (socket) => {
   console.log("connected in CN");
   socket.on("send_comments", async (data) => {
