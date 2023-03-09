@@ -8,6 +8,11 @@ const accountUpgradeSchema = new Schema({
     ref: "NewUsers",
     required: true,
   },
+  requestedRole: {
+    type: String,
+    required: true,
+    enum: ["celebrity", "volunteer"],
+  },
   instagramProfile: {
     type: String,
     required: false,
@@ -16,6 +21,18 @@ const accountUpgradeSchema = new Schema({
     type: String,
     required: false,
   },
+  twitterProfile: {
+    type: String,
+    required: false,
+  },
+  status: {
+    type: String,
+    enum: ["approved", "declined", "pending"],
+    default: "pending",
+  },
+  declinedReason:{
+    type:String,
+  }
 });
 
 module.exports = mongoose.model("UpgradeRequests", accountUpgradeSchema);

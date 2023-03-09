@@ -25,14 +25,13 @@ exports.approveRequest = async (req, res) => {
     //if we are here means that the user profile was updated successfully
     //so delete the request from the UpgradeRequests
 
-    await UpgradeRequests.findByIdAndDelete(request._id);
-
-    let requests = await UpgradeRequests.find().populate('user')
+    await UpgradeRequests.findByIdAndUpdate(request._id, {
+      status: "approved",
+    });
 
     return res.json({
       success: true,
       message: "User type updated successfully",
-      requests
     });
   } catch (error) {
     return res.json({ success: false, message: "internal server error" });
