@@ -35,6 +35,9 @@ const http = require("http");
 const cors = require("cors");
 require("./src/config/connection");
 require("dotenv/config");
+
+//cron job
+require("./src/controllers/do-day/archiveDodaysCronJob")
 const { Server } = require("socket.io");
 const {
   sendGroupMessageNotifications,

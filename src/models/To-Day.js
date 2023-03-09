@@ -8,7 +8,7 @@ const dbSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  date: { type: String, required: true }, //this will hold the start date and time
+  date: { type: Date, required: true }, //this will hold the start date and time
   radius: { type: String, required: false },
   location: {},
   TeamA: {
@@ -38,10 +38,15 @@ const dbSchema = new mongoose.Schema({
   },
 
   endTime: {
-    type: String,
+    type: Date,
     required: true,
   },
   color: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["archived", "active"],
+    default: "active",
+  },
 });
 
 const Data = new mongoose.model("todays", dbSchema);
