@@ -4,6 +4,8 @@ exports.declineRequest = async (req, res) => {
   try {
     let id = req.params.id;
 
+    const { declinedReason } = req.body;
+
     //finding request
     let request = await UpgradeRequests.findById(id);
     if (!request) {
@@ -12,13 +14,14 @@ exports.declineRequest = async (req, res) => {
 
     //deleting request
 
-    await UpgradeRequests.findByIdAndDelete(request._id);
-    let requests = await UpgradeRequests.find().populate('user')
+    await UpgradeRequests.findByIdAndUpdate(request._id, {
+      status: "declined",
+      declinedReason
+    });
 
     return res.json({
       succes: true,
       message: " request declined successfully",
-      requests
     });
   } catch (error) {
     console.log("error is ", error);

@@ -17,9 +17,9 @@ router.post("/addRequest", verify, addRequest);
 router.get("/getAllRequests", getAllUpgradeRequests);
 
 //both the decline and accept routes will eventually delete the particular request
-router.delete("/declineRequest/:id", declineRequest);
+router.patch("/declineRequest/:id", declineRequest);
 
 //this will modify the user type and then delete the request
-router.delete("/approveRequest/:id", approveRequest);
+router.patch("/approveRequest/:id", approveRequest);
 
 module.exports = router;
