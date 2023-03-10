@@ -37,7 +37,7 @@ require("./src/config/connection");
 require("dotenv/config");
 
 //cron job
-require("./src/controllers/do-day/archiveDodaysCronJob");
+require("./src/controllers/do-day/cron-jobs");
 const { Server } = require("socket.io");
 const {
   sendGroupMessageNotifications,
