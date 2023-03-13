@@ -12,7 +12,7 @@ exports.addArchivePost = async (req, res) => {
     let archive = await Posts.findById(req.params.id);
 
     //check if user is actually archiving his own posts
-    if (user !== archive.postedby) {
+    if (user.toString() !== archive.postedby.toString()) {
       return res.status(401).json({ success: false, message: "not allowed" });
     }
 
