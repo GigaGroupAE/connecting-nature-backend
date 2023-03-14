@@ -1,5 +1,6 @@
 const OrderModel = require("../../models/Order");
 const ProductModel = require("../../models/product");
+const UserModel = require("../../models/Register");
 const mongoose = require("mongoose");
 
 //utility function
@@ -59,7 +60,8 @@ async function createOrderAndUpdateProducts(orderData, productData) {
 //once the order is created then this route will also create
 exports.createOrder = async (req, res, next) => {
   try {
-    const { orderItems, shippingAddress, paymentMode , deliveryInstructions } = req.body;
+    const { orderItems, shippingAddress, paymentMode, deliveryInstructions } =
+      req.body;
     //calculating total price
     const totalPrice = await calculatePrice(orderItems);
 
@@ -77,6 +79,10 @@ exports.createOrder = async (req, res, next) => {
       },
       orderItems
     );
+    //increasing points of the user
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $inc: { points: 15 },
+    });
 
     return res
       .status(200)
@@ -86,6 +92,3 @@ exports.createOrder = async (req, res, next) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
-

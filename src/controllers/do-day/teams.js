@@ -1,4 +1,5 @@
 const Campaigns = require("../../models/To-Day");
+const UserModel = require("../../models/Register");
 
 //this function will take campaign id as param
 //and will also take a volunteer object and team name as req.body
@@ -119,6 +120,15 @@ exports.makeTeamLead = async (req, res) => {
         new: true,
       }
     );
+    //increasing the points
+    if (req.body.status === "accepted") {
+      await UserModel.findOneAndUpdate(
+        { phoneNumber: leader },
+        {
+          $inc: { points: 100 },
+        }
+      );
+    }
     return res.json({ success: true, updatedDoday });
   } catch (error) {
     console.log("error in makeTeamLead", error);

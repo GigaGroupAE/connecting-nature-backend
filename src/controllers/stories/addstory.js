@@ -1,4 +1,5 @@
 const stories = require("../../models/story");
+const UserModel = require("../../models/Register")
 const addstory = async (req, res) => {
   console.log(req.body);
   try {
@@ -19,6 +20,10 @@ const addstory = async (req, res) => {
       reactions: [],
       description: description,
       media: media,
+    });
+    //increasing points of the user
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $inc: { points: 5 },
     });
     res.send(savedstory);
   } catch (err) {
