@@ -22,7 +22,10 @@ const addpost = async (req, res) => {
       shares: [],
       media: media,
     });
-    console.log(savedpost);
+    //increasing points of the user
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $inc: { points: 5 },
+    });
     res.send(savedpost);
   } catch (err) {
     console.log("error is ", err);

@@ -42,6 +42,10 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  points: {
+    type: Number,
+    default: 0,
+  },
   following: {
     type: Array,
     required: true,

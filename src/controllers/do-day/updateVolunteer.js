@@ -1,4 +1,5 @@
 const DoDays = require("../../models/To-Day");
+const UserModel = require("../../models/Register")
 
 //this controller will take an id of campaign as param and a phoneNumber and status as body
 //and it will update the status of that phoneNumber to the provided status
@@ -27,6 +28,16 @@ exports.updateVolunteers = async (req, res) => {
         },
       }
     );
+
+    //increasing the points
+    if (req.body.status === "accepted") {
+      await UserModel.findOneAndUpdate(
+        { phoneNumber: req.body.phoneNumber },
+        {
+          $inc: { points: 50 },
+        }
+      );
+    }
 
     return res.json({ success: true, updatedVolunteers });
   } catch (error) {

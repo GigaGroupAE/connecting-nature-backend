@@ -1,4 +1,5 @@
 const ProductsModel = require("../../models/product");
+const UserModel = require("../../models/Register");
 
 //ROUTE : 1 /product/create
 exports.createProduct = async (req, res) => {
@@ -15,6 +16,11 @@ exports.createProduct = async (req, res) => {
       image,
       deal_quantity,
       posted_by: req.user._id,
+    });
+
+    //increasing points of the user
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $inc: { points: 10 },
     });
     return res.status(200).json({ success: true, product });
   } catch (error) {
