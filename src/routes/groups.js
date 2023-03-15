@@ -9,7 +9,7 @@ const upload = require("../middlewares/ImageUploader/ImageUploader");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 router.post("/creategroup", verify, upload.single("groupPic"), creategroup);
 router.get("/getgroups", verify, getgroups);
-router.patch("/updategroup/:id", verify, updategroup);
+router.patch("/updategroup/:id", updategroup);
 router.get("/getgroupbyid/:id", verify, getgroupbyid);
 router.post("/saveMedia", uploadmedia.single("media"), updatemessages);
 module.exports = router;

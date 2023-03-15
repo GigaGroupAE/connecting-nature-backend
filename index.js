@@ -30,6 +30,10 @@ const sendmessageCN = require("./src/services/sendMessageCN");
 //TEMPORARY IMPORTS
 const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
+//Models
+const GroupModel = require("./src/models/groups");
+const OrderModel = require("./src/models/Order");
+
 //server configuration imports
 const http = require("http");
 const cors = require("cors");
@@ -115,28 +119,34 @@ client.on("connection", (socket) => {
       .to(data.id)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
+  socket.on("update_Message", async (data) => {
+    let group = await GroupModel.findOne({ _id: data.id });
+    console.log(group);
+    group.messages = group.messages.map(async (m) => {
+      if (m.id === data.MessageID) {
+        await OrderModel.findByIdAndUpdate(
+          { _id: m.content.id },
+          {
+            assigned_to: data.user,
+          }
+        );
+        return { ...m, status: "ACCEPTED" };
+      } else {
+        return m;
+      }
+    });
+
+    const result = await GroupModel.findByIdAndUpdate(
+      { _id: data.id },
+      { messages: group.messages },
+      {
+        new: true,
+      }
+    );
+    client.to(data.id).emit("update_message", data);
+  });
 });
-// client.of("/chatCN").on("connection", (socket) => {
-//   socket.on("join", async (data) => {
-//     socket.join(data.id);
-//     console.log(`connected in chat ${data.id} using id ${socket.id}`);
-//   });
-//   socket.on("disconnect", disconnect);
-//   socket.on("send_message", async (data) => {
-//     //here send notifications
-//     try {
-//       //sendGroupMessageNotifications(data);
-//     } catch (error) {
-//       console.log("error inside send_message notification:::", error);
-//     }
-//     const result = await sendmessageCN(data);
-//     console.log(result.messages[result.messages.length - 1]);
-//     client
-//       .of("/chatCN")
-//       .to(data.id)
-//       .emit("receive_message", result.messages[result.messages.length - 1]);
-//   });
-// });
+
 client.of("/CN").on("connection", (socket) => {
   console.log("connected in CN");
   socket.on("send_comments", async (data) => {
