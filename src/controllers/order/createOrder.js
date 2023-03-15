@@ -42,6 +42,8 @@ async function createOrderAndUpdateProducts(orderData, productData) {
 
     // Commit the transaction
     await session.commitTransaction();
+
+    return order;
   } catch (error) {
     // If an error occurs, abort the transaction
     if (session) {
@@ -68,7 +70,7 @@ exports.createOrder = async (req, res, next) => {
     let session = await mongoose.startSession();
     session.startTransaction();
 
-    await createOrderAndUpdateProducts(
+    const createdOrder = await createOrderAndUpdateProducts(
       {
         orderItems,
         shippingAddress,
@@ -84,9 +86,7 @@ exports.createOrder = async (req, res, next) => {
       $inc: { points: 15 },
     });
 
-    return res
-      .status(200)
-      .json({ success: true, message: "order created successfully" });
+    return res.status(200).json({ success: true, order: createdOrder });
   } catch (error) {
     console.log("error from createOrder", error.message);
     return res.status(500).json({ success: false, message: error.message });
