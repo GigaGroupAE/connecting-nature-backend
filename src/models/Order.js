@@ -19,6 +19,12 @@ const schema = new Schema({
     ref: "NewUsers",
     required: true,
   },
+
+  assigned_to: {
+    type: Schema.Types.ObjectId,
+    ref: "NewUsers",
+  },
+
   shippingAddress: {
     fullName: {
       type: String,
@@ -56,8 +62,8 @@ const schema = new Schema({
     enum: ["processing", "shipped", "delivered"],
     default: "processing",
   },
-  deliveryInstructions:{
-    type:String,
+  deliveryInstructions: {
+    type: String,
   },
   createdAt: {
     type: Date,
