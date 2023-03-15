@@ -43,7 +43,7 @@ async function createOrderAndUpdateProducts(orderData, productData) {
     // Commit the transaction
     await session.commitTransaction();
 
-    return order;
+    return order[0];
   } catch (error) {
     // If an error occurs, abort the transaction
     if (session) {
