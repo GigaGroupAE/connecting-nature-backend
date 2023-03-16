@@ -19,6 +19,7 @@ const {
 } = require("../controllers/user/blockUnblock");
 const { newChatContacts } = require("../controllers/user/newChatContacts");
 const { getUserByPhone } = require("../controllers/user/getUserByPhone");
+const { awardPoints } = require("../controllers/user/awardPoints");
 
 router.post("/login", login);
 router.post("/register", upload.single("profile"), signup);
@@ -32,4 +33,5 @@ router.patch("/unblock-user/:id", verify, unblockUser);
 router.get("/new-chat-contacts", verify, newChatContacts);
 router.get("/get-user/:phoneNumber", verify, getUserByPhone);
 router.get("/get-blockedUsers", verify, getBlockedUsers);
+router.post("/award-points", verify, awardPoints);
 module.exports = router;
