@@ -1,4 +1,5 @@
 const Posts = require("../../models/post");
+const UserModel = require("../../models/Register")
 const addpost = async (req, res) => {
   console.log(req.body);
   try {
