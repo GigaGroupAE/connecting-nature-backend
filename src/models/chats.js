@@ -1,14 +1,30 @@
 const mongoose = require("mongoose");
 
 const dbSchema = new mongoose.Schema({
-  members: {
-    type: Array,
-    required: true,
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Newusers",
+    },
+  ],
+
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Messages",
+    },
+  ],
+
+  //might be usefull for group-chats
+  chatName: {
+    type: String,
+    trim: true,
   },
 
-  messages: {
-    type: Array,
-    required: true,
+  //for showing the latest message with each chat on chat list screen
+  latestMessage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Messages",
   },
 });
 
