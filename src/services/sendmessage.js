@@ -1,22 +1,29 @@
-const group = require("../models/groups");
+const GroupsModel = require("../models/groups");
+const GroupMessageModel = require("../models/groupMessageSchema");
 
 const sendmessage = async (data) => {
   try {
-    const groupdata = await group.findById(data.id);
-    const messages = groupdata.messages;
-    messages.push(data.message);
-    if (!data.id) {
+    const groupdata = await GroupsModel.findById(data.group);
+    if (!data.group) {
       console.log("invalid data");
     } else {
       try {
-        const _id = data.id;
-        const updategroup = await group.findByIdAndUpdate(
+        const _id = data.group;
+        const messages = groupdata.messages;
+        const newMessage = await GroupMessageModel.create({
+          ...data,
+        });
+        messages.push(newMessage._id);
+
+        const updategroup = await GroupsModel.findByIdAndUpdate(
           _id,
           { messages: messages },
           {
             new: true,
           }
-        );
+        )
+          .populate("members.member")
+          .populate("messages");
         if (!updategroup) {
           return "internal server error";
         } else {

@@ -5,21 +5,30 @@ const dbSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  members: {
-    type: Array,
-    required: true,//name,type,photo,phone
-  },
+  members: [
+    {
+      member: { type: mongoose.Schema.Types.ObjectId, ref: "NewUsers" },
+      privilege: { type: String },
+    },
+  ],
   type: {
     type: String,
     required: true,
   },
-  messages: {
-    type: Array,
-    required: true,
-  },
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "GroupMessages",
+    },
+  ],
   groupPic: {
     type: String,
     required: true,
+  },
+  //for showing the latest message with each chat on chat list screen
+  latestMessage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "GroupMessages",
   },
 });
 
