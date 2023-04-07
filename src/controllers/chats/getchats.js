@@ -10,24 +10,31 @@ exports.getchats = async (req, res) => {
 
 exports.getMyChats = async (req, res) => {
   try {
-    let activeUser = await Users.findById(req.user._id).populate(
-      "blockedUsers blockedByUsers",
-      "phoneNumber -_id"
-    );
-    let blockedUsers = activeUser?.blockedUsers?.map((val) => val.phoneNumber);
-    let blockedByUsers = activeUser?.blockedByUsers?.map(
-      (val) => val.phoneNumber
-    );
+    let activeUser = await Users.findById(req.user._id);
+    // let blockedUsers = activeUser?.blockedUsers?.map((val) => val.phoneNumber);
+    // let blockedByUsers = activeUser?.blockedByUsers?.map(
+    //   (val) => val.phoneNumber
+    // );
 
-    let exculde = [...blockedByUsers, ...blockedUsers];
-  
-    let myChats = await chats.find({
-      $and: [
-        { "members.phoneNumber": activeUser.phoneNumber }, // this lines gives us our chats only
-        { "members.phoneNumber": { $nin: exculde } }, // here exculde those chats where users have blocked each other
-      ],
-    });
+    let exculde = [...activeUser.blockedByUsers, ...activeUser.blockedUsers];
+
+
+    // let myChats = await chats.find({
+    //   $and: [
+    //     { "members.phoneNumber": activeUser.phoneNumber }, // this lines gives us our chats only
+    //     { "members.phoneNumber": { $nin: exculde } }, // here exculde those chats where users have blocked each other
+    //   ],
+    // });
     //now filter data here
+
+    //let myChats = await chats.find().populate("members").populate("messages");
+    let myChats = await chats
+      .find({
+        $and: [{ members: req.user._id }, { members: { $nin: exculde } }],
+      })
+      .populate("members")
+      .populate("messages");
+    
 
     return res.json({ success: true, myChats });
   } catch (error) {

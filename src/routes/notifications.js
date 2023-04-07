@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const verify = require("../middlewares/Auth");
 const addnotification = require("../controllers/notification/addnotification");
-const getnoties = require("../controllers//notification/getnotifications");
+const getnoties = require("../controllers/notification/getnotifications");
 const {
   notifyPostAuthor,
 } = require("../controllers/notification/notifyPostAuthor");

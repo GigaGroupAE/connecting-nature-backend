@@ -10,13 +10,13 @@ exports.notifyPostAuthor = async (req, res) => {
     //4-then we will send the notification to that person and also add a notification
 
     // #2
-    let post = await Posts.findById(req.params.id);
+    let post = await Posts.findById(req.params.id).populate("postedby");
     let user = await Users.findOne({ phoneNumber: post.postedby.phoneNumber }); //this is the user who was the author of post
 
-    if (user.expoPushToken) {
-      //send notification
-      sendNotifications([user.expoPushToken], req.body.title);
-    }
+    // if (user.expoPushToken) {
+    //   //send notification
+    //   sendNotifications([user.expoPushToken], req.body.title);
+    // }
 
     //save the notification into the database
 
@@ -31,6 +31,7 @@ exports.notifyPostAuthor = async (req, res) => {
       message: "notification succes",
     });
   } catch (error) {
+    console.log("error inside notify post author is ", error);
     return res.json({ success: false, error });
   }
 };

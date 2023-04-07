@@ -106,8 +106,11 @@ exports.unblockUser = async (req, res) => {
   }
 };
 
+let counter = 0;
+
 //getting list of blocked users
 exports.getBlockedUsers = async (req, res) => {
+  console.log("get blocked hit ", ++counter, " times ");
   try {
     const user = await Users.findById(req.user._id)
       .populate("blockedUsers", "fullName phoneNumber profile")

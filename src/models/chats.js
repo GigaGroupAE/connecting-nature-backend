@@ -4,7 +4,7 @@ const dbSchema = new mongoose.Schema({
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Newusers",
+      ref: "NewUsers",
     },
   ],
 
@@ -14,12 +14,6 @@ const dbSchema = new mongoose.Schema({
       ref: "Messages",
     },
   ],
-
-  //might be usefull for group-chats
-  chatName: {
-    type: String,
-    trim: true,
-  },
 
   //for showing the latest message with each chat on chat list screen
   latestMessage: {

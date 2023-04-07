@@ -8,6 +8,7 @@ const createchat = async (req, res) => {
   } else {
     path = req.file.filename;
   }
+  
   const newgroup = new group({
     messages: req.body.messages,
     type: req.body.type,
@@ -20,8 +21,10 @@ const createchat = async (req, res) => {
   }
   try {
     const savedgroup = await newgroup.save();
+    console.log("created group is  ", savedgroup);
     res.status(200).send(savedgroup);
   } catch (err) {
+    console.log("err " , err)
     res.send({ message: err, status: 400 });
   }
 };

@@ -95,15 +95,15 @@ client.on("connection", (socket) => {
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
-      sendGroupMessageNotifications(data);
+      //sendGroupMessageNotifications(data);
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessage(data);
-    console.log(data.id);
+    console.log("result is " , result);
     //this is the line causing the issue because .to is not working on it
     client
-      .to(data.id)
+      .to(data.group)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("send_messageCN", async (data) => {
@@ -116,7 +116,7 @@ client.on("connection", (socket) => {
     const result = await sendmessageCN(data);
     console.log(result.messages[result.messages.length - 1]);
     client
-      .to(data.id)
+      .to(data.chat)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("update_Message", async (data) => {
