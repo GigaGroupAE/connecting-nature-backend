@@ -18,7 +18,7 @@ exports.createCampaign = async (req, res, next) => {
 
   try {
     await session.startTransaction();
-    //group for a campaign
+    //creating group for the campagin
     const campaignGroup = await GroupsModel.create(
       [
         {
