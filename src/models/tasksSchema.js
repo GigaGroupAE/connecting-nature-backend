@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-
 const tasksSchema = new Schema({
   title: {
     type: String,
@@ -18,7 +17,7 @@ const tasksSchema = new Schema({
   },
   created_on: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
   completed_on: {
     type: Date,

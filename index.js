@@ -20,6 +20,7 @@ const archives = require("./src/routes/arhiveRoutes");
 const storyroutes = require("./src/routes/storyroutes");
 const productRoutes = require("./src/routes/productRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
+const campaignsRoutes = require("./src/routes/campaignRoutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -82,6 +83,7 @@ app.use("/archives", archives);
 app.use("/story", storyroutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
+app.use("/campaigns", campaignsRoutes);
 
 client.use(socketauth);
 //socket apis
@@ -100,7 +102,7 @@ client.on("connection", (socket) => {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessage(data);
-    console.log("result is " , result);
+    console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
