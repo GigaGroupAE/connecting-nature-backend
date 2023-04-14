@@ -104,6 +104,9 @@ const campaignsSchema = new Schema({
     ref: "groups",
     required: true,
   },
+  color: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Campaigns", campaignsSchema);
