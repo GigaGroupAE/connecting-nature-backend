@@ -12,6 +12,9 @@ exports.createCampaign = async (req, res, next) => {
     radius,
     volunteersRequired,
     searchTag,
+    volunteers,
+    color,
+    location,
   } = req.body;
 
   const session = await mongoose.startSession();
@@ -43,6 +46,9 @@ exports.createCampaign = async (req, res, next) => {
           searchTag,
           group: campaignGroup[0]._id,
           createdBy: req.user._id,
+          volunteers,
+          color,
+          location,
         },
       ],
       { session }
@@ -79,7 +85,12 @@ exports.createCampaign = async (req, res, next) => {
       campaign[0]._id,
       { tasks: taskIds },
       { session, new: true }
-    );
+    ).populate({
+      path: "volunteers.user",
+      model: "NewUsers",
+    });
+
+    console.log("updated campaign is => ", updatedCampaign);
 
     await session.commitTransaction();
     session.endSession();
@@ -87,7 +98,7 @@ exports.createCampaign = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Campaign Created Successfully",
-      updatedCampaign,
+      campaign:updatedCampaign,
     });
   } catch (error) {
     console.log("error in create campaign is ", error);

@@ -18,7 +18,6 @@ const getnotifications = async (req, res) => {
 let counter = 0;
 
 const getNoties = async (req, res) => {
-  console.log("get noties called ", ++counter, " times");
   try {
     let { page, limit } = req.query;
 
@@ -28,14 +27,14 @@ const getNoties = async (req, res) => {
 
     const notifications = await notification
       .find({
-        user: activeUser.phoneNumber,
+        user: req.user._id,
       })
       .populate("data.content")
       .skip(startIndex)
       .limit(limit);
 
     const totalItems = await notification.countDocuments({
-      user: activeUser.phoneNumber,
+      user: req.user._id,
     });
     const totalPages = Math.ceil(totalItems / limit);
     return res
