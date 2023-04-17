@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const dbSchema = new mongoose.Schema({
   user: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "NewUsers",
     required: true,
   },
   body: {

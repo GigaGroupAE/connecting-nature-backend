@@ -7,13 +7,14 @@ exports.sendVevoMessage = async (number, message) => {
       "&screen_name=&sender_address=&textmessage=" +
       JSON.stringify(message) +
       "&sendernum=8583";
-    let { data } = axios.get(path);
-    if (data.status === 200) {
+    let { data } = await axios.get(path);
+    console.log("data is ", data);
+    if (data.status === "ACCEPTED") {
       return data.status;
     } else {
       throw new Error("Failed to send message to user");
     }
   } catch (error) {
-    throw new Error("Failed to send message to user");
+    console.log("error catched ", error);
   }
 };
