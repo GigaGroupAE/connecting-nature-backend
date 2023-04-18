@@ -84,8 +84,12 @@ const campaignsSchema = new Schema({
       },
       status: {
         type: String,
-        enum: ["invite", "sent", "accepted"],
+        enum: ["invite", "sent", "accepted", "rejected"],
         default: "invite",
+      },
+      team: {
+        type: String,
+        default: null,
       },
     },
   ],
