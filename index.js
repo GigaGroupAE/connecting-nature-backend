@@ -92,6 +92,10 @@ client.on("connection", (socket) => {
     socket.join(data.id);
     console.log(`connected in chat ${data.id} using id ${socket.id}`);
   });
+  socket.on("leave",(data)=>{
+    socket.leave(data.id)
+    console.log(`left in chat ${data.id} using id ${socket.id}`);
+  })
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("send_message", async (data) => {
