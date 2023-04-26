@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { createCampaign } = require("../controllers/campaigns/createCampaign");
+const { getByQuery } = require("../controllers/campaigns/getByQuery");
 const { getAllCampaigns } = require("../controllers/campaigns/getCampaign");
 const { inviteVolunteer } = require("../controllers/campaigns/inviteVolunteer");
 const { invitesResponse } = require("../controllers/campaigns/invitesResponse");
@@ -9,6 +10,7 @@ const verify = require("../middlewares/Auth");
 
 router.post("/create", verify, createCampaign);
 router.get("/get", verify, getAllCampaigns);
+router.get("/get-by-query",verify,getByQuery)
 router.patch("/invite-volunteer/:campaignId", verify, inviteVolunteer);
 router.patch("/invite-response/:campaignId", verify, invitesResponse);
 router.patch("/add-volunteer/:campaignId", verify, addVolunteerToTeam);
