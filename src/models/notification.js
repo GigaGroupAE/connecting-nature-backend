@@ -22,7 +22,7 @@ const dbSchema = new mongoose.Schema({
           this.data.title === "campaign-invite-accepted" ||
           this.data.title === "campaign-invite-rejected"
         )
-          return "todays";
+          return "Campaigns";
         if (
           this.data.title === "post-comment" ||
           this.data.title === "post-like"
