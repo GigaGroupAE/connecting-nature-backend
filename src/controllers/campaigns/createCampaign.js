@@ -77,14 +77,10 @@ exports.createCampaign = async (req, res, next) => {
     //tasks for campaign
     const tasks = await TasksModel.create(tasksTocreate, { session });
 
-    //transforming the tasks into ids
+    
 
-    const taskIds = tasks.map((task) => task._id);
-
-    let updatedCampaign = await CampaignsModel.findByIdAndUpdate(
-      campaign[0]._id,
-      { tasks: taskIds },
-      { session, new: true }
+    let updatedCampaign = await CampaignsModel.findById(
+      campaign[0]._id
     ).populate({
       path: "volunteers.user",
       model: "NewUsers",
@@ -98,7 +94,7 @@ exports.createCampaign = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Campaign Created Successfully",
-      campaign:updatedCampaign,
+      campaign: updatedCampaign,
     });
   } catch (error) {
     console.log("error in create campaign is ", error);

@@ -97,12 +97,6 @@ const campaignsSchema = new Schema({
   messages: {
     type: Array, // do-day live poll screen messages
   },
-  tasks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Tasks",
-    },
-  ],
   group: {
     type: Schema.Types.ObjectId,
     ref: "groups",
