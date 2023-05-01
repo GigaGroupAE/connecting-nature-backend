@@ -21,6 +21,7 @@ const storyroutes = require("./src/routes/storyroutes");
 const productRoutes = require("./src/routes/productRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
 const campaignsRoutes = require("./src/routes/campaignRoutes");
+const taskRoutes = require("./src/routes/tasksRoutes")
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -84,6 +85,7 @@ app.use("/story", storyroutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 app.use("/campaigns", campaignsRoutes);
+app.use("/task",taskRoutes)
 
 client.use(socketauth);
 //socket apis
