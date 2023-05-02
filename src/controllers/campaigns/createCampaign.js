@@ -77,14 +77,12 @@ exports.createCampaign = async (req, res, next) => {
     //tasks for campaign
     const tasks = await TasksModel.create(tasksTocreate, { session });
 
-    
-
-    let updatedCampaign = await CampaignsModel.findById(
-      campaign[0]._id
-    ).populate({
-      path: "volunteers.user",
-      model: "NewUsers",
-    });
+    let updatedCampaign = await CampaignsModel.findById(campaign[0]._id)
+      .populate({
+        path: "volunteers.user",
+        model: "NewUsers",
+      })
+      .session(session);
 
     console.log("updated campaign is => ", updatedCampaign);
 
