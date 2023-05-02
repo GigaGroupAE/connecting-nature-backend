@@ -4,8 +4,12 @@ const TasksModel = require("../../models/tasksSchema");
 
 exports.deleteTask = async (req, res, next) => {
   try {
-    await TasksModel.findByIdAndDelete(req.body.taskId);
-    const tasks = await TasksModel.find({ campaign: req.params.campaignId });
+    let count = await TasksModel.countDocuments();
+    await TasksModel.findOneAndDelete({ _id: req.query.taskId });
+    count = await TasksModel.countDocuments();
+    const tasks = await TasksModel.find({
+      campaign: req.params.campaignId,
+    }).populate("created_by", "fullName");
     return res.status(200).json({ success: true, tasks });
   } catch (error) {
     console.log("error in delete task is ", error);
