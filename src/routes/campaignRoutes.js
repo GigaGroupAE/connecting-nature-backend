@@ -12,6 +12,7 @@ const {
   addVolunteerToTeam,
   removeVolunteerFromTeam,
 } = require("../controllers/campaigns/teams");
+const { updateCampaign } = require("../controllers/campaigns/updateCampaign");
 const verify = require("../middlewares/Auth");
 
 router.post("/create", verify, createCampaign);
@@ -24,7 +25,7 @@ router.patch("/remove-volunteer/:campaignId", verify, removeVolunteerFromTeam);
 router.post("/add-task/:campaignId", verify, createTask);
 router.delete("/delete-task/:campaignId", verify, deleteTask);
 router.patch("/edit-task/:campaignId", verify, editTask);
-
 router.patch("/make-lead/:campaignId", verify, makeLead);
+router.patch("/update-campaign/:campaignId", verify, updateCampaign);
 
 module.exports = router;
