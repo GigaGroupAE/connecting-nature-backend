@@ -41,7 +41,7 @@ exports.makeLead = async (req, res, next) => {
         [teamName]: team,
       },
       { new: true, runValidators: true }
-    );
+    ).populate("group volunteers.user teamA.members teamB.members teamA.leader teamB.leader");
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
     console.log("errror in make lead ==========> ", error);
