@@ -5,6 +5,9 @@ const { deleteTask } = require("../controllers/campaigns/deleteTask");
 const { editTask } = require("../controllers/campaigns/editTask");
 const { getByQuery } = require("../controllers/campaigns/getByQuery");
 const { getAllCampaigns } = require("../controllers/campaigns/getCampaign");
+const {
+  initiateCampaign,
+} = require("../controllers/campaigns/initiateCampaign");
 const { inviteVolunteer } = require("../controllers/campaigns/inviteVolunteer");
 const { invitesResponse } = require("../controllers/campaigns/invitesResponse");
 const { makeLead } = require("../controllers/campaigns/makeLead");
@@ -27,5 +30,6 @@ router.delete("/delete-task/:campaignId", verify, deleteTask);
 router.patch("/edit-task/:campaignId", verify, editTask);
 router.patch("/make-lead/:campaignId", verify, makeLead);
 router.patch("/update-campaign/:campaignId", verify, updateCampaign);
+router.patch("/initiate-campaign/:groupId", verify, initiateCampaign);
 
 module.exports = router;

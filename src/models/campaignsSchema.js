@@ -34,10 +34,6 @@ const campaignsSchema = new Schema({
     ref: "NewUsers",
     required: true,
   },
-  approved: {
-    type: Boolean,
-    default: false,
-  },
   status: {
     type: String,
     enum: ["planning", "created", "executed", "archived"],
