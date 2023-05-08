@@ -49,7 +49,7 @@ exports.addVolunteerToTeam = async (req, res, next) => {
       req.params.campaignId,
       query,
       { new: true, runValidators: true }
-    );
+    ).populate("group volunteers.user teamA.members teamB.members teamA.leader teamB.leader");
 
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
@@ -98,8 +98,7 @@ exports.removeVolunteerFromTeam = async (req, res, next) => {
       req.params.campaignId,
       query,
       { new: true, runValidators: true }
-    );
-
+    ).populate("group volunteers.user teamA.members teamB.members teamA.leader teamB.leader");
 
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
