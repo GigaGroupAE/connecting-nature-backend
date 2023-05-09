@@ -10,7 +10,7 @@ const {
 } = require("../controllers/campaigns/initiateCampaign");
 const { inviteVolunteer } = require("../controllers/campaigns/inviteVolunteer");
 const { invitesResponse } = require("../controllers/campaigns/invitesResponse");
-const { makeLead } = require("../controllers/campaigns/makeLead");
+const { makeLead, makeAutoLead } = require("../controllers/campaigns/makeLead");
 const {
   addVolunteerToTeam,
   removeVolunteerFromTeam,
@@ -31,5 +31,6 @@ router.patch("/edit-task/:campaignId", verify, editTask);
 router.patch("/make-lead/:campaignId", verify, makeLead);
 router.patch("/update-campaign/:campaignId", verify, updateCampaign);
 router.patch("/initiate-campaign/:groupId", verify, initiateCampaign);
+router.patch("/auto-lead/:campaignId", verify, makeAutoLead);
 
 module.exports = router;
