@@ -9,6 +9,15 @@ exports.initiateCampaign = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "No Campaign Found" });
 
+    if (campaign.status !== "planning") {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `Campaing status is already "${campaign.status}"`,
+        });
+    }
+
     let tasks = await TasksModel.find({
       campaign: campaign._id,
       status: "pending",
