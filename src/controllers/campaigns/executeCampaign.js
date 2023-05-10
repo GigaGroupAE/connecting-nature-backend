@@ -1,36 +1,22 @@
 const CampaignModel = require("../../models/campaignsSchema");
-const TasksModel = require("../../models/tasksSchema");
 
-exports.initiateCampaign = async (req, res, next) => {
+exports.executeCampaign = async (req, res, next) => {
   try {
-    const campaign = await CampaignModel.findOne({ group: req.params.groupId });
+    const campaign = await CampaignModel.findById(req.params.campaignId);
     if (!campaign)
       return res
         .status(400)
         .json({ success: false, message: "No Campaign Found" });
 
-    if (campaign.status !== "planning") {
+    if (!campaign.teamA.leader && !campaign.teamB.leader)
       return res.status(400).json({
         success: false,
-        message: `Campaing status is already "${campaign.status}"`,
+        message: "Need to have a leader for both teams",
       });
-    }
-
-    let tasks = await TasksModel.find({
-      campaign: campaign._id,
-      status: "pending",
-    });
-
-    if (tasks.length > 0)
-      return res
-        .status(400)
-        .json({ success: false, message: "Some Tasks are not finished" });
-
-    //if tasks are completed then just change the status of campaign
 
     const updatedCampaign = await CampaignModel.findByIdAndUpdate(
       campaign._id,
-      { status: "created" },
+      { status: "executed" },
       { new: true }
     ).populate(
       "group volunteers.user teamA.members teamB.members teamA.leader teamB.leader"
