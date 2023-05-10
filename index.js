@@ -21,7 +21,8 @@ const storyroutes = require("./src/routes/storyroutes");
 const productRoutes = require("./src/routes/productRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
 const campaignsRoutes = require("./src/routes/campaignRoutes");
-const taskRoutes = require("./src/routes/tasksRoutes")
+const taskRoutes = require("./src/routes/tasksRoutes");
+const bucketRoutes = require("./src/routes/bucketRoutes");
 
 //sockets
 const disconnect = require("./src/sockets/disconnect");
@@ -85,7 +86,8 @@ app.use("/story", storyroutes);
 app.use("/product", productRoutes);
 app.use("/order", orderRoutes);
 app.use("/campaigns", campaignsRoutes);
-app.use("/task",taskRoutes)
+app.use("/task", taskRoutes);
+app.use("/buckets", bucketRoutes);
 
 client.use(socketauth);
 //socket apis
@@ -94,10 +96,10 @@ client.on("connection", (socket) => {
     socket.join(data.id);
     console.log(`connected in chat ${data.id} using id ${socket.id}`);
   });
-  socket.on("leave",(data)=>{
-    socket.leave(data.id)
+  socket.on("leave", (data) => {
+    socket.leave(data.id);
     console.log(`left in chat ${data.id} using id ${socket.id}`);
-  })
+  });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("send_message", async (data) => {
