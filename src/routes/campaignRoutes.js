@@ -17,6 +17,7 @@ const {
   removeVolunteerFromTeam,
 } = require("../controllers/campaigns/teams");
 const { updateCampaign } = require("../controllers/campaigns/updateCampaign");
+const { updatePoints } = require("../controllers/campaigns/updatePoints");
 const verify = require("../middlewares/Auth");
 
 router.post("/create", verify, createCampaign);
@@ -34,5 +35,6 @@ router.patch("/update-campaign/:campaignId", verify, updateCampaign);
 router.patch("/initiate-campaign/:groupId", verify, initiateCampaign);
 router.patch("/execute-campaign/:campaignId", verify, executeCampaign);
 router.patch("/auto-lead/:campaignId", verify, makeAutoLead);
+router.patch("/update-points/:campaignId", verify, updatePoints);
 
 module.exports = router;
