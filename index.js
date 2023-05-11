@@ -49,6 +49,7 @@ const { Server } = require("socket.io");
 const {
   sendGroupMessageNotifications,
 } = require("./src/services/sendGroupMessageNotifications");
+const { updatePoints } = require("./src/services/updateCampaignPoints");
 
 //server configuration
 const app = express();
@@ -102,6 +103,11 @@ client.on("connection", (socket) => {
   });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
+  socket.on("update_points", async (data) => {
+    const result = await updatePoints(data);
+    
+    client.to(data.group).emit("receive_points", result);
+  });
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
