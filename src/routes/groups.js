@@ -8,10 +8,12 @@ const updatemessages = require("../controllers/Groups/updateMessages");
 const upload = require("../middlewares/ImageUploader/ImageUploader");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 const { getGroupMessages } = require("../controllers/Groups/getGroupMessages");
+const { groupMessages } = require("../controllers/Groups/groupMessages");
 router.post("/creategroup", verify, upload.single("groupPic"), creategroup);
 router.get("/getgroups", verify, getgroups);
 router.patch("/updategroup/:id", updategroup);
 router.get("/getgroupbyid/:id", verify, getgroupbyid);
 router.post("/saveMedia", uploadmedia.single("media"), updatemessages);
-router.get("/getgroupmessages/:groupId", verify, getGroupMessages);
+//router.get("/getgroupmessages/:groupId", verify, getGroupMessages);
+router.get("/group-messages/:groupId",verify,groupMessages)
 module.exports = router;
