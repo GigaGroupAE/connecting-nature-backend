@@ -101,6 +101,7 @@ const campaignsSchema = new Schema({
   color: {
     type: String,
   },
+  venue: String,
 });
 
 module.exports = mongoose.model("Campaigns", campaignsSchema);
