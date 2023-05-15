@@ -1,16 +1,14 @@
 const GroupsModel = require("../../models/groups");
 
-exports.addMembers = async (req, res) => {
+exports.removeMember = async (req, res) => {
   try {
     const group = await GroupsModel.findById(req.params.groupId);
-    const { newMember } = req.body;
-
-    console.log("new member is " , newMember)
+    const { memberId } = req.body;
 
     const updatedGroup = await GroupsModel.findByIdAndUpdate(
-      group._id, // ID of the group you want to modify
-      { $push: { members: newMember } },
-      { new: true, runValidators: true }
+      group._id,
+      { $pull: { members: { member: memberId } } },
+      { new: true }
     ).populate({
       path: "members.member",
       select: "fullName phoneNumber profile",
