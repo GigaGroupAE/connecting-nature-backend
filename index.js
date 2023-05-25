@@ -64,6 +64,10 @@ const client = new Server(server, {
   },
 });
 
+app.get("/", (req, res) => {
+  return res.send("Successful,Happy Coding");
+});
+
 //static configuration
 app.use(express.static("./uploads"));
 //send a req to this route along with the image name to get image
