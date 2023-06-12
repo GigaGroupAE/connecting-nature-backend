@@ -1,11 +1,13 @@
 const register = require("../../models/Register");
+const jwt  = require("jsonwebtoken")
 const signup = async (req, res) => {
+  console.log("signup called")
   let path = "";
-  let parsedLocation = JSON.parse(req.body.location)
+  let parsedLocation = JSON.parse(req.body.location);
   if (req.file === undefined) {
     path = "no-profile-picture-placeholder.png";
   } else {
-    path = req.file.filename
+    path = req.file.filename;
   }
   const newuser = new register({
     email: "",
@@ -21,16 +23,21 @@ const signup = async (req, res) => {
   });
   if (phoneExist !== null) {
     console.log(phoneExist);
-    return res.send({
+    return res.status(400).send({
       statusCode: 400,
       message: "Phone Number Already Exists",
     });
   }
   try {
-    const savedUser = await newuser.save();
-    res.send(savedUser);
+    console.log("inside try")
+    const User = await newuser.save();
+    //copy the login logic here
+    const token = jwt.sign({ _id: User.id }, process.env.TOKEN_SECRET);
+    console.log("sending this back")
+    res.header("auth_token", token).send(User);
   } catch (err) {
-    res.send({ message: err, status: 400 });
+    console.log("inside catch error is " , err)
+    res.status(400).json({ message: err, status: 400 });
   }
 };
 
