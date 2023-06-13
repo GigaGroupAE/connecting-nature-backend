@@ -3,7 +3,12 @@ const jwt  = require("jsonwebtoken")
 const signup = async (req, res) => {
   console.log("signup called")
   let path = "";
-  let parsedLocation = JSON.parse(req.body.location);
+  let createObj = {}
+  if (req.body.location){
+
+    let parsedLocation = JSON.parse(req.body.location);
+    createObj.location = parsedLocation
+  }
   if (req.file === undefined) {
     path = "no-profile-picture-placeholder.png";
   } else {
@@ -14,9 +19,9 @@ const signup = async (req, res) => {
     phoneNumber: req.body.phoneNumber,
     fullName: req.body.fullName,
     type: req.body.type,
-    location: parsedLocation,
     //this picture shall be retrieve by sending network request to {HOSTNAME/images/:profile}
     profile: path, //saving the name of the file to the database
+    ...createObj
   });
   const phoneExist = await register.findOne({
     phoneNumber: newuser.phoneNumber,
