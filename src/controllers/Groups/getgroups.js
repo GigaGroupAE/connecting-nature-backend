@@ -4,7 +4,7 @@ const getgroups = async (req, res) => {
   console.log("----------")
   const getgroups = await groups
     .find()
-    .populate({ path: "members.member" , select:"fullName phoneNumber profile" })
+    .populate({ path: "members.member" , select:"fullName phoneNumber profile type" })
     .populate("messages");
 
   return res.status(200).send(getgroups);
