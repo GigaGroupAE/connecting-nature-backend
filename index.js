@@ -142,12 +142,6 @@ client.on("connection", (socket) => {
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("Delete_messageCN", async (data) => {
-    //here send notifications
-    try {
-      //sendGroupMessageNotifications(data);
-    } catch (error) {
-      console.log("error inside send_message notification:::", error);
-    }
     await MessageModel.findByIdAndDelete({_id:data.id})
     console.log(data);
     client
@@ -155,12 +149,6 @@ client.on("connection", (socket) => {
       .emit("deleted_messageCN", data.id);
   });
   socket.on("Delete_message", async (data) => {
-    //here send notifications
-    try {
-      //sendGroupMessageNotifications(data);
-    } catch (error) {
-      console.log("error inside send_message notification:::", error);
-    }
     await GroupMessageModel.findByIdAndDelete({_id:data.id})
     console.log(data);
     client
