@@ -35,6 +35,8 @@ const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
 //Models
 const GroupModel = require("./src/models/groups");
+const MessageModel = require("./src/models/messageSchema")
+const GroupMessageModel = require("./src/models/groupMessageSchema");
 const OrderModel = require("./src/models/Order");
 
 //server configuration imports
@@ -138,6 +140,20 @@ client.on("connection", (socket) => {
     client
       .to(data.chat)
       .emit("receive_message", result.messages[result.messages.length - 1]);
+  });
+  socket.on("Delete_messageCN", async (data) => {
+    await MessageModel.findByIdAndDelete({_id:data.id})
+    console.log(data);
+    client
+      .to(data.chat)
+      .emit("deleted_messageCN", data.id);
+  });
+  socket.on("Delete_message", async (data) => {
+    await GroupMessageModel.findByIdAndDelete({_id:data.id})
+    console.log(data);
+    client
+      .to(data.chat)
+      .emit("deleted_message", data);
   });
   socket.on("update_Message", async (data) => {
     let group = await GroupModel.findOne({ _id: data.id });
