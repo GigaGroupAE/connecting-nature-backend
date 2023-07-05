@@ -8,8 +8,8 @@ const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUpl
 const { getMyChats, getchats } = require("../controllers/chats/getchats");
 router.post("/createchat", verify, createchat);
 router.get("/getchats", verify, getchats);
+router.get("/get-my-chats", verify, getMyChats);
 router.patch("/updatachat/:id", verify, updatechat);
 router.post("/saveMedia", uploadmedia.single("media"), updatemessages);
 
-router.get("/get-my-chats" , verify,getMyChats)
 module.exports = router;

@@ -109,7 +109,7 @@ client.on("connection", (socket) => {
   socket.on("chat", () => {});
   socket.on("update_points", async (data) => {
     const result = await updatePoints(data);
-    
+
     client.to(data.group).emit("receive_points", result);
   });
   socket.on("send_message", async (data) => {

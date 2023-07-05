@@ -20,6 +20,8 @@ const MessageMediaUploader = multer({
       file.mimetype === "audio/mpeg" ||
       file.mimetype === "application/pdf" ||
       file.mimetype ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || // Updated MIME type for Excel
+      file.mimetype ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       file.mimetype === "image/jpeg" ||
       file.mimetype === "image/png" ||
