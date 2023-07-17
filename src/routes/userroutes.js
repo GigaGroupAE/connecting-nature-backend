@@ -27,7 +27,7 @@ router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
 router.post("/otp", OTPGen);
 router.put("/updateUserExpoToken", verify, updateExpoPushToken);
-router.patch("/updateUser/:id", verify, updateuser);
+router.patch("/updateUser/:id",upload.single("profile"), updateuser);
 router.patch("/toggleFollow/:id", verify, followUnfollowUser);
 router.patch("/block-user/:id", verify, blockUser);
 router.patch("/unblock-user/:id", verify, unblockUser);
