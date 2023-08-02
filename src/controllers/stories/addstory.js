@@ -20,6 +20,8 @@ const addstory = async (req, res) => {
       reactions: [],
       description: description,
       media: media,
+      comments: [],
+      shares: [],
     });
     //increasing points of the user
     await UserModel.findByIdAndUpdate(req.user._id, {

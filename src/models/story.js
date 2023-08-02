@@ -20,6 +20,29 @@ const dbSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  comments: [
+    {
+      commented_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "NewUsers",
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  shares: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
   createdAT: {
     type: Date,
     default: Date.now,
