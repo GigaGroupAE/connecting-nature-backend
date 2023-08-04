@@ -2,7 +2,7 @@ const stories = require("../../models/story");
 const Users = require("../../models/Register");
 
 const getstories = async (req, res) => {
-  const getstories = await stories.find().populate("postedby reactions", {
+  const getstories = await stories.find().populate("postedby reactions comments", {
     fullName: 1,
     phoneNumber: 1,
     profile: 1,

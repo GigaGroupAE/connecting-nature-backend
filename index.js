@@ -117,7 +117,7 @@ client.on("connection", (socket) => {
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
-      //sendGroupMessageNotifications(data);
+      sendGroupMessageNotifications(data);
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
@@ -131,7 +131,7 @@ client.on("connection", (socket) => {
   socket.on("send_messageCN", async (data) => {
     //here send notifications
     try {
-      //sendGroupMessageNotifications(data);
+      sendGroupMessageNotifications(data);
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }

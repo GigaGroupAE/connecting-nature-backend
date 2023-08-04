@@ -9,7 +9,6 @@ exports.sendNotifications = (somePushTokens,title) => {
 
   // Create the messages that you want to send to clients
   let messages = [];
-  let umarBhaiKaToken = `ExponentPushToken[Y2HAJtJRo-PVkEjZyMn6N-]`;
   for (let pushToken of somePushTokens) {
     // Check that all your push tokens appear to be valid Expo push tokens
     if (!Expo.isExpoPushToken(pushToken)) {
