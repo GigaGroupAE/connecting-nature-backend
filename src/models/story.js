@@ -39,7 +39,8 @@ const dbSchema = new mongoose.Schema({
   ],
   shares: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+
       ref: "NewUsers",
     },
   ],

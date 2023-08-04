@@ -6,6 +6,7 @@ const { instrument } = require("@socket.io/admin-ui");
 //testing
 
 const postModal = require("./src/models/post");
+const storyModal = require("./src/models/story");
 
 //Routes
 const authroutes = require("./src/routes/userroutes");
@@ -35,7 +36,7 @@ const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
 //Models
 const GroupModel = require("./src/models/groups");
-const MessageModel = require("./src/models/messageSchema")
+const MessageModel = require("./src/models/messageSchema");
 const GroupMessageModel = require("./src/models/groupMessageSchema");
 const OrderModel = require("./src/models/Order");
 
@@ -117,7 +118,7 @@ client.on("connection", (socket) => {
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
-      sendGroupMessageNotifications(data);
+      //sendGroupMessageNotifications(data);
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
@@ -131,7 +132,7 @@ client.on("connection", (socket) => {
   socket.on("send_messageCN", async (data) => {
     //here send notifications
     try {
-      sendGroupMessageNotifications(data);
+      //sendGroupMessageNotifications(data);
     } catch (error) {
       console.log("error inside send_message notification:::", error);
     }
@@ -142,18 +143,14 @@ client.on("connection", (socket) => {
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("Delete_messageCN", async (data) => {
-    await MessageModel.findByIdAndDelete({_id:data.id})
+    await MessageModel.findByIdAndDelete({ _id: data.id });
     console.log(data);
-    client
-      .to(data.chat)
-      .emit("deleted_messageCN", data.id);
+    client.to(data.chat).emit("deleted_messageCN", data.id);
   });
   socket.on("Delete_message", async (data) => {
-    await GroupMessageModel.findByIdAndDelete({_id:data.id})
+    await GroupMessageModel.findByIdAndDelete({ _id: data.id });
     console.log(data);
-    client
-      .to(data.chat)
-      .emit("deleted_message", data);
+    client.to(data.chat).emit("deleted_message", data);
   });
   socket.on("update_Message", async (data) => {
     let group = await GroupModel.findOne({ _id: data.id });
@@ -186,6 +183,7 @@ client.on("connection", (socket) => {
 client.of("/CN").on("connection", (socket) => {
   console.log("connected in CN");
   socket.on("send_comments", async (data) => {
+    // console.log(data);
     const post = await postModal.find({ _id: data._id }).populate({
       path: "comments",
       populate: {
@@ -193,9 +191,27 @@ client.of("/CN").on("connection", (socket) => {
         select: "profile fullName phoneNumber type",
       },
     });
-    console.log(post[0].comments);
+    // console.log(post[0].comments);
+    console.log(post, "post");
     socket.emit("receive_comments", post[0].comments);
   });
+  // story comments
+
+  socket.on("send_comments_story", async (data) => {
+    // console.log(data);
+    const post = await storyModal.find({ _id: data._id }).populate({
+      path: "comments",
+      populate: {
+        path: "commented_by",
+        select: "profile fullName phoneNumber type",
+      },
+    });
+    // console.log(post[0].comments);
+    socket.emit("receive_comments_story", post[0].comments);
+  });
+
+  // story comments end
+
   socket.on("send_posts", (data) => {
     socket.emit("receive_posts", data);
   });
