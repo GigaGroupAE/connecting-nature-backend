@@ -2,11 +2,17 @@ const stories = require("../../models/story");
 const Users = require("../../models/Register");
 
 const getstories = async (req, res) => {
-  const getstories = await stories.find().populate("postedby reactions comments", {
+  const getstories = await stories.find().populate("postedby reactions", {
     fullName: 1,
     phoneNumber: 1,
     profile: 1,
     type: 1,
+  }).populate({
+    path: "comments",
+    populate: {
+      path: "commented_by",
+      select: "profile fullName phoneNumber type",
+    },
   });
   let user = await Users.findById(req.user._id);
 
