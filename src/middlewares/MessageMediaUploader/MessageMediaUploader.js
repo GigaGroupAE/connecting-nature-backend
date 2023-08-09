@@ -25,7 +25,8 @@ const MessageMediaUploader = multer({
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       file.mimetype === "image/jpeg" ||
       file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg"
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "video/mp4"
     ) {
       cb(null, true);
     } else {
