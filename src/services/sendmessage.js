@@ -22,8 +22,14 @@ const sendmessage = async (data) => {
             new: true,
           }
         )
-          .populate("members.member")
-          .populate("messages");
+        .populate({ path: "members.member" , select:"fullName phoneNumber profile type" })
+        .populate({
+          path:"messages",
+          populate:{
+            path: "from",
+            select:"profile fullName phoneNumber type"
+          }
+        })
         if (!updategroup) {
           return "internal server error";
         } else {
