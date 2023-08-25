@@ -6,6 +6,7 @@ exports.getGroupMessages = async (req, res, next) => {
     const limit = 20; // the number of documents per page
 
     let messages = await GroupMessages.find({ group: req.params.groupId })
+      .populate("from")
       .sort({ date: -1 })
       .skip((req.query.page - 1) * limit)
       .limit(limit);
