@@ -15,9 +15,18 @@ const updategroup = async (req, res) => {
         res.status(200).send("Messages Updated Successfully");
       } else {
         const _id = req.params.id;
-        const updategroup = await model.findByIdAndUpdate(_id, req.body, {
-          new: true,
-        });
+        const updategroup = await model
+          .findByIdAndUpdate(_id, req.body, {
+            new: true,
+          })
+          .populate({
+            path: "members.member",
+          })
+          .populate({
+            path: "members.privilege",
+          });
+
+        console.log(updategroup, "update");
         if (!updategroup) {
           res.status(500).send("internal server error");
         } else {

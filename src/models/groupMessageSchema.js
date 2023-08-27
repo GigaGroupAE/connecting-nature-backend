@@ -4,8 +4,10 @@ const dbSchema = new mongoose.Schema(
   {
     from: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: "NewUsers",
     },
+
     group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "groups",
