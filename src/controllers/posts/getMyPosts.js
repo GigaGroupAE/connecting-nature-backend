@@ -5,7 +5,6 @@ exports.getUserPosts = async (req, res) => {
   try {
     let { page, limit } = req.query;
 
-
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const user = await UserModel.findOne({
@@ -27,12 +26,16 @@ exports.getUserPosts = async (req, res) => {
           select: "profile fullName phoneNumber type",
         },
       })
+      .populate({
+        path: "reactions",
+        select: "profile fullName phoneNumber type",
+        model: "NewUsers", // Specify the model to use for population
+      })
       .skip(startIndex)
       .limit(limit);
 
     const totalItems = await PostsModel.countDocuments({ postedby: user._id });
     const totalPages = Math.ceil(totalItems / limit);
-
 
     return res.status(200).send({ posts, totalPages });
   } catch (error) {

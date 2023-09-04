@@ -62,6 +62,10 @@ exports.postsExperiment = async (req, res) => {
           select: "profile fullName phoneNumber type",
         },
       })
+      .populate({
+        path: "reactions",
+        select: "profile fullName phoneNumber type",
+      })
       .skip(startIndex)
       .limit(limit)
       .exec();
@@ -71,7 +75,6 @@ exports.postsExperiment = async (req, res) => {
     const count = postsToCount.length;
     const totalPages = Math.ceil(count / limit);
     const currentPage = page;
-
 
     // Return the posts and pagination info as JSON response
     return res.json({ totalPages, currentPage, newPosts });

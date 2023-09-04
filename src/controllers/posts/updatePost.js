@@ -8,6 +8,7 @@ const updatepost = async (req, res) => {
       const updatedpost = await model.findByIdAndUpdate(_id, req.body, {
         new: true,
       });
+
       if (!updatedpost) {
         res.status(500).send("internal server error");
       } else {

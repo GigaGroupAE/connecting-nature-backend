@@ -11,7 +11,7 @@ exports.removeMember = async (req, res) => {
       { new: true }
     ).populate({
       path: "members.member",
-      select: "fullName phoneNumber profile",
+      // select: "fullName phoneNumber profile",
     });
 
     return res.status(200).json({ success: true, group: updatedGroup });
