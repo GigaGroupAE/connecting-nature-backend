@@ -19,6 +19,7 @@ const signup = async (req, res) => {
     phoneNumber: req.body.phoneNumber,
     fullName: req.body.fullName,
     type: req.body.type,
+    expoPushToken:"",
     //this picture shall be retrieve by sending network request to {HOSTNAME/images/:profile}
     profile: path, //saving the name of the file to the database
     ...createObj
