@@ -21,7 +21,7 @@ exports.notifyPostAuthor = async (req, res) => {
     //save the notification into the database
 
     await Notifications.create({
-      user: post.postedby.phoneNumber,
+      user: post.postedby._id,
       body: req.body.body,
       data: req.body.data,
     });

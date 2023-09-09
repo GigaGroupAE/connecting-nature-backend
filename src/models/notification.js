@@ -25,7 +25,8 @@ const dbSchema = new mongoose.Schema({
           return "Campaigns";
         if (
           this.data.title === "post-comment" ||
-          this.data.title === "post-like"
+          this.data.title === "post-like" ||
+          this.data.title === "post-share"
         )
           return "post";
       },
