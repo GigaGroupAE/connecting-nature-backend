@@ -11,6 +11,7 @@ exports.getPosts = async (req, res) => {
       type: 1,
       followers: 1,
       following: 1,
+      expoPushToken: 1,
     })
     .populate({
       path: "comments",
@@ -54,6 +55,7 @@ exports.postsExperiment = async (req, res) => {
         type: 1,
         followers: 1,
         following: 1,
+        expoPushToken: 1,
       })
       .populate({
         path: "comments",
