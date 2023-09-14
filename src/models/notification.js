@@ -14,6 +14,9 @@ const dbSchema = new mongoose.Schema({
     title: {
       type: String,
     },
+    token: {
+      type: String,
+    },
     content: {
       type: mongoose.Schema.Types.ObjectId,
       ref: function () {

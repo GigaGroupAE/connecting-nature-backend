@@ -2,8 +2,37 @@ const Posts = require("../../models/post");
 const Users = require("../../models/Register");
 const Notifications = require("../../models/notification");
 const { sendNotifications } = require("../../services/sendNotifications");
+const { Expo } = require("expo-server-sdk");
+const expo = new Expo();
 exports.notifyPostAuthor = async (req, res) => {
+  const expoPushToken = req.body.data.token;
   try {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "New Notification",
+      body: "Hello, this is a push notification from your backend!",
+      data: { customData: { foo: "bar" } },
+    };
+    expo
+      .sendPushNotificationsAsync([message])
+      .then((ticketReceipts) => {
+        // Process the ticket receipts for each successful or failed notification
+        // For example, you can iterate over the receipts and check the status of each notification
+        for (const receiptId in ticketReceipts) {
+          const { status, message } = ticketReceipts[receiptId];
+          if (status === "ok") {
+            console.log(`Notification sent successfully, ID: ${receiptId}`);
+          } else {
+            console.error(
+              `Failed to send notification, ID: ${receiptId}, Error: ${message}`
+            );
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending push notification:", error);
+      });
     //1-we would receive a post id here
     //2-from the post id we will extract the number of posted by
     //3-from that number we will extract the expo token of the person
