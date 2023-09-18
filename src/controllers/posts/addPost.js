@@ -1,16 +1,17 @@
+const sharp = require('sharp');
+const fs = require('fs');
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const Posts = require("../../models/post");
 const UserModel = require("../../models/Register");
-const fs = require("fs");
 const path = require("path");
 
 const videoOptions = {
   codec: "libx264",
-  bitrate: "400k", // Adjust to an appropriate value
-  size: "720x1280", // Adjust to a lower resolution
+  bitrate: "300k",
+  size: "720x1280",
 };
 
 const addpost = async (req, res) => {
@@ -20,17 +21,16 @@ const addpost = async (req, res) => {
 
     if (req.file) {
       if (req.file.mimetype === "video/mp4") {
-        // Video compression logic
-        const inputFilePath = req.file.path; // Path to the uploaded video
+        // Video compression logic (unchanged)
+        const inputFilePath = req.file.path;
         const outputFileName =
-          req.file.filename.replace(/\.[^/.]+$/, "") + "_compressed.mp4"; // New filename for compressed video
+          req.file.filename.replace(/\.[^/.]+$/, "") + "_compressed.mp4";
         const outputFilePath = path.join(
           __dirname,
           "../../../uploads",
           outputFileName
-        ); // Destination for compressed video
+        );
 
-        // Compress the video
         await new Promise((resolve, reject) => {
           ffmpeg(inputFilePath)
             .videoCodec(videoOptions.codec)
@@ -56,18 +56,44 @@ const addpost = async (req, res) => {
             .on("error", (err) => {
               reject(err);
             })
-            .save(outputFilePath); // Save the compressed video to a different file
+            .save(outputFilePath);
         });
-      } else {
-        // Handle image upload as before
-        media = {
-          name: req.file.filename,
-          type: req.file.mimetype,
-        };
+      } else if (req.file.mimetype.startsWith("image/")) {
+        // Image compression logic
+        const inputImagePath = req.file.path;
+        const outputImageName =
+          req.file.filename.replace(/\.[^/.]+$/, "") + "_compressed.jpg";
+
+        await new Promise((resolve, reject) => {
+          sharp(inputImagePath)
+          .resize(800, null, { fit: 'inside' })
+            .toFile(
+              path.join(__dirname, "../../../uploads", outputImageName), // Save in the same location
+              (err, info) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  media = {
+                    name: outputImageName, // Change the name here
+                    type: req.file.mimetype,
+                    compressedPath: "/images/compressed/" + outputImageName, // Use a relative path or URL
+                  };
+
+                  // Delete the original image file
+                  fs.unlink(inputImagePath, (err) => {
+                    if (err) {
+                      console.error("Error deleting original image:", err);
+                    }
+                  });
+
+                  resolve();
+                }
+              }
+            );
+        });
       }
     }
 
-    // Parsing the postedby object
     let parsed = JSON.parse(req.body.postedby);
     const { description } = req.body;
 
@@ -80,7 +106,6 @@ const addpost = async (req, res) => {
       media: media,
     });
 
-    // Increasing points of the user
     await UserModel.findByIdAndUpdate(req.user._id, {
       $inc: { points: 5 },
     });
