@@ -34,14 +34,33 @@ exports.notifyPostAuthor = async (req, res) => {
     //     console.error("Error sending push notification:", error);
     //   });
 
-    const pushToken = "ExponentPushToken[dftyj9Dxnb1bU3-HaS5U4u]";
-    const title = "Congratulations Umar Bhai";
-    const message = "Onces more ";
+    const pushToken = req.use.expoPushToken;
+    let title = "";
+    let message = "";
 
     console.log(Expo.isExpoPushToken(pushToken));
     if (Expo.isExpoPushToken(pushToken)) {
       const expo = new Expo(); // Create an Expo SDK client
-
+      if(req.body.data.title==="post-like")
+      {
+        title="New like"
+        message=`${req.user.fullName} liked your post`
+      }
+      else if(req.body.data.title==="post-comment")
+      {
+        title="New Comment"
+        message=`${req.user.fullName} commented on your post`
+      }
+      else if(req.body.data.title==="post-share")
+      {
+        title="New Share"
+        message=`${req.user.fullName} shared your post`
+      }
+      else if(req.body.data.title==="campaign-invite")
+      {
+        title="New Invitation"
+        message=`${req.user.fullName} Invited you to a campaign`
+      }
       const messageData = {
         to: "ExponentPushToken[dftyj9Dxnb1bU3-HaS5U4u]",
         sound: "default",
