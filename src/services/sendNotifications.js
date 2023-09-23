@@ -2,7 +2,7 @@ const { Expo } = require("expo-server-sdk");
 
 //this function will send notification to the array of push tokens
 //it receives as an argument
-exports.sendNotifications = (somePushTokens,title) => {
+exports.sendNotifications = (somePushTokens, title) => {
   // Create a new Expo SDK client
   // optionally providing an access token if you have enabled push security
   let expo = new Expo();
@@ -24,11 +24,9 @@ exports.sendNotifications = (somePushTokens,title) => {
     });
   }
 
-
   let chunks = expo.chunkPushNotifications(messages);
   let tickets = [];
   (async () => {
-
     for (let chunk of chunks) {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
