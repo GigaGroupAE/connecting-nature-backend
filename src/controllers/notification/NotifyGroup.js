@@ -1,9 +1,6 @@
-const Posts = require("../../models/post");
-const Users = require("../../models/Register");
-const Notifications = require("../../models/notification");
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
-exports.notifyPostAuthor = async (req, res) => {
+const notifyGroup = async (req, res) => {
   try {
     // const pushToken = req.body.expoPushToken;
     let title = "New Message";
@@ -11,7 +8,7 @@ exports.notifyPostAuthor = async (req, res) => {
 //[{token,fullname}]
     if (Expo.isExpoPushToken(pushToken)) {
       
-      expoPushToken.map((body)=>{
+      req.body.something.map((body)=>{
         const pushToken = body.token;
         message = `${body.fullName} sent you a message`
         const messageData = {
@@ -38,3 +35,5 @@ exports.notifyPostAuthor = async (req, res) => {
     return res.json({ success: false, error });
   }
 };
+
+module.exports = notifyGroup

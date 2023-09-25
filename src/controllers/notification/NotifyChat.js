@@ -3,7 +3,7 @@ const Users = require("../../models/Register");
 const Notifications = require("../../models/notification");
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
-exports.notifyPostAuthor = async (req, res) => {
+const notifyChat = async (req, res) => {
   try {
     //{fullName,expoPushtoken}
     const pushToken = req.body.expoPushToken;
@@ -34,3 +34,5 @@ exports.notifyPostAuthor = async (req, res) => {
     return res.json({ success: false, error });
   }
 };
+
+module.exports = notifyChat
