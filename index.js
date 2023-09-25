@@ -1,5 +1,5 @@
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 //admin-ui setup
 const { instrument } = require("@socket.io/admin-ui");
 
@@ -57,8 +57,14 @@ const { updatePoints } = require("./src/services/updateCampaignPoints");
 //server configuration
 const app = express();
 app.use(express.json());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 app.use(cors());
 const server = http.createServer(app);
 const client = new Server(server, {
@@ -125,7 +131,7 @@ client.on("connection", (socket) => {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessage(data);
-    console.log("result is ", result);
+    // console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
@@ -139,7 +145,7 @@ client.on("connection", (socket) => {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessageCN(data);
-    console.log(result.messages[result.messages.length - 1]);
+    // console.log(result.messages[result.messages.length - 1]);
     client
       .to(data.chat)
       .emit("receive_message", result.messages[result.messages.length - 1]);

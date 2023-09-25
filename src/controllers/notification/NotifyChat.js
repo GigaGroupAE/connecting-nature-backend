@@ -5,8 +5,7 @@ const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 const notifyChat = async (req, res) => {
   try {
-    //{fullName,expoPushtoken}
-    const pushToken = req.body.expoPushToken;
+    const pushToken = req.body.expoPushtoken;
     let title = "New Message";
     let message = `${req.body.fullName} send you a message`;
 
@@ -35,4 +34,4 @@ const notifyChat = async (req, res) => {
   }
 };
 
-module.exports = notifyChat
+module.exports = notifyChat;

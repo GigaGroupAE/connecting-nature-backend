@@ -1,39 +1,41 @@
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
+
 const notifyGroup = async (req, res) => {
   try {
-    // const pushToken = req.body.expoPushToken;
-    let title = "New Message";
-    let message = ``;
-//[{token,fullname}]
-    if (Expo.isExpoPushToken(pushToken)) {
-      
-      req.body.something.map((body)=>{
-        const pushToken = body.token;
-        message = `${body.fullName} sent you a message`
+    const users = req.body.user;
+    const senderName = req.body.senderName;
+    const title = "New Message";
+
+    for (const user of users) {
+      // Check if the user has an Expo Push Token
+      if (Expo.isExpoPushToken(user.expoPushToken)) {
+        const message = `${senderName} sent you a message`;
+
         const messageData = {
-            to: pushToken,
-            sound: "default",
-            title,
-            body: message,
-          };
-          try {
-            expo.sendPushNotificationsAsync([messageData]).then((tickets) => {
-              console.log("Notification sent:", tickets);
-            });
-          } catch (error) {
-            console.log(error);
-          }
-      })
+          to: user.expoPushToken,
+          sound: "default",
+          title,
+          body: message,
+        };
+
+        try {
+          await expo.sendPushNotificationsAsync([messageData]);
+          console.log("Notification sent to:", user.fullName);
+        } catch (error) {
+          console.log("Error sending notification to", user.fullName, error);
+        }
+      }
     }
+
     return res.json({
       success: true,
-      message: "notification succes",
+      message: "Notifications sent successfully",
     });
   } catch (error) {
-    console.log("error inside notify chat is ", error);
+    console.log("Error inside notifyGroup:", error);
     return res.json({ success: false, error });
   }
 };
 
-module.exports = notifyGroup
+module.exports = notifyGroup;

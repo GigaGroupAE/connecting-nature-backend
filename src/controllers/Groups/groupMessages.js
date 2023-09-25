@@ -4,7 +4,10 @@ exports.groupMessages = async (req, res, next) => {
   console.log("HIT");
   try {
     let messages = await GroupMessages.find({ group: req.params.groupId })
-      .populate({ path: "from", select: "profile fullName phoneNumber type" })
+      .populate({
+        path: "from",
+        select: "profile fullName phoneNumber type   expoPushToken",
+      })
       .sort({ createdAt: -1 });
 
     return res.status(200).json({ success: true, messages });

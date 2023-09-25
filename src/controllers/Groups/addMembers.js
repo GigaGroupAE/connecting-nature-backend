@@ -5,7 +5,7 @@ exports.addMembers = async (req, res) => {
     const group = await GroupsModel.findById(req.params.groupId);
     const { newMember } = req.body;
 
-    console.log("new member is " , newMember)
+    console.log("new member is ", newMember);
 
     const updatedGroup = await GroupsModel.findByIdAndUpdate(
       group._id, // ID of the group you want to modify
@@ -13,7 +13,7 @@ exports.addMembers = async (req, res) => {
       { new: true, runValidators: true }
     ).populate({
       path: "members.member",
-      select: "fullName phoneNumber profile",
+      select: "fullName phoneNumber profile expoPushToken",
     });
 
     return res.status(200).json({ success: true, group: updatedGroup });
