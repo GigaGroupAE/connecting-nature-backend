@@ -1,6 +1,4 @@
-const { Expo } = require("expo-server-sdk");
 const model = require("../../models/post");
-const notificationService = require("../../services/sendNotifications");
 
 const updatepost = async (req, res) => {
   if (!req.params.id) {

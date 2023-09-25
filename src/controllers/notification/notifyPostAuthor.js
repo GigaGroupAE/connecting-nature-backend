@@ -5,55 +5,27 @@ const { sendNotifications } = require("../../services/sendNotifications");
 const { Expo } = require("expo-server-sdk");
 const expo = new Expo();
 exports.notifyPostAuthor = async (req, res) => {
-  // const expoPushToken = req.body.data.token;
   try {
-    // const message = {
-    //   to: "ExponentPushToken[dftyj9Dxnb1bU3-HaS5U4u]",
-    //   sound: "default",
-    //   title: "New Notification",
-    //   body: "Hello, this is a push notification from your backend!",
-    //   data: { customData: { foo: "bar" } },
-    // };
-    // expo
-    //   .sendPushNotificationsAsync([message])
-    //   .then((ticketReceipts) => {
-    //     // Process the ticket receipts for each successful or failed notification
-    //     // For example, you can iterate over the receipts and check the status of each notification
-    //     for (const receiptId in ticketReceipts) {
-    //       const { status, message } = ticketReceipts[receiptId];
-    //       if (status === "ok") {
-    //         console.log(`Notification sent successfully, ID: ${receiptId}`);
-    //       } else {
-    //         console.error(
-    //           `Failed to send notification, ID: ${receiptId}, Error: ${message}`
-    //         );
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error sending push notification:", error);
-    //   });
-
     const pushToken = req.body.body.user.expoPushToken;
     let title = "";
     let message = "";
-    console.log(req.body);
     console.log(Expo.isExpoPushToken(pushToken));
     if (Expo.isExpoPushToken(pushToken)) {
       const expo = new Expo(); // Create an Expo SDK client
       if (req.body.data.title === "post-like") {
-        title = "New like";
-        message = `${req.body.body.user.fullName} liked your post`;
+        title = "New Like";
+        message = `${req.body.body.user.fullName}  liked your post!`;
       } else if (req.body.data.title === "post-comment") {
         title = "New Comment";
-        message = `${req.body.body.user.fullName} commented on your post`;
+        message = `${req.body.body.user.fullName} left a comment on your post!`;
       } else if (req.body.data.title === "post-share") {
         title = "New Share";
-        message = `${req.body.body.user.fullName} shared your post`;
+        message = `${req.body.body.user.fullName} just shared one of your posts!`;
       } else if (req.body.data.title === "campaign-invite") {
         title = "New Invitation";
-        message = `${req.body.body.user.fullName} Invited you to a campaign`;
+        message = `${req.body.body.user.fullName} has invited you to join a campaign!`;
       }
+
       const messageData = {
         to: pushToken,
         sound: "default",
