@@ -7,6 +7,7 @@ const updatepost = require("../controllers/posts/updatePost");
 const upload = require("../middlewares/ImageUploader/ImageUploader");
 const { getPosts, postsExperiment } = require("../controllers/posts/GetPosts");
 const {  getUserPosts } = require("../controllers/posts/getMyPosts");
+const getPost = require("../controllers/posts/getPost");
 
 router.post("/addpost", verify, upload.single("media"), addpost);
 router.get("/getposts", verify, getPosts);
@@ -15,4 +16,6 @@ router.get("/posts-pagination", verify, postsExperiment);
 router.get("/get-user-posts/:phoneNumber", verify, getUserPosts);
 
 router.patch("/updateposts/:id", verify, updatepost);
+
+router.get("/getPost",verify, getPost)
 module.exports = router;
