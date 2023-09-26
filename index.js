@@ -114,7 +114,6 @@ client.on("connection", (socket) => {
   });
   socket.on("leave", (data) => {
     socket.leave(data.id);
-    console.log(`left in chat ${data.id} using id ${socket.id}`);
   });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
@@ -152,17 +151,14 @@ client.on("connection", (socket) => {
   });
   socket.on("Delete_messageCN", async (data) => {
     await MessageModel.findByIdAndDelete({ _id: data.id });
-    console.log(data);
     client.to(data.chat).emit("deleted_messageCN", data.id);
   });
   socket.on("Delete_message", async (data) => {
     await GroupMessageModel.findByIdAndDelete({ _id: data.id });
-    console.log(data);
     client.to(data.chat).emit("deleted_message", data);
   });
   socket.on("update_Message", async (data) => {
     let group = await GroupModel.findOne({ _id: data.id });
-    console.log(group);
     group.messages = group.messages.map(async (m) => {
       if (m.id === data.MessageID) {
         await OrderModel.findByIdAndUpdate(
@@ -200,7 +196,6 @@ client.of("/CN").on("connection", (socket) => {
       },
     });
     // console.log(post[0].comments);
-    console.log(post, "post");
     socket.emit("receive_comments", post[0].comments);
   });
   // story comments
