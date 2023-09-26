@@ -1,5 +1,5 @@
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 //admin-ui setup
 const { instrument } = require("@socket.io/admin-ui");
 
@@ -57,8 +57,14 @@ const { updatePoints } = require("./src/services/updateCampaignPoints");
 //server configuration
 const app = express();
 app.use(express.json());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 app.use(cors());
 const server = http.createServer(app);
 const client = new Server(server, {
@@ -108,7 +114,6 @@ client.on("connection", (socket) => {
   });
   socket.on("leave", (data) => {
     socket.leave(data.id);
-    console.log(`left in chat ${data.id} using id ${socket.id}`);
   });
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
@@ -125,7 +130,6 @@ client.on("connection", (socket) => {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessage(data);
-    console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
@@ -139,24 +143,20 @@ client.on("connection", (socket) => {
       console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessageCN(data);
-    console.log(result.messages[result.messages.length - 1]);
     client
       .to(data.chat)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("Delete_messageCN", async (data) => {
     await MessageModel.findByIdAndDelete({ _id: data.id });
-    console.log(data);
     client.to(data.chat).emit("deleted_messageCN", data.id);
   });
   socket.on("Delete_message", async (data) => {
     await GroupMessageModel.findByIdAndDelete({ _id: data.id });
-    console.log(data);
     client.to(data.chat).emit("deleted_message", data);
   });
   socket.on("update_Message", async (data) => {
     let group = await GroupModel.findOne({ _id: data.id });
-    console.log(group);
     group.messages = group.messages.map(async (m) => {
       if (m.id === data.MessageID) {
         await OrderModel.findByIdAndUpdate(
@@ -194,7 +194,6 @@ client.of("/CN").on("connection", (socket) => {
       },
     });
     // console.log(post[0].comments);
-    console.log(post, "post");
     socket.emit("receive_comments", post[0].comments);
   });
   // story comments

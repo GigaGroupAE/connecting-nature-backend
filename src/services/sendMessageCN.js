@@ -28,7 +28,6 @@ const sendmessage = async (data) => {
           .populate("members")
           .populate("messages");
 
-        console.log("update chat ----> ", updatechat);
         if (!updatechat) {
           return "internal server error";
         } else {

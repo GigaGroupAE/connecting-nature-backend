@@ -1,5 +1,5 @@
-const sharp = require('sharp');
-const fs = require('fs');
+const sharp = require("sharp");
+const fs = require("fs");
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -15,7 +15,6 @@ const videoOptions = {
 };
 
 const addpost = async (req, res) => {
-  console.log(req.body);
   try {
     let media = {};
 
@@ -66,7 +65,7 @@ const addpost = async (req, res) => {
 
         await new Promise((resolve, reject) => {
           sharp(inputImagePath)
-          .resize(800, null, { fit: 'inside' })
+            .resize(800, null, { fit: "inside" })
             .toFile(
               path.join(__dirname, "../../../uploads", outputImageName), // Save in the same location
               (err, info) => {
