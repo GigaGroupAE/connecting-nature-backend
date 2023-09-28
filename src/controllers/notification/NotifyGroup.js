@@ -5,12 +5,13 @@ const notifyGroup = async (req, res) => {
   try {
     const users = req.body.user;
     const senderName = req.body.senderName;
+    const groupTitle = req.body.groupTitle;
     const title = "New Message";
 
     for (const user of users) {
       // Check if the user has an Expo Push Token
       if (Expo.isExpoPushToken(user.expoPushToken)) {
-        const message = `${senderName} sent you a message`;
+        const message = `You have a new message from ${senderName} in the ${groupTitle} group.`;
 
         const messageData = {
           to: user.expoPushToken,

@@ -14,7 +14,7 @@ exports.notifyPostAuthor = async (req, res) => {
       const expo = new Expo(); // Create an Expo SDK client
       if (req.body.data.title === "post-like") {
         title = "New Like";
-        message = `${req.body.body.user.fullName}  liked your post!`;
+        message = `${req.body.body.user.fullName} liked your post!`;
       } else if (req.body.data.title === "post-comment") {
         title = "New Comment";
         message = `${req.body.body.user.fullName} left a comment on your post!`;

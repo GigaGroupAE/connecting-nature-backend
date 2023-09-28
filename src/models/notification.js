@@ -30,7 +30,8 @@ const dbSchema = new mongoose.Schema({
           this.data.title === "post-comment" ||
           this.data.title === "post-like" ||
           this.data.title === "post-share" ||
-          this.data.title === "send-message"
+          this.data.title === "send-message" ||
+          this.data.title === "group-message"
         )
           return "post";
       },
