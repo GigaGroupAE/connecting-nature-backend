@@ -21,8 +21,10 @@ const { newChatContacts } = require("../controllers/user/newChatContacts");
 const { getUserByPhone } = require("../controllers/user/getUserByPhone");
 const { awardPoints } = require("../controllers/user/awardPoints");
 const { getUserByQuery } = require("../controllers/user/getByQuery");
+const loginWeb = require("../controllers/user/LoginWeb");
 
 router.post("/login", login);
+router.post("/loginWeb",loginWeb)
 router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
 router.post("/otp", OTPGen);
