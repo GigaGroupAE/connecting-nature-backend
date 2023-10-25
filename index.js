@@ -39,6 +39,7 @@ const GroupModel = require("./src/models/groups");
 const MessageModel = require("./src/models/messageSchema");
 const GroupMessageModel = require("./src/models/groupMessageSchema");
 const OrderModel = require("./src/models/Order");
+const ChatModel = require("./src/models/chats");
 
 //server configuration imports
 const http = require("http");
@@ -115,6 +116,7 @@ client.on("connection", (socket) => {
   socket.on("leave", (data) => {
     socket.leave(data.id);
   });
+
   socket.on("disconnect", disconnect);
   socket.on("chat", () => {});
   socket.on("update_points", async (data) => {
@@ -122,6 +124,7 @@ client.on("connection", (socket) => {
 
     client.to(data.group).emit("receive_points", result);
   });
+
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
@@ -136,6 +139,7 @@ client.on("connection", (socket) => {
       .to(data.group)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
+
   socket.on("send_messageCN", async (data) => {
     //here send notifications
     try {
@@ -149,14 +153,31 @@ client.on("connection", (socket) => {
       .to(data.chat)
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
+
   socket.on("Delete_messageCN", async (data) => {
+    const chat = await ChatModel.findOne({ _id: data.chatId });
+    await ChatModel.findByIdAndUpdate(
+      { _id: data.chatId },
+      {
+        messages: chat.messages.filter((item) => item !== data.id),
+      }
+    );
     await MessageModel.findByIdAndDelete({ _id: data.id });
     client.to(data.chat).emit("deleted_messageCN", data.id);
   });
+
   socket.on("Delete_message", async (data) => {
+    const Group = await GroupModel.findOne({ _id: data.groupId });
+    await GroupModel.findByIdAndUpdate(
+      { _id: data.GroupId },
+      {
+        messages: Group.messages.filter((item) => item !== data.id),
+      }
+    );
     await GroupMessageModel.findByIdAndDelete({ _id: data.id });
     client.to(data.chat).emit("deleted_message", data);
   });
+
   socket.on("update_Message", async (data) => {
     let group = await GroupModel.findOne({ _id: data.id });
     group.messages = group.messages.map(async (m) => {
