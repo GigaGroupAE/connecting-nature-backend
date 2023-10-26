@@ -4,7 +4,6 @@ const Users = require("../../models/Register");
 const DeleteComment = async (req, res) => {
   try {
     const { comment, PostId } = req.body;
-    console.log(comment, PostId);
     const getpost = await posts.findOne({ _id: PostId });
 
     console.log(getpost?.comments?.filter((item) => console.log(item._id)));
@@ -22,7 +21,6 @@ const DeleteComment = async (req, res) => {
         { new: true }
       )
       .populate("comments.commented_by");
-    console.log(updatePost);
     if (comment) {
       return res.status(200).send(updatePost.comments);
     } else {
