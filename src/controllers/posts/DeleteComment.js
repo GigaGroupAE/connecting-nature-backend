@@ -3,21 +3,28 @@ const Users = require("../../models/Register");
 
 const DeleteComment = async (req, res) => {
   try {
-    const [comment, PostId] = req.body;
+    const { comment, PostId } = req.body;
+    console.log(comment, PostId);
     const getpost = await posts.findOne({ _id: PostId });
 
-    const newComments = getpost.comments.filter((item) => item._id !== comment);
+    console.log(getpost?.comments?.filter((item) => console.log(item._id)));
 
-    const updatePost = await posts.findByIdAndUpdate(
-      { _id: PostId },
-      {
-        comments: newComments,
-      },
-      { new: true }
+    const newComments = getpost.comments.filter(
+      (item) => item._id?.toString() !== comment
     );
 
+    const updatePost = await posts
+      .findByIdAndUpdate(
+        { _id: PostId },
+        {
+          comments: newComments,
+        },
+        { new: true }
+      )
+      .populate("comments.commented_by");
+    console.log(updatePost);
     if (comment) {
-      return res.status(200).send(updatePost.omments);
+      return res.status(200).send(updatePost.comments);
     } else {
       return res.status(404).json({ error: "Post not found" });
     }
