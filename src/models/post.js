@@ -32,6 +32,25 @@ const dbSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      likes: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "NewUsers",
+        },
+      ],
+      replies: [
+        {
+          commented_by: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "NewUsers",
+          },
+          description: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
     },
   ],
   shares: [
@@ -43,6 +62,10 @@ const dbSchema = new mongoose.Schema({
   createdAT: {
     type: Date,
     default: Date.now,
+  },
+  ref: {
+    type: Schema.Types.ObjectId,
+    ref: "Campaigns",
   },
 });
 
