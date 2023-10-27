@@ -51,6 +51,10 @@ const dbSchema = new mongoose.Schema({
           },
         },
       ],
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   shares: [
