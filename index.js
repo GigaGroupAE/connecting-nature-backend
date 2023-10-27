@@ -246,6 +246,6 @@ client.of("/CN").on("connection", (socket) => {
 instrument(client, {
   auth: false,
 });
-server.listen(process.env.PORT || 3000, () => {
+server.listen(3000, () => {
   console.log("Server is running");
 });
