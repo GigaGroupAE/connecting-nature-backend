@@ -26,7 +26,7 @@ exports.getPostsByCampaign = async (req, res) => {
         model: "NewUsers", // Specify the model to use for population
       });
 
-    return res.status(200).send({ posts, totalPages });
+    return res.status(200).send({ posts });
   } catch (error) {
     console.log("error is  ", error);
   }
