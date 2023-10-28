@@ -42,5 +42,6 @@ router.patch("/execute-campaign/:campaignId", verify, executeCampaign);
 router.patch("/auto-lead/:campaignId", verify, makeAutoLead);
 router.patch("/update-points/:campaignId", verify, updatePoints);
 router.patch("/update/:campaignId", verify, update);
+router.get("/getActiveCampaigns", verify, getAllCampaigns);
 
 module.exports = router;

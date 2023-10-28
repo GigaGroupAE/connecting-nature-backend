@@ -104,6 +104,57 @@ const campaignsSchema = new Schema({
   venue: {
     type: String,
   },
+  reactions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
+  reactions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
+  reactions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
+  reactions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+      required: true,
+    },
+  ],
+  comments: [
+    {
+      commented_by: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "NewUsers",
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  shares: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Campaigns", campaignsSchema);
