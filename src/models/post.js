@@ -68,8 +68,7 @@ const dbSchema = new mongoose.Schema({
     default: Date.now,
   },
   ref: {
-    type: Schema.Types.ObjectId,
-    ref: "Campaigns",
+    type: String,
   },
 });
 
