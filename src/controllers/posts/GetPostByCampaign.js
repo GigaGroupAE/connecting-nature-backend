@@ -3,7 +3,7 @@ const UserModel = require("../../models/Register");
 
 exports.getPostsByCampaign = async (req, res) => {
   try {
-    const posts = await PostsModel.find({ postedby: req.params.id })
+    const posts = await PostsModel.find({ ref: req.params.id })
       .populate("postedby shares", {
         fullName: 1,
         phoneNumber: 1,
