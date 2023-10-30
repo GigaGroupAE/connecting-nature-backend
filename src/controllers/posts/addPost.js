@@ -103,6 +103,7 @@ const addpost = async (req, res) => {
       comments: [],
       shares: [],
       media: media,
+      ref: req.body.ref,
     });
 
     await UserModel.findByIdAndUpdate(req.user._id, {
