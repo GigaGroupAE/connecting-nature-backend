@@ -11,7 +11,11 @@ exports.update = async (req, res) => {
         {
           new: true,
         }
-      );
+      ).populate({
+        path: "reactions",
+        select: "profile fullName phoneNumber type",
+        model: "NewUsers",
+      });
       if (!updateddoday) {
         res.status(500).send("internal server error");
       } else {
