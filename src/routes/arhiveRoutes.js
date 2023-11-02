@@ -8,6 +8,12 @@ const {
   getDisbandedGroups,
 } = require("../controllers/archivee/getDisbandedGroups");
 const { undoDisband } = require("../controllers/archivee/undoDisband");
+const {
+  addArchiveCamapaign,
+} = require("../controllers/archivee/addArchiveCampaign");
+const {
+  getArchiveCampaigns,
+} = require("../controllers/archivee/getArchiveCampaigns");
 
 router.post("/addPostArchive/:id", verify, addArchivePost); //id is of some document from posts collection
 router.get("/getArchivePosts", verify, getArchivePosts); //will fetch archive posts of LOGGED IN USER
@@ -15,5 +21,6 @@ router.post("/undoArchive/:id", verify, undoArchive); //id is of some document f
 router.post("/disband-group/:id", verify, disbandGroup); // id is of some group from groups collection
 router.get("/get-disbanded-groups", verify, getDisbandedGroups); //will fetch us all the disbaned groups by the logged in user
 router.post("/undo-disband/:id", verify, undoDisband); // id is of some group from archives collection
-
+router.post("/addArchiveCampaign/:id", verify, addArchiveCamapaign);
+router.get("/getArchiveCampaigns", verify, getArchiveCampaigns);
 module.exports = router;
