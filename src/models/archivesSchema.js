@@ -6,6 +6,7 @@ const archivesSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "NewUsers",
     requird: true,
+    default: null,
   },
   type: {
     type: String, // post group etc

@@ -1,4 +1,7 @@
 const router = require("express").Router();
+const {
+  getMostRecentCampaign,
+} = require("../controllers/campaigns/GetMostRecentCampaign");
 const { createCampaign } = require("../controllers/campaigns/createCampaign");
 const { createTask } = require("../controllers/campaigns/createTask");
 const { deleteTask } = require("../controllers/campaigns/deleteTask");
@@ -43,5 +46,6 @@ router.patch("/auto-lead/:campaignId", verify, makeAutoLead);
 router.patch("/update-points/:campaignId", verify, updatePoints);
 router.patch("/update/:campaignId", verify, update);
 router.get("/getActiveCampaigns", verify, getAllCampaigns);
+router.get("/mostrecentcampaign", verify, getMostRecentCampaign);
 
 module.exports = router;
