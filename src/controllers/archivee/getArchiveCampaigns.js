@@ -1,5 +1,5 @@
 const Archives = require("../../models/archivesSchema");
-const PostModel = require("../../models/post");
+const postModel = require("../../models/post");
 exports.getArchiveCampaigns = async (req, res) => {
   try {
     let campaigns = await Archives.find({
