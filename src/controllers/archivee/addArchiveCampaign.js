@@ -29,7 +29,11 @@ exports.addArchiveCamapaign = async (req, res) => {
       type: "campaign",
       data: archive,
     });
-    await CampaignModel.findByIdAndDelete(archive._id);
+    await CampaignModel.findByIdAndDelete(
+      { _id: archive._id },
+      { status: "archived" },
+      { new: true }
+    );
 
     return res.json({ success: true, message: "archived successfully" });
   } catch (error) {
