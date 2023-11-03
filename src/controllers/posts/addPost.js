@@ -104,6 +104,7 @@ const addpost = async (req, res) => {
       shares: [],
       media: media,
       ref: req.body.ref,
+      sharedBy: req.body.sharedBy,
     });
 
     await UserModel.findByIdAndUpdate(req.user._id, {
