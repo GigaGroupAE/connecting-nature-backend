@@ -24,6 +24,12 @@ exports.notifyPostAuthor = async (req, res) => {
       } else if (req.body.data.title === "campaign-invite") {
         title = "New Invitation";
         message = `${req.body.body.user.fullName} has invited you to join a campaign!`;
+      } else if (req.body.data.title === "comment-like") {
+        title = "New Comment Like";
+        message = `${req.body.body.user.fullName} has Liked your comment!`;
+      } else if (req.body.data.title === "comment-reply") {
+        title = "New Comment Like";
+        message = `${req.body.body.user.fullName} has replied to your comment!`;
       }
 
       const messageData = {
