@@ -9,7 +9,7 @@ const DeleteComment = async (req, res) => {
     console.log(getpost?.comments?.filter((item) => console.log(item._id)));
 
     const newComments = getpost.comments.filter(
-      (item) => item._id?.toString() !== comment
+      (item, index) => item.index !== comment
     );
 
     const updatePost = await posts
@@ -22,7 +22,7 @@ const DeleteComment = async (req, res) => {
       )
       .populate("comments.commented_by");
     if (comment) {
-      return res.status(200).send(updatePost.comments);
+      return res.status(200).send({ comments: updatePost.comments });
     } else {
       return res.status(404).json({ error: "Post not found" });
     }
