@@ -1,5 +1,5 @@
 const Archives = require("../../models/archivesSchema");
-const CampaignModel = require("../../models/archivesSchema");
+const CampaignModel = require("../../models/campaignsSchema");
 
 exports.addArchiveCamapaign = async (req, res) => {
   try {

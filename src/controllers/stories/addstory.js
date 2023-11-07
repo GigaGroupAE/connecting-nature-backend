@@ -1,14 +1,11 @@
-
 const stories = require("../../models/story");
-const UserModel = require("../../models/Register")
-const sharp = require('sharp');
-const fs = require('fs');
+const UserModel = require("../../models/Register");
+const sharp = require("sharp");
+const fs = require("fs");
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath(ffmpegPath);
 const path = require("path");
-
-
 
 const videoOptions = {
   codec: "libx264",
@@ -66,7 +63,7 @@ const addstory = async (req, res) => {
 
         await new Promise((resolve, reject) => {
           sharp(inputImagePath)
-          .resize(800, null, { fit: 'inside' })
+            .resize(800, null, { fit: "inside" })
             .toFile(
               path.join(__dirname, "../../../uploads", outputImageName), // Save in the same location
               (err, info) => {
@@ -110,8 +107,6 @@ const addstory = async (req, res) => {
       $inc: { points: 5 },
     });
     res.send(savedstory);
-
- 
   } catch (err) {
     console.log("error is ", err);
     res.status(400).send(err);
