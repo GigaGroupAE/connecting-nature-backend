@@ -24,6 +24,7 @@ const {
 } = require("../controllers/campaigns/teams");
 const { update } = require("../controllers/campaigns/update");
 const { updateCampaign } = require("../controllers/campaigns/updateCampaign");
+const { updateEndtime } = require("../controllers/campaigns/updateEndTime");
 const { updatePoints } = require("../controllers/campaigns/updatePoints");
 const verify = require("../middlewares/Auth");
 
@@ -47,5 +48,6 @@ router.patch("/update-points/:campaignId", verify, updatePoints);
 router.patch("/update/:campaignId", verify, update);
 router.get("/getActiveCampaigns", verify, getAllCampaigns);
 router.get("/mostrecentcampaign", verify, getMostRecentCampaign);
+router.patch("/updateTime/:id", verify, updateEndtime);
 
 module.exports = router;

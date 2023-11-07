@@ -2,7 +2,7 @@ const CampaignModel = require("../../models/campaignsSchema");
 
 exports.getMostRecentCampaign = async (req, res, next) => {
   try {
-    const campaigns = await CampaignModel.find()
+    const campaigns = await CampaignModel.find({ status: "executed" })
       .sort({ startTime: -1 }) // Sort by startDate in descending order (most recent first)
       .limit(1)
       .select("campaignName searchTag");
