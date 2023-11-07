@@ -1,7 +1,8 @@
 const Archives = require("../../models/archivesSchema");
-const CampaignModel = require("../../models/archivesSchema");
+const CampaignModel = require("../../models/campaignsSchema");
 
 exports.addArchiveCamapaign = async (req, res) => {
+  console.log("d");
   try {
     if (!req.params.id) {
       return res.json({ success: false, message: "invalid id " });
