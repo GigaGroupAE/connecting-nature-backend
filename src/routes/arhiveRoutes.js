@@ -21,6 +21,6 @@ router.post("/undoArchive/:id", verify, undoArchive); //id is of some document f
 router.post("/disband-group/:id", verify, disbandGroup); // id is of some group from groups collection
 router.get("/get-disbanded-groups", verify, getDisbandedGroups); //will fetch us all the disbaned groups by the logged in user
 router.post("/undo-disband/:id", verify, undoDisband); // id is of some group from archives collection
-router.post("/addArchiveCampaign/:id", verify, addArchiveCamapaign);
+router.patch("/addArchiveCampaign/:id", verify, addArchiveCamapaign);
 router.get("/getArchiveCampaigns", verify, getArchiveCampaigns);
 module.exports = router;
