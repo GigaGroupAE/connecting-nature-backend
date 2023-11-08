@@ -11,7 +11,8 @@ const { getGroupMessages } = require("../controllers/Groups/getGroupMessages");
 const { groupMessages } = require("../controllers/Groups/groupMessages");
 const { addMembers } = require("../controllers/Groups/addMembers");
 const { removeMember } = require("../controllers/Groups/removeMember");
-const notifyGroup = require("../controllers/notification/NotifyGroup")
+const notifyGroup = require("../controllers/notification/NotifyGroup");
+const updategroupPicture = require("../controllers/Groups/updateGroupPicture");
 router.post("/creategroup", verify, upload.single("groupPic"), creategroup);
 router.get("/getgroups", verify, getgroups);
 router.patch("/updategroup/:id", updategroup);
@@ -22,4 +23,10 @@ router.get("/group-messages/:groupId", verify, groupMessages);
 router.patch("/add-member/:groupId", verify, addMembers);
 router.patch("/remove-member/:groupId", verify, removeMember);
 router.post("/notifyGroup", verify, notifyGroup);
+router.patch(
+  "/updateGroupPicture",
+  verify,
+  upload.single("groupPic"),
+  updategroupPicture
+);
 module.exports = router;
