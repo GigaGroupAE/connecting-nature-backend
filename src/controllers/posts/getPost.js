@@ -13,6 +13,7 @@ const getPost = async (req, res) => {
         followers: 1,
         following: 1,
         expoPushToken: 1,
+        sharedBy: 1,
       })
       .populate({
         path: "comments",
