@@ -5,7 +5,7 @@ exports.getMostRecentCampaign = async (req, res, next) => {
     const campaigns = await CampaignModel.find({ status: "executed" })
       .sort({ startTime: -1 }) // Sort by startDate in descending order (most recent first)
       .limit(1)
-      .select("campaignName searchTag");
+      .select("campaignName    teamB   teamA");
     return res.status(200).json({ success: true, campaigns: campaigns[0] });
   } catch (error) {
     console.log("error in get all campaings is ", error);
