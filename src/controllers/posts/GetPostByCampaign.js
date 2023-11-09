@@ -1,10 +1,15 @@
 const PostsModel = require("../../models/post");
 const UserModel = require("../../models/Register");
+const Users = require("../../models/Register");
 
 exports.getPostsByCampaign = async (req, res) => {
   try {
+    let user = await Users.findById(req.user._id);
+    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers];
     const posts = await PostsModel.find({ ref: req.params.id })
-      .populate("postedby shares", {
+      .find({ postedby: { $nin: blockedUserIds } })
+
+      .populate("postedby shares sharedBy", {
         fullName: 1,
         phoneNumber: 1,
         profile: 1,

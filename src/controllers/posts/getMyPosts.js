@@ -11,7 +11,7 @@ exports.getUserPosts = async (req, res) => {
       phoneNumber: req.params.phoneNumber,
     });
     const posts = await PostsModel.find({ postedby: user._id })
-      .populate("postedby shares", {
+      .populate("postedby shares sharedBy", {
         fullName: 1,
         phoneNumber: 1,
         profile: 1,
