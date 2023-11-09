@@ -4,7 +4,7 @@ const Users = require("../../models/Register");
 exports.getPosts = async (req, res) => {
   const getposts = await posts
     .find()
-    .populate("postedby shares", {
+    .populate("postedby shares sharedBy", {
       fullName: 1,
       phoneNumber: 1,
       profile: 1,
@@ -49,7 +49,7 @@ exports.postsExperiment = async (req, res) => {
     const newPosts = await posts
       .find({ postedby: { $nin: blockedUserIds } })
       .sort({ createdAT: "desc" })
-      .populate("postedby shares", {
+      .populate("postedby shares sharedBy", {
         fullName: 1,
         phoneNumber: 1,
         profile: 1,
