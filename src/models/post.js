@@ -65,6 +65,7 @@ const dbSchema = new mongoose.Schema({
   ],
   sharedBy: {
     type: Schema.Types.ObjectId,
+    ref: "NewUsers",
     default: null,
   },
   createdAT: {
