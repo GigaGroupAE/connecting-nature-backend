@@ -9,7 +9,7 @@ const DeleteComment = async (req, res) => {
     console.log(getpost?.comments?.filter((item) => console.log(item._id)));
 
     const newComments = getpost.comments.filter(
-      (item, index) => item.index !== comment
+      (item) => item._id?.toString() !== comment
     );
 
     const updatePost = await posts
