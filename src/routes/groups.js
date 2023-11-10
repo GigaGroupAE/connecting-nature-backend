@@ -24,7 +24,7 @@ router.patch("/add-member/:groupId", verify, addMembers);
 router.patch("/remove-member/:groupId", verify, removeMember);
 router.post("/notifyGroup", verify, notifyGroup);
 router.patch(
-  "/updateGroupPicture",
+  "/updateGroupPicture/:id",
   verify,
   upload.single("groupPic"),
   updategroupPicture
