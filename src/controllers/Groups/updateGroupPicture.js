@@ -6,7 +6,7 @@ const updategroupPicture = async (req, res) => {
     res.status(400).send("Invalid id");
   } else {
     try {
-      console.log(req.body.members);
+      // console.log(req.body.members);
       let path = "";
       if (req.file === undefined) {
         path = "no-profile-picture-placeholder.png";
