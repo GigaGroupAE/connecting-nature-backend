@@ -20,7 +20,14 @@ exports.getPosts = async (req, res) => {
         select: "profile fullName phoneNumber type",
       },
     })
-    .populate("sharedBy");
+    .populate("sharedBy")
+    .populate({
+      path: "sharedBy",
+      populate: {
+        path: "postedby",
+        model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+      },
+    });
   let user = await Users.findById(req.user._id);
 
   //filtering posts i.e checking if the post is from someone who is blocked by user
@@ -70,6 +77,13 @@ exports.postsExperiment = async (req, res) => {
         select: "profile fullName phoneNumber type",
       })
       .populate("sharedBy")
+      .populate({
+        path: "sharedBy",
+        populate: {
+          path: "postedby",
+          model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+        },
+      })
       .skip(startIndex)
       .limit(limit)
       .exec();
