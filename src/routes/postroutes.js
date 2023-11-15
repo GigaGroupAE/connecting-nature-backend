@@ -14,7 +14,7 @@ const {
 } = require("../controllers/posts/GetPostByCampaign");
 
 router.post("/addpost", verify, upload.single("media"), addpost);
-router.get("/getposts", verify, getPosts);
+router.get("/getposts", getPosts);
 router.get("/posts-pagination", verify, postsExperiment);
 router.patch("/delete-Comment", verify, DeleteComment);
 router.get("/get-user-posts/:phoneNumber", verify, getUserPosts);
