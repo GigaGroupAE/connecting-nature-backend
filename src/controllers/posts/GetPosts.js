@@ -4,7 +4,7 @@ const Users = require("../../models/Register");
 exports.getPosts = async (req, res) => {
   const getposts = await posts
     .find()
-    .populate("postedby shares sharedBy", {
+    .populate("postedby shares", {
       fullName: 1,
       phoneNumber: 1,
       profile: 1,
@@ -19,7 +19,8 @@ exports.getPosts = async (req, res) => {
         path: "commented_by",
         select: "profile fullName phoneNumber type",
       },
-    });
+    })
+    .populate("sharedBy");
   let user = await Users.findById(req.user._id);
 
   //filtering posts i.e checking if the post is from someone who is blocked by user
