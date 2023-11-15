@@ -49,7 +49,7 @@ exports.postsExperiment = async (req, res) => {
     const newPosts = await posts
       .find({ postedby: { $nin: blockedUserIds } })
       .sort({ createdAT: "desc" })
-      .populate("postedby shares sharedBy", {
+      .populate("postedby shares ", {
         fullName: 1,
         phoneNumber: 1,
         profile: 1,
@@ -57,7 +57,6 @@ exports.postsExperiment = async (req, res) => {
         followers: 1,
         following: 1,
         expoPushToken: 1,
-        sharedBy: 1,
       })
       .populate({
         path: "comments",
@@ -70,6 +69,7 @@ exports.postsExperiment = async (req, res) => {
         path: "reactions",
         select: "profile fullName phoneNumber type",
       })
+      .populate("sharedBy")
       .skip(startIndex)
       .limit(limit)
       .exec();
