@@ -26,6 +26,13 @@ const getPost = async (req, res) => {
         path: "reactions",
         select: "profile fullName phoneNumber type",
         model: "NewUsers",
+      })
+      .populate({
+        path: "sharedBy",
+        populate: {
+          path: "postedby",
+          model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+        },
       });
 
     if (getpost && getpost.length > 0) {

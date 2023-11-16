@@ -56,7 +56,7 @@ exports.postsExperiment = async (req, res) => {
     const newPosts = await posts
       .find({ postedby: { $nin: blockedUserIds } })
       .sort({ createdAT: "desc" })
-      .populate("postedby shares ", {
+      .populate("postedby shares", {
         fullName: 1,
         phoneNumber: 1,
         profile: 1,

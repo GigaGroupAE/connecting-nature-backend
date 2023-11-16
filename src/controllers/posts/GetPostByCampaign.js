@@ -30,6 +30,13 @@ exports.getPostsByCampaign = async (req, res) => {
         path: "reactions",
         select: "profile fullName phoneNumber type",
         model: "NewUsers", // Specify the model to use for population
+      })
+      .populate({
+        path: "sharedBy",
+        populate: {
+          path: "postedby",
+          model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+        },
       });
 
     return res.status(200).send({ posts });

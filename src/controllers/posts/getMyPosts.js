@@ -33,6 +33,13 @@ exports.getUserPosts = async (req, res) => {
         select: "profile fullName phoneNumber type",
         model: "NewUsers", // Specify the model to use for population
       })
+      .populate({
+        path: "sharedBy",
+        populate: {
+          path: "postedby",
+          model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+        },
+      })
       .skip(startIndex)
       .limit(limit);
 
