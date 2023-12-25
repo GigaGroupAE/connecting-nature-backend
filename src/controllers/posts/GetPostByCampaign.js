@@ -1,14 +1,19 @@
-const PostsModel = require("../../models/post");
-const UserModel = require("../../models/Register");
-const Users = require("../../models/Register");
+const PostsModel = require("../../models/post")
+const UserModel = require("../../models/Register")
+const Users = require("../../models/Register")
 
 exports.getPostsByCampaign = async (req, res) => {
   try {
-    let user = await Users.findById(req.user._id);
-    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers];
+    const user = await Users.findById(req.user._id)
+    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers]
+
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const startIndex = (page - 1) * limit
+
     const posts = await PostsModel.find({ ref: req.params.id })
       .find({ postedby: { $nin: blockedUserIds } })
-
+      .sort({ createdAT: "desc" }) // Sorting by createdAt in descending order
       .populate("postedby shares sharedBy", {
         fullName: 1,
         phoneNumber: 1,
@@ -29,18 +34,28 @@ exports.getPostsByCampaign = async (req, res) => {
       .populate({
         path: "reactions",
         select: "profile fullName phoneNumber type",
-        model: "NewUsers", // Specify the model to use for population
+        model: "NewUsers",
       })
       .populate({
         path: "sharedBy",
         populate: {
           path: "postedby",
-          model: "NewUsers", // Replace 'User' with the actual model name for the postedby field
+          model: "NewUsers",
         },
-      });
+      })
+      .skip(startIndex)
+      .limit(limit)
 
-    return res.status(200).send({ posts });
+    const postsToCount = await PostsModel.find({ ref: req.params.id }).find({
+      postedby: { $nin: blockedUserIds },
+    })
+    const count = postsToCount.length
+    const totalPages = Math.ceil(count / limit)
+    const currentPage = page
+
+    return res.status(200).send({ totalPages, currentPage, posts })
   } catch (error) {
-    console.log("error is  ", error);
+    console.log("Error:", error)
+    return res.status(500).send("Server error")
   }
-};
+}

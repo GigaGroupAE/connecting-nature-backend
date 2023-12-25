@@ -1,8 +1,7 @@
-const stories = require("../../models/story");
-const Users = require("../../models/Register");
+const stories = require("../../models/story")
+const Users = require("../../models/Register")
 
 const getstory = async (req, res) => {
-  console.log(req.body);
   const getstories = await stories
     .find({
       _id: req.body.id,
@@ -24,8 +23,8 @@ const getstory = async (req, res) => {
       path: "reactions",
       select: "profile fullName phoneNumber type",
       model: "NewUsers",
-    });
-  return res.status(200).send(getstories[0]);
-};
+    })
+  return res.status(200).send(getstories[0])
+}
 
-module.exports = getstory;
+module.exports = getstory

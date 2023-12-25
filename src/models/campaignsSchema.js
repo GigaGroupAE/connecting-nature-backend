@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoose = require("mongoose")
+const { Schema } = mongoose
 const campaignsSchema = new Schema({
   campaignName: {
     type: String,
@@ -155,6 +155,6 @@ const campaignsSchema = new Schema({
       ref: "NewUsers",
     },
   ],
-});
+})
 
-module.exports = mongoose.model("Campaigns", campaignsSchema);
+module.exports = mongoose.model("Campaigns", campaignsSchema)

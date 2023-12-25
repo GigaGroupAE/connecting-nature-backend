@@ -1,14 +1,14 @@
-const model = require("../../models/post");
+const model = require("../../models/post")
 
 const updatepost = async (req, res) => {
   if (!req.params.id) {
-    res.status(400).send("Invalid id");
+    res.status(400).send("Invalid id")
   } else {
     try {
-      const _id = req.params.id;
+      const _id = req.params.id
       const updatedpost = await model.findByIdAndUpdate(_id, req.body, {
         new: true,
-      });
+      })
       const posts = await model
         .find({ _id: _id })
         .populate("postedby shares", {
@@ -32,10 +32,10 @@ const updatepost = async (req, res) => {
           path: "reactions",
           select: "profile fullName phoneNumber type",
           model: "NewUsers",
-        });
+        })
 
       if (!updatedpost) {
-        res.status(500).send(posts[0]);
+        res.status(500).send(posts[0])
       } else {
         // const pushToken = "ExponentPushToken[dftyj9Dxnb1bU3-HaS5U4u]";
         // const title = "Congratulations Umar Bhai";
@@ -61,12 +61,27 @@ const updatepost = async (req, res) => {
         //     });
         // }
 
-        res.status(200).send(posts[0]);
+        res.status(200).send(posts[0])
       }
     } catch (e) {
-      res.status(400).send("Invalid data body");
+      res.status(400).send("Invalid data body")
     }
   }
-};
+}
 
-module.exports = updatepost;
+module.exports = updatepost
+
+exports.getTotalPostCount = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({
+      phoneNumber: req.params.phoneNumber,
+    })
+
+    const totalItems = await PostsModel.countDocuments({ postedby: user._id })
+
+    return res.status(200).send({ totalItems })
+  } catch (error) {
+    console.log("Error:", error)
+    return res.status(500).send("Server error")
+  }
+}

@@ -1,34 +1,62 @@
-const stories = require("../../models/story");
-const Users = require("../../models/Register");
+const stories = require("../../models/story")
+const Users = require("../../models/Register")
 
 const getstories = async (req, res) => {
-  const getstories = await stories.find().populate("postedby reactions", {
-    fullName: 1,
-    phoneNumber: 1,
-    profile: 1,
-    type: 1,
-  }).populate({
-    path: "comments",
-    populate: {
-      path: "commented_by",
-      select: "profile fullName phoneNumber type",
-    },
-  });
-  let user = await Users.findById(req.user._id);
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const startIndex = (page - 1) * limit
 
-  //filtering posts i.e checking if the post is from someone who is blocked by user
-  let blockedList = user.blockedUsers;
-  let blockedBy = user.blockedByUsers;
-  let newstories = getstories.filter((post) => {
-    if (
-      blockedList?.includes(post.postedby.phoneNumber) ||
-      blockedBy?.includes(post.postedby.phoneNumber)
-    ) {
-      return false;
-    }
-    return true;
-  });
-  return res.status(200).send(newstories);
-};
+    const allStories = await stories
+      .find()
+      .sort({ createdAT: "desc" })
+      .populate("postedby reactions", {
+        fullName: 1,
+        phoneNumber: 1,
+        profile: 1,
+        type: 1,
+      })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "commented_by",
+          select: "profile fullName phoneNumber type",
+        },
+      })
 
-module.exports = getstories;
+    let user = await Users.findById(req.user._id)
+
+    // Filter posts based on blocked users
+    let blockedList = user.blockedUsers
+    let blockedBy = user.blockedByUsers
+    const filteredStories = allStories.filter((post) => {
+      if (
+        blockedList?.includes(post.postedby.phoneNumber) ||
+        blockedBy?.includes(post.postedby.phoneNumber)
+      ) {
+        return false
+      }
+      return true
+    })
+
+    const totalStories = filteredStories.length
+    const totalPages = Math.ceil(totalStories / limit)
+    const currentPage = page
+
+    const paginatedStories = filteredStories.slice(
+      startIndex,
+      startIndex + limit
+    )
+
+    return res.status(200).json({
+      totalPages,
+      currentPage,
+      stories: paginatedStories,
+    })
+  } catch (err) {
+    console.error("Error fetching stories: ", err.message)
+    return res.status(500).send("Server error")
+  }
+}
+
+module.exports = getstories

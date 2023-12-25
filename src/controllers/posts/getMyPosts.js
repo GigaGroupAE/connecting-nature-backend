@@ -1,15 +1,15 @@
-const PostsModel = require("../../models/post");
-const UserModel = require("../../models/Register");
+const PostsModel = require("../../models/post")
+const UserModel = require("../../models/Register")
 
 exports.getUserPosts = async (req, res) => {
   try {
-    let { page, limit } = req.query;
+    let { page, limit } = req.query
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
     const user = await UserModel.findOne({
       phoneNumber: req.params.phoneNumber,
-    });
+    })
     const posts = await PostsModel.find({ postedby: user._id })
       .populate("postedby shares sharedBy", {
         fullName: 1,
@@ -41,13 +41,13 @@ exports.getUserPosts = async (req, res) => {
         },
       })
       .skip(startIndex)
-      .limit(limit);
+      .limit(limit)
 
-    const totalItems = await PostsModel.countDocuments({ postedby: user._id });
-    const totalPages = Math.ceil(totalItems / limit);
+    const totalItems = await PostsModel.countDocuments({ postedby: user._id })
+    const totalPages = Math.ceil(totalItems / limit)
 
-    return res.status(200).send({ posts, totalPages });
+    return res.status(200).send({ posts, totalPages })
   } catch (error) {
-    console.log("error is  ", error);
+    console.log("error is  ", error)
   }
-};
+}
