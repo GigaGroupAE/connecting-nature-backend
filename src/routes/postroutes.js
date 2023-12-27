@@ -6,7 +6,10 @@ const storage = require("../middlewares/ImageUploader/ImageUploader")
 const updatepost = require("../controllers/posts/updatePost")
 const upload = require("../middlewares/ImageUploader/ImageUploader")
 const { getPosts, postsExperiment } = require("../controllers/posts/GetPosts")
-const { getUserPosts } = require("../controllers/posts/getMyPosts")
+const {
+  getUserPosts,
+  getUserTotalPostCount,
+} = require("../controllers/posts/getMyPosts")
 const getPost = require("../controllers/posts/getPost")
 const DeleteComment = require("../controllers/posts/DeleteComment")
 const { getPostsByCampaign } = require("../controllers/posts/GetPostByCampaign")
@@ -17,6 +20,7 @@ router.get("/posts-pagination", verify, postsExperiment)
 router.patch("/delete-Comment", verify, DeleteComment)
 router.get("/get-user-posts/:phoneNumber", verify, getUserPosts)
 router.get("/getPostByCampaign/:id", verify, getPostsByCampaign)
+router.get("/getPostCount/:phoneNumber", getUserTotalPostCount)
 
 router.patch("/updateposts/:id", verify, updatepost)
 
