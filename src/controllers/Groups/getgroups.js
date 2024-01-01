@@ -1,22 +1,28 @@
 const groups = require("../../models/groups");
 
 const getgroups = async (req, res) => {
-  console.log("----------");
-  const getgroups = await groups
-    .find()
-    .populate({
-      path: "members.member",
-      select: "fullName phoneNumber profile type   expoPushToken",
-    })
-    .populate({
-      path: "messages",
-      populate: {
-        path: "from",
-        select: "profile fullName phoneNumber type    expoPushToken",
-      },
-    });
+  try {
+    const userId = req.user._id;
 
-  return res.status(200).send(getgroups);
+    const userGroups = await groups
+      .find({ "members.member": userId })
+      .populate({
+        path: "members.member",
+        select: "fullName phoneNumber profile type expoPushToken",
+      })
+      .populate({
+        path: "messages",
+        populate: {
+          path: "from",
+          select: "profile fullName phoneNumber type expoPushToken",
+        },
+      });
+
+    return res.status(200).send(userGroups);
+  } catch (error) {
+    console.error("Error fetching groups:", error.message);
+    return res.status(500).send("Server error");
+  }
 };
 
 module.exports = getgroups;
