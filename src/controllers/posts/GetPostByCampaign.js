@@ -1,15 +1,15 @@
-const PostsModel = require("../../models/post")
-const UserModel = require("../../models/Register")
-const Users = require("../../models/Register")
+const PostsModel = require("../../models/post");
+const UserModel = require("../../models/Register");
+const Users = require("../../models/Register");
 
 exports.getPostsByCampaign = async (req, res) => {
   try {
-    const user = await Users.findById(req.user._id)
-    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers]
+    const user = await Users.findById(req.user._id);
+    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers];
 
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
-    const startIndex = (page - 1) * limit
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 30;
+    const startIndex = (page - 1) * limit;
 
     const posts = await PostsModel.find({ ref: req.params.id })
       .find({ postedby: { $nin: blockedUserIds } })
@@ -44,18 +44,18 @@ exports.getPostsByCampaign = async (req, res) => {
         },
       })
       .skip(startIndex)
-      .limit(limit)
+      .limit(limit);
 
     const postsToCount = await PostsModel.find({ ref: req.params.id }).find({
       postedby: { $nin: blockedUserIds },
-    })
-    const count = postsToCount.length
-    const totalPages = Math.ceil(count / limit)
-    const currentPage = page
+    });
+    const count = postsToCount.length;
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = page;
 
-    return res.status(200).send({ totalPages, currentPage, posts })
+    return res.status(200).send({ totalPages, currentPage, posts });
   } catch (error) {
-    console.log("Error:", error)
-    return res.status(500).send("Server error")
+    console.log("Error:", error);
+    return res.status(500).send("Server error");
   }
-}
+};
