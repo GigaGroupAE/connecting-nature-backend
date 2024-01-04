@@ -12,6 +12,7 @@ const {
 } = require("../controllers/posts/getMyPosts")
 const getPost = require("../controllers/posts/getPost")
 const DeleteComment = require("../controllers/posts/DeleteComment")
+ const commentController=require("../controllers/posts/UpdateComments")
 const { getPostsByCampaign } = require("../controllers/posts/GetPostByCampaign")
 
 router.post("/addpost", verify, upload.single("media"), addpost)
@@ -21,6 +22,8 @@ router.patch("/delete-Comment", verify, DeleteComment)
 router.get("/get-user-posts/:phoneNumber", verify, getUserPosts)
 router.get("/getPostByCampaign/:id", verify, getPostsByCampaign)
 router.get("/getPostCount/:phoneNumber", getUserTotalPostCount)
+router.patch("/update-Comment/:id", verify,  commentController.handleCommentAction)
+
 
 router.patch("/updateposts/:id", verify, updatepost)
 
