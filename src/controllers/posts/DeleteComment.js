@@ -5,9 +5,6 @@ const DeleteComment = async (req, res) => {
   try {
     const { comment, PostId } = req.body;
     const getpost = await posts.findOne({ _id: PostId });
-
-    console.log(getpost?.comments?.filter((item) => console.log(item._id)));
-
     const newComments = getpost.comments.filter(
       (item) => item._id?.toString() !== comment
     );
