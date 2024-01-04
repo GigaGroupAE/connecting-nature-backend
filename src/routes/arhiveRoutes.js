@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const verify = require("../middlewares/Auth");
 const { addArchivePost } = require("../controllers/archivee/addArchivePost");
+const { addArchiveStory } = require("../controllers/archivee/addStoryArchive");
 const { getArchivePosts } = require("../controllers/archivee/getArchivePosts");
 const { undoArchive } = require("../controllers/archivee/undoArchive");
 const { disbandGroup } = require("../controllers/archivee/disbandGroup");
@@ -14,6 +15,9 @@ const {
 const {
   getArchiveCampaigns,
 } = require("../controllers/archivee/getArchiveCampaigns");
+
+router.post("/addStoryArchive/:id", verify, addArchiveStory); //id is of some document from posts collection
+
 
 router.post("/addPostArchive/:id", verify, addArchivePost); //id is of some document from posts collection
 router.get("/getArchivePosts", verify, getArchivePosts); //will fetch archive posts of LOGGED IN USER
