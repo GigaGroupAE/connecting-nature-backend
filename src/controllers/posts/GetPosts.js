@@ -101,3 +101,61 @@ exports.postsExperiment = async (req, res) => {
     return res.status(500).send("Server error")
   }
 }
+
+
+
+
+exports.searchPosts = async (req, res) => {
+  try {
+    const searchQuery = req.query.search; 
+
+    if (!searchQuery) {
+      return res.status(400).json({ message: "Please provide a search query" });
+    }
+
+    const user = await Users.findById(req.user._id);
+    const blockedUserIds = [...user.blockedUsers, ...user.blockedByUsers];
+
+    const searchResult = await posts.find({
+      $and: [
+        { postedby: { $nin: blockedUserIds } },
+        { description: { $regex: new RegExp(searchQuery, 'i') } }
+
+
+      ]
+    }).      populate("postedby shares", {
+      fullName: 1,
+      phoneNumber: 1,
+      profile: 1,
+      type: 1,
+      followers: 1,
+      following: 1,
+      expoPushToken: 1,
+    })
+    .populate({
+      path: "comments",
+      populate: {
+        path: "commented_by",
+        select: "profile fullName phoneNumber type",
+      },
+    })
+    .populate({
+      path: "reactions",
+      select: "profile fullName phoneNumber type",
+    })
+    .populate("sharedBy")
+    .populate({
+      path: "sharedBy",
+      populate: {
+        path: "postedby",
+        model: "NewUsers", 
+      },
+    })
+
+
+    return res.json({ searchResult });
+  } catch (err) {
+    console.error("Error searching posts:", err.message);
+    return res.status(500).send("Server error");
+  }
+};
