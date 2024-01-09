@@ -13,6 +13,7 @@ const sendmessage = async (data) => {
         const newMessage = await GroupMessageModel.create({
           ...data,
         });
+
         messages.push(newMessage._id);
 
         const updategroup = await GroupsModel.findByIdAndUpdate(
