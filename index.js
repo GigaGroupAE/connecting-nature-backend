@@ -1,185 +1,187 @@
-const express = require("express")
-const bodyParser = require("body-parser")
+const express = require("express");
+const bodyParser = require("body-parser");
 //admin-ui setup
-const { instrument } = require("@socket.io/admin-ui")
+const { instrument } = require("@socket.io/admin-ui");
 
 //testing
 
-const postModal = require("./src/models/post")
-const storyModal = require("./src/models/story")
+const postModal = require("./src/models/post");
+const storyModal = require("./src/models/story");
 
 //Routes
-const authroutes = require("./src/routes/userroutes")
-const postroutes = require("./src/routes/postroutes")
-const todayroutes = require("./src/routes/to-day-routes")
-const notification = require("./src/routes/notifications")
-const groups = require("./src/routes/groups")
-const chats = require("./src/routes/chatroute")
-const invitesms = require("./src/routes/inviteroutes")
-const upgradeRequest = require("./src/routes/upgradeRequestRoutes")
-const archives = require("./src/routes/arhiveRoutes")
-const storyroutes = require("./src/routes/storyroutes")
-const productRoutes = require("./src/routes/productRoutes")
-const orderRoutes = require("./src/routes/orderRoutes")
-const campaignsRoutes = require("./src/routes/campaignRoutes")
-const taskRoutes = require("./src/routes/tasksRoutes")
-const bucketRoutes = require("./src/routes/bucketRoutes")
+const authroutes = require("./src/routes/userroutes");
+const postroutes = require("./src/routes/postroutes");
+const todayroutes = require("./src/routes/to-day-routes");
+const notification = require("./src/routes/notifications");
+const groups = require("./src/routes/groups");
+const chats = require("./src/routes/chatroute");
+const invitesms = require("./src/routes/inviteroutes");
+const upgradeRequest = require("./src/routes/upgradeRequestRoutes");
+const archives = require("./src/routes/arhiveRoutes");
+const storyroutes = require("./src/routes/storyroutes");
+const productRoutes = require("./src/routes/productRoutes");
+const orderRoutes = require("./src/routes/orderRoutes");
+const campaignsRoutes = require("./src/routes/campaignRoutes");
+const taskRoutes = require("./src/routes/tasksRoutes");
+const bucketRoutes = require("./src/routes/bucketRoutes");
 
 //sockets
-const disconnect = require("./src/sockets/disconnect")
+const disconnect = require("./src/sockets/disconnect");
 //Services
-const socketauth = require("./src/middlewares/socketauthentication/socketauth")
-const sendmessage = require("./src/services/sendmessage")
-const sendmessageCN = require("./src/services/sendMessageCN")
+const socketauth = require("./src/middlewares/socketauthentication/socketauth");
+const sendmessage = require("./src/services/sendmessage");
+const sendmessageCN = require("./src/services/sendMessageCN");
 //TEMPORARY IMPORTS
-const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes")
+const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
 //Models
-const GroupModel = require("./src/models/groups")
-const MessageModel = require("./src/models/messageSchema")
-const GroupMessageModel = require("./src/models/groupMessageSchema")
-const OrderModel = require("./src/models/Order")
-const ChatModel = require("./src/models/chats")
+const GroupModel = require("./src/models/groups");
+const MessageModel = require("./src/models/messageSchema");
+const GroupMessageModel = require("./src/models/groupMessageSchema");
+const OrderModel = require("./src/models/Order");
+const ChatModel = require("./src/models/chats");
 
 //server configuration imports
-const http = require("http")
-const cors = require("cors")
-require("./src/config/connection")
-require("dotenv/config")
+const http = require("http");
+const cors = require("cors");
+require("./src/config/connection");
+require("dotenv/config");
 
 //cron job
-require("./src/controllers/do-day/cron-jobs")
-const { Server } = require("socket.io")
+require("./src/controllers/do-day/cron-jobs");
+const { Server } = require("socket.io");
 const {
   sendGroupMessageNotifications,
-} = require("./src/services/sendGroupMessageNotifications")
-const { updatePoints } = require("./src/services/updateCampaignPoints")
+} = require("./src/services/sendGroupMessageNotifications");
+const { updatePoints } = require("./src/services/updateCampaignPoints");
 
 //server configuration
-const app = express()
-app.use(express.json())
-app.use(bodyParser.json({ limit: "50mb" }))
+const app = express();
+app.use(express.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({
     limit: "50mb",
     extended: true,
     parameterLimit: 50000,
   })
-)
-app.use(cors())
-const server = http.createServer(app)
+);
+app.use(cors());
+const server = http.createServer(app);
 const client = new Server(server, {
   maxHttpBufferSize: 1e8,
   cors: {
     origin: ["*", "https://admin.socket.io/"],
     methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
   },
-})
+});
 
 app.get("/", (req, res) => {
-  return res.send("Successful,Happy Coding")
-})
+  return res.send("Successful,Happy Coding");
+});
 
 //static configuration
-app.use(express.static("./uploads"))
+app.use(express.static("./uploads"));
 //send a req to this route along with the image name to get image
-app.use("/images", express.static("uploads"))
+app.use("/images", express.static("uploads"));
 
 //to get audio
-app.use("/messageMedia", express.static("uploads/messageMedia"))
+app.use("/messageMedia", express.static("uploads/messageMedia"));
 
 //traditional crud
-app.use("/user", authroutes)
-app.use("/posts", postroutes)
-app.use("/today", todayroutes)
-app.use("/notify", notification)
-app.use("/chat", chats)
-app.use("/groups", groups)
-app.use("/temporary", TEMPORARY_ROUTES)
-app.use("/sms", invitesms)
-app.use("/upgradeRequests", upgradeRequest)
-app.use("/archives", archives)
-app.use("/story", storyroutes)
-app.use("/product", productRoutes)
-app.use("/order", orderRoutes)
-app.use("/campaigns", campaignsRoutes)
-app.use("/task", taskRoutes)
-app.use("/buckets", bucketRoutes)
+app.use("/user", authroutes);
+app.use("/posts", postroutes);
+app.use("/today", todayroutes);
+app.use("/notify", notification);
+app.use("/chat", chats);
+app.use("/groups", groups);
+app.use("/temporary", TEMPORARY_ROUTES);
+app.use("/sms", invitesms);
+app.use("/upgradeRequests", upgradeRequest);
+app.use("/archives", archives);
+app.use("/story", storyroutes);
+app.use("/product", productRoutes);
+app.use("/order", orderRoutes);
+app.use("/campaigns", campaignsRoutes);
+app.use("/task", taskRoutes);
+app.use("/buckets", bucketRoutes);
 
-client.use(socketauth)
+client.use(socketauth);
 //socket apis
 client.on("connection", (socket) => {
   socket.on("join", async (data) => {
-    socket.join(data.id)
-    console.log(`connected in chat ${data.id} using id ${socket.id}`)
-  })
+    socket.join(data.id);
+    console.log(`connected in chat ${data.id} using id ${socket.id}`);
+  });
   socket.on("leave", (data) => {
-    socket.leave(data.id)
-  })
+    socket.leave(data.id);
+  });
 
-  socket.on("disconnect", disconnect)
-  socket.on("chat", () => {})
+  socket.on("disconnect", disconnect);
+  socket.on("chat", () => {});
   socket.on("update_points", async (data) => {
-    const result = await updatePoints(data)
+    const result = await updatePoints(data);
 
-    client.to(data.group).emit("receive_points", result)
-  })
+    client.to(data.group).emit("receive_points", result);
+  });
 
   socket.on("send_message", async (data) => {
     //here send notifications
     try {
       //sendGroupMessageNotifications(data);
     } catch (error) {
-      console.log("error inside send_message notification:::", error)
+      console.log("error inside send_message notification:::", error);
     }
-    const result = await sendmessage(data)
+    const result = await sendmessage(data);
     // console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
-      .emit("receive_message", result.messages[result.messages.length - 1])
-  })
+      .emit("receive_message", result.messages[result.messages.length - 1]);
+  });
 
   socket.on("send_messageCN", async (data) => {
-    //here send notifications
-    try {
-      //sendGroupMessageNotifications(data);
-    } catch (error) {
-      console.log("error inside send_message notification:::", error)
-    }
-    const result = await sendmessageCN(data)
+ 
+    const result = await sendmessageCN(data);
     // console.log(result.messages[result.messages.length - 1]);
     client
       .to(data.chat)
-      .emit("receive_message", result.messages[result.messages.length - 1])
-  })
-
+      .emit("receive_message", result.messages[result.messages.length - 1]);
+  });
   socket.on("Delete_messageCN", async (data) => {
-    const chat = await ChatModel.findOne({ _id: data.chatId })
-    await ChatModel.findByIdAndUpdate(
-      { _id: data.chatId },
-      {
-        messages: chat.messages.filter((item) => item !== data.id),
+    try {
+      let chat = await ChatModel.findOne({ _id: data.chat });
+      if (!chat) {
+        return;
       }
-    )
-    await MessageModel.findByIdAndDelete({ _id: data.id })
-    client.to(data.chat).emit("deleted_messageCN", data.id)
-  })
+      chat.messages = chat.messages.filter(
+        (item) => item?._id.toString() !== data.id
+      );
+      await chat.save();
+      await MessageModel.findByIdAndDelete({ _id: data.id });
+      chat = await ChatModel.findOne({ _id: data.chat });
+      const messageIds = chat?.messages;
+      const messages = await MessageModel.find({ _id: { $in: messageIds } });
+      client.to(data.chat,messages).emit("Deleted_messageCN", data.id,messages);
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
   socket.on("Delete_message", async (data) => {
-    const Group = await GroupModel.findOne({ _id: data.groupId })
+    const Group = await GroupModel.findOne({ _id: data.groupId });
     await GroupModel.findByIdAndUpdate(
       { _id: data.GroupId },
       {
-        messages: Group.messages.filter((item) => item !== data.id),
+        messages: Group.messages.filter((item) => console.log(item)),
       }
-    )
-    await GroupMessageModel.findByIdAndDelete({ _id: data.id })
-    client.to(data.chat).emit("deleted_message", data)
-  })
+    );
+    await GroupMessageModel.findByIdAndDelete({ _id: data.id });
+    client.to(data.chat).emit("deleted_message", data);
+  });
 
   socket.on("update_Message", async (data) => {
-    let group = await GroupModel.findOne({ _id: data.id })
+    let group = await GroupModel.findOne({ _id: data.id });
     group.messages = group.messages.map(async (m) => {
       if (m.id === data.MessageID) {
         await OrderModel.findByIdAndUpdate(
@@ -187,12 +189,12 @@ client.on("connection", (socket) => {
           {
             assigned_to: data.user,
           }
-        )
-        return { ...m, status: "ACCEPTED" }
+        );
+        return { ...m, status: "ACCEPTED" };
       } else {
-        return m
+        return m;
       }
-    })
+    });
 
     const result = await GroupModel.findByIdAndUpdate(
       { _id: data.id },
@@ -200,13 +202,13 @@ client.on("connection", (socket) => {
       {
         new: true,
       }
-    )
-    client.to(data.id).emit("update_message", data)
-  })
-})
+    );
+    client.to(data.id).emit("update_message", data);
+  });
+});
 
 client.of("/CN").on("connection", (socket) => {
-  console.log("connected in CN")
+  console.log("connected in CN");
   socket.on("send_comments", async (data) => {
     // console.log(data);
     const post = await postModal.find({ _id: data._id }).populate({
@@ -215,10 +217,10 @@ client.of("/CN").on("connection", (socket) => {
         path: "commented_by",
         select: "profile fullName phoneNumber type",
       },
-    })
+    });
     // console.log(post[0].comments);
-    socket.emit("receive_comments", post[0].comments)
-  })
+    socket.emit("receive_comments", post[0].comments);
+  });
   // story comments
 
   socket.on("send_comments_story", async (data) => {
@@ -229,23 +231,23 @@ client.of("/CN").on("connection", (socket) => {
         path: "commented_by",
         select: "profile fullName phoneNumber type",
       },
-    })
+    });
     // console.log(post[0].comments);
-    socket.emit("receive_comments_story", post[0].comments)
-  })
+    socket.emit("receive_comments_story", post[0].comments);
+  });
 
   // story comments end
 
   socket.on("send_posts", (data) => {
-    socket.emit("receive_posts", data)
-  })
+    socket.emit("receive_posts", data);
+  });
   socket.on("send_message", (data) => {
-    socket.emit("receive_message", data)
-  })
-})
+    socket.emit("receive_message", data);
+  });
+});
 instrument(client, {
   auth: false,
-})
+});
 server.listen(3000, () => {
-  console.log("Server is running")
-})
+  console.log("Server is running");
+});
