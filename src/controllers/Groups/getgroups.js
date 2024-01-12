@@ -5,7 +5,7 @@ const getgroups = async (req, res) => {
     const userId = req.user._id;
 
     const userGroups = await groups
-      .find({ "members.member": userId })
+      .find({ "members.member": userId, type: { $ne: "individual" } })
       .populate({
         path: "members.member",
         select: "fullName phoneNumber profile type expoPushToken",
