@@ -141,7 +141,6 @@ client.on("connection", (socket) => {
   });
 
   socket.on("send_messageCN", async (data) => {
- 
     const result = await sendmessageCN(data);
     // console.log(result.messages[result.messages.length - 1]);
     client
@@ -162,7 +161,9 @@ client.on("connection", (socket) => {
       chat = await ChatModel.findOne({ _id: data.chat });
       const messageIds = chat?.messages;
       const messages = await MessageModel.find({ _id: { $in: messageIds } });
-      client.to(data.chat,messages).emit("Deleted_messageCN", data.id,messages);
+      client
+        .to(data.chat, messages)
+        .emit("Deleted_messageCN", data.id, messages);
     } catch (error) {
       console.error(error);
     }

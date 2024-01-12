@@ -1,11 +1,11 @@
 const groups = require("../../models/groups");
 
-const getgroups = async (req, res) => {
+const getCRMMessages = async (req, res) => {
   try {
     const userId = req.user._id;
 
     const userGroups = await groups
-      .find({ "members.member": userId, type: { $ne: "individual" } })
+      .find({ "members.member": userId, type: "individual" })
       .populate({
         path: "members.member",
         select: "fullName phoneNumber profile type expoPushToken",
@@ -25,4 +25,4 @@ const getgroups = async (req, res) => {
   }
 };
 
-module.exports = getgroups;
+module.exports = getCRMMessages;
