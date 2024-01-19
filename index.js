@@ -170,15 +170,35 @@ client.on("connection", (socket) => {
   });
 
   socket.on("Delete_message", async (data) => {
-    const Group = await GroupModel.findOne({ _id: data.groupId });
-    await GroupModel.findByIdAndUpdate(
-      { _id: data.GroupId },
-      {
-        messages: Group.messages.filter((item) => console.log(item)),
+    try {
+      const group = await GroupModel.findOne({ _id: data.groupId });
+
+      if (!group) {
+        return;
       }
-    );
-    await GroupMessageModel.findByIdAndDelete({ _id: data.id });
-    client.to(data.chat).emit("deleted_message", data);
+      group.messages = group.messages.filter(
+        (item) => item?._id.toString() !== data.id
+      );
+
+      await group.save();
+      await GroupMessageModel.findByIdAndDelete({ _id: data.id });
+
+      const updatedGroup = await GroupModel.findOne({ _id: data.groupId });
+      const messageIds = updatedGroup?.messages;
+      const messages = await GroupMessageModel.find({
+        _id: { $in: messageIds },
+      })
+        .populate({
+          path: "from",
+          select: "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
+        })
+        .exec();
+      client
+        .to(data.groupId, messages)
+        .emit("Delete_message", data.id, messages);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   socket.on("update_Message", async (data) => {
