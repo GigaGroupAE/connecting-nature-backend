@@ -26,7 +26,6 @@ exports.LockUnlockDoday = async (req, res) => {
     );
     return res.json({ success: true, message: "unlocked successfully" });
   } catch (error) {
-    console.log(error);
     return res.json({ success: false, message: "internal server error" });
   }
 };

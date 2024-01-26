@@ -20,12 +20,9 @@ exports.updatePoints = async (req, res) => {
     campaign[teamName].points += bucket.points * bucketCount;
 
     const updateCampaign = await campaign.save();
-    console.log(updateCampaign)
-    console.log("after saving")
 
     return res.status(200).json({ success: true, campaign: updateCampaign });
   } catch (error) {
-    console.log("error in update campaigns ", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

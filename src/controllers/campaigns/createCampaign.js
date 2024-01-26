@@ -86,7 +86,6 @@ exports.createCampaign = async (req, res, next) => {
       })
       .session(session);
 
-    console.log("updated campaign is => ", updatedCampaign);
 
     await session.commitTransaction();
     session.endSession();
@@ -97,7 +96,6 @@ exports.createCampaign = async (req, res, next) => {
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.log("error in create campaign is ", error);
     await session.abortTransaction();
     session.endSession();
 

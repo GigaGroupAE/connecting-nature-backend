@@ -42,7 +42,6 @@ exports.addVolunteerToTeam = async (req, res) => {
 
     return res.json({ success: true, updatedDoday });
   } catch (error) {
-    console.log("error in addVolunteerToTeam: ", error);
     return res.json({ success: false, message: "internal server error" });
   }
 };
@@ -93,7 +92,6 @@ exports.removeVolunteerFromTeam = async (req, res) => {
     });
     return res.json({ success: true, updatedDoday });
   } catch (error) {
-    console.log("error in removeVolunteerFromTeam", error);
     return res.json({ success: true, message: "internal server error" });
   }
 };
@@ -131,7 +129,6 @@ exports.makeTeamLead = async (req, res) => {
     }
     return res.json({ success: true, updatedDoday });
   } catch (error) {
-    console.log("error in makeTeamLead", error);
     return res.json({ success: true, message: "internal server error" });
   }
 };

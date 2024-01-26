@@ -41,7 +41,6 @@ exports.updateVolunteers = async (req, res) => {
 
     return res.json({ success: true, updatedVolunteers });
   } catch (error) {
-    console.log(error);
     return res.json({ success: false, message: "internal server error" });
   }
 };

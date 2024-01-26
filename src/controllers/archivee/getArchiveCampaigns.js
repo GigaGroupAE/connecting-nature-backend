@@ -11,10 +11,8 @@ exports.getArchiveCampaigns = async (req, res) => {
 
     let newcampaigns = [];
     for (const item of campaigns) {
-      console.log(item._id);
       const query = { ref: item._id };
       const count = await postModel.countDocuments(query);
-      console.log(count);
       newcampaigns.push({
         ...item._doc,
         count: count,

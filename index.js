@@ -7,6 +7,7 @@ const { instrument } = require("@socket.io/admin-ui");
 
 const postModal = require("./src/models/post");
 const storyModal = require("./src/models/story");
+const campaignModal = require("./src/models/campaignsSchema");
 
 //Routes
 const authroutes = require("./src/routes/userroutes");
@@ -111,7 +112,6 @@ client.use(socketauth);
 client.on("connection", (socket) => {
   socket.on("join", async (data) => {
     socket.join(data.id);
-    console.log(`connected in chat ${data.id} using id ${socket.id}`);
   });
   socket.on("leave", (data) => {
     socket.leave(data.id);
@@ -129,9 +129,7 @@ client.on("connection", (socket) => {
     //here send notifications
     try {
       //sendGroupMessageNotifications(data);
-    } catch (error) {
-      console.log("error inside send_message notification:::", error);
-    }
+    } catch (error) {}
     const result = await sendmessage(data);
     // console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
@@ -190,7 +188,8 @@ client.on("connection", (socket) => {
       })
         .populate({
           path: "from",
-          select: "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
+          select:
+            "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
         })
         .exec();
       client
@@ -229,7 +228,6 @@ client.on("connection", (socket) => {
 });
 
 client.of("/CN").on("connection", (socket) => {
-  console.log("connected in CN");
   socket.on("send_comments", async (data) => {
     // console.log(data);
     const post = await postModal.find({ _id: data._id }).populate({
@@ -253,11 +251,21 @@ client.of("/CN").on("connection", (socket) => {
         select: "profile fullName phoneNumber type",
       },
     });
-    // console.log(post[0].comments);
     socket.emit("receive_comments_story", post[0].comments);
   });
 
   // story comments end
+
+  socket.on("send_comments_campaign", async (data) => {
+    const campaign = await campaignModal.find({ _id: data._id }).populate({
+      path: "comments",
+      populate: {
+        path: "commented_by",
+        select: "profile fullName phoneNumber type",
+      },
+    });
+    socket.emit("receive_comments_campaign", campaign[0].comments);
+  });
 
   socket.on("send_posts", (data) => {
     socket.emit("receive_posts", data);

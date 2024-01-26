@@ -53,7 +53,6 @@ exports.addVolunteerToTeam = async (req, res, next) => {
 
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
-    console.log("errror in add volunteer to team ==========> ", error);
     return res.status(500).json({ success: true, message: error.message });
   }
 };
@@ -102,7 +101,6 @@ exports.removeVolunteerFromTeam = async (req, res, next) => {
 
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
-    console.log("errror in remove volunteer to team ==========> ", error);
     return res.status(500).json({ success: true, message: error.message });
   }
 };

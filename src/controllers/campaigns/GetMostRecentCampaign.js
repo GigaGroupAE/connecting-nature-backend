@@ -8,7 +8,6 @@ exports.getMostRecentCampaign = async (req, res, next) => {
       .select("campaignName    teamB   teamA");
     return res.status(200).json({ success: true, campaigns: campaigns[0] });
   } catch (error) {
-    console.log("error in get all campaings is ", error);
     return res.status(200).json({ success: false, message: error.message });
   }
 };
