@@ -38,7 +38,6 @@ exports.getMyChats = async (req, res) => {
 
     return res.json({ success: true, myChats });
   } catch (error) {
-    console.log("error in get my chats is ", error);
     return res.json({ success: false, message: "internal server error" });
   }
 };

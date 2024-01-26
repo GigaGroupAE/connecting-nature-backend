@@ -2,7 +2,6 @@ const todaymodel = require("../../models/To-Day");
 const UserModel = require("../../models/Register");
 
 const createtoday = async (req, res) => {
-  console.log(req.body);
   let user = req.user._id;
 
   const newtoday = new todaymodel({

@@ -5,9 +5,6 @@ exports.inviteVolunteer = async (req, res, next) => {
   try {
     let campaign = await CampaignsModel.findById(req.params.campaignId);
     const { phoneNumbers, usersToUpdate } = req.body;
-    console.log("phone numbers = ", phoneNumbers);
-    console.log("users to update = ", usersToUpdate);
-
     //sending phone message
     for (const num of phoneNumbers) {
       await sendVevoMessage(
@@ -66,7 +63,6 @@ exports.inviteVolunteer = async (req, res, next) => {
       .status(200)
       .json({ success: true, updatedCampaign: updatedCampaign.volunteers });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

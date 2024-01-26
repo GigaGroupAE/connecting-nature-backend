@@ -1,6 +1,6 @@
 // controllers/commentController.js
 
-const posts = require("../../models/post");
+const posts = require("../../models/story");
 const updateLikes = async (postId, commentId, likes) => {
   try {
     const post = await posts.findById(postId);

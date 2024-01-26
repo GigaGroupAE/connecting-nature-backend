@@ -38,7 +38,6 @@ exports.initiateCampaign = async (req, res, next) => {
 
     return res.status(200).json({ success: true, campaign: updatedCampaign });
   } catch (error) {
-    console.log("error in initiate campaign is ", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

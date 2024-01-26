@@ -19,7 +19,6 @@ exports.disbandGroup = async (req, res) => {
     await Groups.findByIdAndDelete(groupToDisband._id);
     return res.json({ success: true, message: "group disbanded successfully" });
   } catch (error) {
-    console.log(error);
     return res.json({ success: false, message: "internal server error " });
   }
 };

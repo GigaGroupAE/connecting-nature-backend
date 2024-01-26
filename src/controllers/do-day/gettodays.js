@@ -1,7 +1,6 @@
 const todays = require("../../models/To-Day");
 
 const getodays = async (req, res) => {
-  console.log("get dodays called")
   try {
     const newtodays = await todays
       .find({ status: "active" })

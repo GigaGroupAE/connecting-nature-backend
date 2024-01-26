@@ -18,7 +18,6 @@ const updategroup = async (req, res) => {
     if (!uploadedFile) {
       return res.status(400).send("No file uploaded.");
     }
-    console.log(uploadedFile);
     const mimeType = uploadedFile.mimetype;
     const originalFilePath = uploadedFile.path;
 

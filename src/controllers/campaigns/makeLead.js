@@ -31,7 +31,6 @@ exports.makeLead = async (req, res, next) => {
 
     query.volunteers = updatedVolunteers;
 
-    console.log("query is ", query);
 
     //team.leader = volunteer;
 
@@ -46,7 +45,6 @@ exports.makeLead = async (req, res, next) => {
     );
     return res.status(200).json({ success: true, updatedCampaign });
   } catch (error) {
-    console.log("errror in make lead ==========> ", error);
     return res.status(500).json({ success: true, message: error.message });
   }
 };
@@ -93,7 +91,6 @@ exports.makeAutoLead = async (req, res, next) => {
 
     return res.json({ success: true, campaign: updatedCampaign });
   } catch (error) {
-    console.log("errror in make lead ==========> ", error);
     return res.status(500).json({ success: true, message: error.message });
   }
 };

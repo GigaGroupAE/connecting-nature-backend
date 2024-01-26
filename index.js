@@ -111,7 +111,6 @@ client.use(socketauth);
 client.on("connection", (socket) => {
   socket.on("join", async (data) => {
     socket.join(data.id);
-    console.log(`connected in chat ${data.id} using id ${socket.id}`);
   });
   socket.on("leave", (data) => {
     socket.leave(data.id);
@@ -130,7 +129,6 @@ client.on("connection", (socket) => {
     try {
       //sendGroupMessageNotifications(data);
     } catch (error) {
-      console.log("error inside send_message notification:::", error);
     }
     const result = await sendmessage(data);
     // console.log("result is ", result);
@@ -190,7 +188,8 @@ client.on("connection", (socket) => {
       })
         .populate({
           path: "from",
-          select: "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
+          select:
+            "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
         })
         .exec();
       client
@@ -229,7 +228,6 @@ client.on("connection", (socket) => {
 });
 
 client.of("/CN").on("connection", (socket) => {
-  console.log("connected in CN");
   socket.on("send_comments", async (data) => {
     // console.log(data);
     const post = await postModal.find({ _id: data._id }).populate({
@@ -253,7 +251,6 @@ client.of("/CN").on("connection", (socket) => {
         select: "profile fullName phoneNumber type",
       },
     });
-    // console.log(post[0].comments);
     socket.emit("receive_comments_story", post[0].comments);
   });
 
