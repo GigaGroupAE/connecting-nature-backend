@@ -27,6 +27,8 @@ const { updateCampaign } = require("../controllers/campaigns/updateCampaign");
 const { updateEndtime } = require("../controllers/campaigns/updateEndTime");
 const { updatePoints } = require("../controllers/campaigns/updatePoints");
 const verify = require("../middlewares/Auth");
+ const DeleteComment = require("../controllers/campaigns/CommentDeleteCampagin");
+
 
 router.post("/create", verify, createCampaign);
 router.get("/get", verify, getAllCampaigns);
@@ -49,5 +51,7 @@ router.patch("/update/:campaignId", verify, update);
 router.get("/getActiveCampaigns", verify, getAllCampaigns);
 router.get("/mostrecentcampaign", verify, getMostRecentCampaign);
 router.patch("/updateTime/:id", verify, updateEndtime);
+router.patch("/delete-campaign-comment", verify, DeleteComment);
+
 
 module.exports = router;

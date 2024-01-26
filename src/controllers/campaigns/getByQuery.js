@@ -21,6 +21,13 @@ exports.getMultipleByQuery = async (req, res, next) => {
         path: "reactions",
         select: "profile fullName phoneNumber type",
         model: "NewUsers",
+      })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "commented_by",
+          select: "profile fullName phoneNumber type",
+        },
       });
     return res.status(200).json({ success: true, campaigns });
   } catch (error) {

@@ -7,6 +7,7 @@ const { instrument } = require("@socket.io/admin-ui");
 
 const postModal = require("./src/models/post");
 const storyModal = require("./src/models/story");
+const campaignModal = require("./src/models/campaignsSchema");
 
 //Routes
 const authroutes = require("./src/routes/userroutes");
@@ -128,8 +129,7 @@ client.on("connection", (socket) => {
     //here send notifications
     try {
       //sendGroupMessageNotifications(data);
-    } catch (error) {
-    }
+    } catch (error) {}
     const result = await sendmessage(data);
     // console.log("result is ", result);
     //this is the line causing the issue because .to is not working on it
@@ -255,6 +255,17 @@ client.of("/CN").on("connection", (socket) => {
   });
 
   // story comments end
+
+  socket.on("send_comments_campaign", async (data) => {
+    const campaign = await campaignModal.find({ _id: data._id }).populate({
+      path: "comments",
+      populate: {
+        path: "commented_by",
+        select: "profile fullName phoneNumber type",
+      },
+    });
+    socket.emit("receive_comments_campaign", campaign[0].comments);
+  });
 
   socket.on("send_posts", (data) => {
     socket.emit("receive_posts", data);
