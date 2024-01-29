@@ -3,7 +3,6 @@ const campaigns = require("../../models/campaignsSchema");
 const DeleteCampaignComment = async (req, res) => {
   try {
     const { comment, campaignId } = req.body;
-    console.log(req.body, "im req");
     const getCampaign = await campaigns.findOne({ _id: campaignId });
     const newComments = getCampaign.comments.filter(
       (item) => item._id?.toString() !== comment
@@ -17,13 +16,6 @@ const DeleteCampaignComment = async (req, res) => {
         },
         { new: true }
       )
-      .populate({
-        path: "comments",
-        populate: {
-          path: "commented_by",
-          select: "profile fullName phoneNumber type",
-        },
-      });
     if (comment) {
       return res.status(200).send({ comments: updateCampaign.comments });
     } else {

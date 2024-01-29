@@ -257,13 +257,7 @@ client.of("/CN").on("connection", (socket) => {
   // story comments end
 
   socket.on("send_comments_campaign", async (data) => {
-    const campaign = await campaignModal.find({ _id: data._id }).populate({
-      path: "comments",
-      populate: {
-        path: "commented_by",
-        select: "profile fullName phoneNumber type",
-      },
-    });
+    const campaign = await campaignModal.find({ _id: data._id });
     socket.emit("receive_comments_campaign", campaign[0].comments);
   });
 
