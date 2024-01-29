@@ -8,7 +8,6 @@ exports.updateCampaign = async (req, res, next) => {
     const existingVolunteers = campaign.volunteers;
     const updatedVolunteers = [...existingVolunteers, ...volunteers];
 
-    console.log("updated volunteeres are ", updatedVolunteers);
     if (!campaign)
       return res
         .status(400)

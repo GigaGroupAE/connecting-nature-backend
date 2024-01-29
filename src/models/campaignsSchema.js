@@ -135,9 +135,28 @@ const campaignsSchema = new Schema({
   comments: [
     {
       commented_by: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "NewUsers",
+        _id: {
+          type: String,
+        },
+        fullName: {
+          type: String,
+          required: true,
+        },
+        phoneNumber: {
+          type: String,
+          required: true,
+        },
+        profile: {
+          type: String,
+          required: true,
+        },
+        type: {
+          type: String,
+          required: true,
+        },
+        expoPushToken: {
+          type: String,
+        },
       },
       description: {
         type: String,
