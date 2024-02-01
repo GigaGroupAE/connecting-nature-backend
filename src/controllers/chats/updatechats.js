@@ -1,21 +1,24 @@
-const model = require("../../models/chats");
+const Messages = require("../../models/messageSchema");
 const updatechat = async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).send("Invalid id");
-  } else {
-    try {
-      const _id = req.params.id;
-      const updatechat = await model.findByIdAndUpdate(_id, req.body, {
-        new: true,
+  const { messageId, newStatus } = req.body;
+
+  try {
+    const message = await Messages.findByIdAndUpdate(
+      messageId,
+      { $set: { status: newStatus } },
+      { new: true }
+    );
+
+    if (message) {
+      res.status(200).json({
+        message: "Message status updated successfully",
+        updatedMessage: message,
       });
-      if (!updatechat) {
-        res.status(500).send("internal server error");
-      } else {
-        res.status(200).send(updatechat);
-      }
-    } catch (e) {
-      res.status(400).send("Invalid data body");
+    } else {
+      res.status(404).json({ error: "Message not found" });
     }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const verify = require("../middlewares/Auth");
 const addnotification = require("../controllers/notification/addnotification");
 const getnoties = require("../controllers/notification/getnotifications");
+const deleteNoties = require("../controllers/notification/deletenoties");
 const {
   notifyPostAuthor,
 } = require("../controllers/notification/notifyPostAuthor");
@@ -14,6 +15,7 @@ const {
 router.post("/addnotification", verify, addnotification);
 router.get("/getnoties", verify, getnoties);
 router.post("/addMultipleNotifications", verify, addMultipleNotifications);
+router.delete("/delete-notification/:id", verify, deleteNoties);
 
 router.post("/commentNotification/:id", verify, notifyPostAuthor);
 router.patch("/change-notification-type/:id", verify, changeNotificationType);

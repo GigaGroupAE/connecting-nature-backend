@@ -11,7 +11,7 @@ const notifychat = require("../controllers/notification/NotifyChat");
 router.post("/createchat", verify, createchat);
 router.get("/getchats", verify, getchats);
 router.get("/get-my-chats", verify, getMyChats);
-router.patch("/updatachat/:id", verify, updatechat);
+router.patch("/updatachat", verify, updatechat);
 router.post("/saveMedia", uploadmedia.single("media"), updatemessages);
 router.delete("/delete/:id", verify, deleteChat);
 router.get("/get-my-chats", verify, getMyChats);

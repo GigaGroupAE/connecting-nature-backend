@@ -23,6 +23,11 @@ const dbSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    status: {
+      type: String,
+      enum: ["checked", "unchecked"],
+      default: "unchecked",
+    },
   },
   {
     timestamps: true,
