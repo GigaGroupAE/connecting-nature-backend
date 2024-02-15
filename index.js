@@ -67,12 +67,16 @@ app.use(
     parameterLimit: 50000,
   })
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001", // Allow requests from this origin
+  })
+);
 const server = http.createServer(app);
 const client = new Server(server, {
   maxHttpBufferSize: 1e8,
   cors: {
-    origin: ["*", "https://admin.socket.io/"],
+    origin: ["*", "https://admin.socket.io/", "http://localhost:3001"],
     methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
   },
 });

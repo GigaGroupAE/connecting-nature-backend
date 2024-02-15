@@ -15,6 +15,7 @@ const videoOptions = {
 const updategroup = async (req, res) => {
   try {
     const uploadedFile = req.file;
+
     if (!uploadedFile) {
       return res.status(400).send("No file uploaded.");
     }
