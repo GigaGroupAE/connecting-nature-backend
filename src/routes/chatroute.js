@@ -14,7 +14,7 @@ router.get("/get-my-chats", verify, getMyChats);
 router.patch("/updatachat", verify, updatechat);
 router.post("/saveMedia", uploadmedia.single("media"), updatemessages);
 router.delete("/delete/:id", verify, deleteChat);
-router.get("/get-my-chats", verify, getMyChats);
+// router.get("/get-my-chats", verify, getMyChats);
 router.post("/notifychat", verify, notifychat);
 
 module.exports = router;
