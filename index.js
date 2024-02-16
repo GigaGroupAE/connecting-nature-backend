@@ -26,6 +26,8 @@ const campaignsRoutes = require("./src/routes/campaignRoutes");
 const taskRoutes = require("./src/routes/tasksRoutes");
 const bucketRoutes = require("./src/routes/bucketRoutes");
 
+const decorations = require("./src/routes/decorationsRoutes");
+
 //sockets
 const disconnect = require("./src/sockets/disconnect");
 //Services
@@ -110,6 +112,7 @@ app.use("/order", orderRoutes);
 app.use("/campaigns", campaignsRoutes);
 app.use("/task", taskRoutes);
 app.use("/buckets", bucketRoutes);
+app.use("/decorations", decorations);
 
 client.use(socketauth);
 //socket apis
