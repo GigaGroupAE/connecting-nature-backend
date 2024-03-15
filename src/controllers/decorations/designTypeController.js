@@ -40,3 +40,22 @@ exports.updateDesign = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.deleteDesign = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deletedDesign = await DesignType.findByIdAndDelete(id);
+
+    if (!deletedDesign) {
+      return res.status(404).json({ error: "Design not found" });
+    }
+
+    res.status(200).json({
+      message: "Design type deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting design:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

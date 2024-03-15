@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const imageSchema = new mongoose.Schema({
-  url: {
+  name: {
     type: String,
     required: true,
   },
@@ -31,7 +31,6 @@ const decorationSchema = new mongoose.Schema({
   },
   Description: {
     type: String,
-    required: true,
   },
   images: {
     type: [imageSchema],
@@ -43,12 +42,17 @@ const decorationSchema = new mongoose.Schema({
   },
   tag: {
     type: String,
-    required: true,
   },
   products: {
     type: [productSchema],
     default: [],
   },
+  isSaved: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NewUsers",
+    },
+  ],
 });
 
 function arrayLimit(val) {
