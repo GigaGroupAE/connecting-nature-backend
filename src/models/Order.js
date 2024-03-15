@@ -52,7 +52,6 @@ const schema = new Schema({
     enum: ["COD", "credit card"],
     required: true,
   },
-
   totalPrice: {
     type: Number,
     required: true,

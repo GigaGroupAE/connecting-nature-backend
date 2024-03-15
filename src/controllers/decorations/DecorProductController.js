@@ -12,7 +12,7 @@ exports.getDecorProducts = async (req, res) => {
 
 exports.getDecorProductswithTitle = async (req, res) => {
   try {
-    const query = req.query.q;
+    const query = req.query.search;
 
     const searchCriteria = query
       ? { title: { $regex: query, $options: "i" } }
@@ -28,7 +28,8 @@ exports.getDecorProductswithTitle = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
   try {
-    const { title, price, image } = req.body;
+    const { title, price } = req.body;
+    const image = req.file;
 
     if (!title || !price || !image) {
       return res
@@ -36,7 +37,11 @@ exports.addProduct = async (req, res) => {
         .json({ error: "Title, price, and image are required" });
     }
 
-    const newProduct = new DecorProduct({ title, price, image });
+    const newProduct = new DecorProduct({
+      title,
+      price,
+      image: image.filename,
+    });
 
     const savedProduct = await newProduct.save();
 
@@ -50,9 +55,10 @@ exports.addProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.id;
-    const { title, price, image } = req.body;
+    const { title, price } = req.body;
+    const image = req.file;
 
-    if (!title && !price && !image) {
+    if (!title && !price) {
       return res.status(400).json({
         error:
           "At least one field (title, price, image) is required for update",
@@ -72,7 +78,7 @@ exports.updateProduct = async (req, res) => {
       product.price = price;
     }
     if (image) {
-      product.image = image;
+      product.image = image.filename;
     }
 
     const updatedProduct = await product.save();
@@ -86,9 +92,9 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   try {
-    const productId = req.params.id;
+    const id = req.params.id;
 
-    const deletedProduct = await DecorProduct.findByIdAndDelete(productId);
+    const deletedProduct = await DecorProduct.findByIdAndDelete(id);
 
     if (!deletedProduct) {
       return res.status(404).json({ error: "Product not found" });

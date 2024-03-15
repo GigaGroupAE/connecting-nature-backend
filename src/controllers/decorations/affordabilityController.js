@@ -13,15 +13,17 @@ exports.getAllAffordabilities = async (req, res) => {
 exports.createAffordability = async (req, res) => {
   try {
     const { name, minRange, maxRange } = req.body;
-    if (!name || !minRange || !maxRange) {
+    if (!name || !maxRange) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
     const newAffordability = new Affordability({ name, minRange, maxRange });
-
     await newAffordability.save();
-
-    res.status(201).json(newAffordability);
+    res.status(201).json({
+      success: true,
+      message: "Affordability created successfully",
+      data: newAffordability,
+    });
   } catch (err) {
     console.error("Error creating affordability:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -44,9 +46,31 @@ exports.updateAffordability = async (req, res) => {
       return res.status(404).json({ error: "Affordability not found" });
     }
 
-    res.status(200).json(updatedAffordability);
+    res.status(200).json({
+      updatedAffordability,
+      message: "Affordability update successfully",
+    });
   } catch (err) {
     console.error("Error updating affordability:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.deleteAffordability = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const deletedAffordability = await Affordability.findByIdAndDelete(id);
+
+    if (!deletedAffordability) {
+      return res.status(404).json({ error: "Affordability not found" });
+    }
+
+    res.status(200).json({
+      message: "Affordability deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting affordability:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
