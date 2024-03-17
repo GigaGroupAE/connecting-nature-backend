@@ -18,7 +18,6 @@ exports.getMyChats = async (req, res) => {
 
     let exculde = [...activeUser.blockedByUsers, ...activeUser.blockedUsers];
 
-
     // let myChats = await chats.find({
     //   $and: [
     //     { "members.phoneNumber": activeUser.phoneNumber }, // this lines gives us our chats only
@@ -34,10 +33,44 @@ exports.getMyChats = async (req, res) => {
       })
       .populate("members")
       .populate("messages");
-    
+    myChats = myChats.filter((chat) => chat.messages.length > 0);
 
     return res.json({ success: true, myChats });
   } catch (error) {
     return res.json({ success: false, message: "internal server error" });
+  }
+};
+
+exports.getOrCreateChat = async (req, res) => {
+  const userId = req.user._id;
+  const { id } = req.params;
+
+  try {
+    // Check if a chat already exists between the two users
+    let existingChat = await chats
+      .findOne({
+        members: { $all: [userId, id] },
+      })
+      .populate("members")
+      .populate("messages");
+
+    if (existingChat) {
+      return res.json({ chat: existingChat });
+    } else {
+      const newChat = new chats({
+        members: [userId, id],
+        messages: [],
+      });
+
+      await newChat.save();
+
+      // Populate the members field of the new chat
+      existingChat = await newChat.populate("members");
+
+      return res.json({ chat: existingChat });
+    }
+  } catch (error) {
+    console.error("Error occurred while getting or creating chat:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

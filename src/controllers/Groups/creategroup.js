@@ -1,14 +1,13 @@
 const group = require("../../models/groups");
 
 const createchat = async (req, res) => {
-  console.log(req.body.members);
   let path = "";
   if (req.file === undefined) {
     path = "no-profile-picture-placeholder.png";
   } else {
     path = req.file.filename;
   }
-  
+
   const newgroup = new group({
     messages: req.body.messages,
     type: req.body.type,
@@ -24,7 +23,7 @@ const createchat = async (req, res) => {
     console.log("created group is  ", savedgroup);
     res.status(200).send(savedgroup);
   } catch (err) {
-    console.log("err " , err)
+    console.log("err ", err);
     res.send({ message: err, status: 400 });
   }
 };

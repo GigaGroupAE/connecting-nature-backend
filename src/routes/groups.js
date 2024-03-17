@@ -14,6 +14,7 @@ const { addMembers } = require("../controllers/Groups/addMembers");
 const { removeMember } = require("../controllers/Groups/removeMember");
 const notifyGroup = require("../controllers/notification/NotifyGroup");
 const updategroupPicture = require("../controllers/Groups/updateGroupPicture");
+const { getOrCreateGroup } = require("../controllers/Groups/getOrCreateGroup");
 router.post("/creategroup", verify, upload.single("groupPic"), creategroup);
 router.get("/getgroups", verify, getgroups);
 router.get("/getcrmmessages", verify, getcrmMessages);
@@ -31,4 +32,5 @@ router.patch(
   upload.single("groupPic"),
   updategroupPicture
 );
+router.post("/get-orCreateGroup/:id", verify, getOrCreateGroup);
 module.exports = router;

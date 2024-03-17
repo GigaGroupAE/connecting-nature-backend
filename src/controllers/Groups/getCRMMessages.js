@@ -4,7 +4,7 @@ const getCRMMessages = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const userGroups = await groups
+    let userGroups = await groups
       .find({ "members.member": userId, type: "individual" })
       .populate({
         path: "members.member",
@@ -17,6 +17,7 @@ const getCRMMessages = async (req, res) => {
           select: "profile fullName phoneNumber type expoPushToken",
         },
       });
+    userGroups = userGroups?.filter((chat) => chat.messages.length > 0);
 
     return res.status(200).send(userGroups);
   } catch (error) {
