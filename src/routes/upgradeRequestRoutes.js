@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { addRequest } = require("../controllers/UpgradeRequests/addRequest");
+const upload = require("../middlewares/ImageUploader/ImageUploader");
 const {
   approveRequest,
 } = require("../controllers/UpgradeRequests/approveRequest");
@@ -11,7 +12,16 @@ const {
 } = require("../controllers/UpgradeRequests/getAllRequests");
 const verify = require("../middlewares/Auth");
 
-router.post("/addRequest", verify, addRequest);
+router.post(
+  "/addRequest",
+  verify,
+  upload.fields([
+    { name: "cnicFront" },
+    { name: "cnicBack" },
+    { name: "utililtyBill" },
+  ]),
+  addRequest
+);
 
 //TODO : AUTHORIZATION MIDDLEWARE MAY BE REQUIRED IN FUTURE FOR ALL BELOW REQUESTS
 router.get("/getAllRequests", getAllUpgradeRequests);

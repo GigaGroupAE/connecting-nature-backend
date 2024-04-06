@@ -14,6 +14,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: function (req, file, cb) {
+    console.log(file);
     console.log("file type is ", file.mimetype);
     if (
       file.mimetype === "image/jpeg" ||

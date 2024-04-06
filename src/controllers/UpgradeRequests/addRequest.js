@@ -4,23 +4,33 @@ const UpgradeRequests = require("../../models/accountUpgradeSchema");
 exports.addRequest = async (req, res) => {
   try {
     let user = req.user._id;
-    const { requestedRole, instagramProfile, facebookProfile, twitterProfile } =
-      req.body;
-
-    if (
-      requestedRole === "celebrity" &&
-      (!instagramProfile || !facebookProfile || !twitterProfile)
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "provide all social links" });
+    let cnicFront;
+    let cnicBack;
+    let utililtyBill;
+    if (req?.files?.cnicFront) {
+      cnicFront = req?.files?.cnicFront[0]?.filename;
     }
-    await UpgradeRequests.create({ ...req.body, user });
+    if (req?.files?.cnicBack) {
+      cnicBack = req?.files?.cnicBack[0]?.filename;
+    }
+    if (req?.files?.utililtyBill) {
+      utililtyBill = req?.files?.utililtyBill[0]?.filename;
+    }
+
+    const data = {
+      ...req.body,
+      cnicBack,
+      cnicFront,
+      utililtyBill,
+      user,
+    };
+    await UpgradeRequests.create(data);
     return res.json({
       success: true,
-      message: "request submitted successfully",
+      message: "Request submitted successfully",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).send("Internal Server Error");
   }
 };

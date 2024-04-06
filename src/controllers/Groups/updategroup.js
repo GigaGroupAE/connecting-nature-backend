@@ -2,7 +2,6 @@ const model = require("../../models/groups");
 const sendMessage = require("../../services/sendmessage");
 
 const updategroup = async (req, res) => {
-  console.log(req.body);
   if (!req.params.id) {
     res.status(400).send("Invalid id");
   } else {

@@ -7,7 +7,6 @@ const dbSchema = new mongoose.Schema(
       required: true,
       ref: "NewUsers",
     },
-
     group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "groups",
