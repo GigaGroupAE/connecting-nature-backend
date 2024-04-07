@@ -75,7 +75,7 @@ exports.getAllRequests = async (req, res) => {
     // Fetch all subscription requests
     const subscriptionRequests = await subscriptionModal.find().populate({
       path: "requestedBy",
-      select: "fullName phoneNumber profile type expoPushToke",
+      select: "fullName phoneNumber profile type expoPushToken",
     });
     return res.status(200).json({
       message: "Subscription requests fetched successfully.",

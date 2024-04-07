@@ -9,6 +9,7 @@ const {
   winnerAnnouncement,
   updateGroupMembers,
   removeSubscriber,
+  fetchClosedBidApartments,
 } = require("../controllers/BIdChannel/CreateChaneel");
 const verify = require("../middlewares/Auth");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
@@ -20,6 +21,11 @@ const {
   approveSubscription,
   rejectSubscription,
 } = require("../controllers/ChannelSubscription");
+const {
+  addcrmNotifications,
+  getAllNotificationsForUser,
+  notifynewBid,
+} = require("../controllers/BiddingNotifications/BiddingNotifications");
 
 router.post("/createchannel", verify, upload.single("groupPic"), createChannel);
 router.get("/get-channel", verify, getChannel);
@@ -40,5 +46,11 @@ router.patch("/remove-member-chanel/:id", verify, removeSubscriber);
 router.get("/get-subscription-req", verify, getAllRequests);
 router.post("/approve-subscription", verify, approveSubscription);
 router.post("/reject-subscription", verify, rejectSubscription);
+router.get("/closed-bid-apartments", verify, fetchClosedBidApartments);
+
+// Routes for managing notifications
+router.post("/add-crm-notification", verify, addcrmNotifications);
+router.get("/get-crm-notifications", verify, getAllNotificationsForUser);
+router.post("/notify-new-bid", verify, notifynewBid);
 
 module.exports = router;

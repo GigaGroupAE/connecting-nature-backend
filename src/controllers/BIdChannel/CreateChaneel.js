@@ -312,3 +312,34 @@ exports.removeSubscriber = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.fetchClosedBidApartments = async (req, res) => {
+  try {
+    // Fetch bidApartments with status "Closed" and sort by createdAt
+    const closedBidApartments = await bidAppartmint
+      .find({ status: "Closed" })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "bids",
+        populate: {
+          path: "bidOn",
+          model: "bidApartment",
+          select:
+            " ProjectName   PropertyType    description  bedrooms  price    unit    biddingTime",
+        },
+        select: "bidBy bidOn bidPrice bidTime",
+      });
+
+    // If no closed bidApartments found, return an empty array
+    if (closedBidApartments.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    // Return the fetched bidApartments to the client
+    return res.status(200).json(closedBidApartments);
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching closed bidApartments:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
