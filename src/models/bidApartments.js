@@ -21,14 +21,15 @@ const dbSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: [String],
-      validate: [arrayLimit, "{PATH} exceeds the limit of 10"],
-    },
+    image: [
+      {
+        filename: String,
+        mimetype: String,
+      },
+    ],
     PropertyType: {
       type: String,
       required: true,
-      enum: ["Residential Apartment", "Commercial", "Studio", "Kiosk Place"],
     },
     description: {
       type: String,
@@ -60,9 +61,36 @@ const dbSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Starting Soon", "Started", "Closed", "Archive"],
+      enum: [
+        "Starting Soon",
+        "Started",
+        "Closed",
+        "Archive",
+        "Under Review",
+        "rejected",
+      ],
       default: "Starting Soon",
     },
+    thirdParty: {
+      type: String,
+    },
+    denyReason: {
+      type: String,
+    },
+    announcement: [
+      {
+        announcementItem: {
+          content: {
+            type: mongoose.Schema.Types.Mixed,
+            default: null, // Set your default content value here
+          },
+          createdAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      },
+    ],
   },
   {
     timestamps: true,

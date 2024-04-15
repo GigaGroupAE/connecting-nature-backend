@@ -24,7 +24,7 @@ exports.createChannel = async (req, res) => {
     const savedgroup = await newgroup.save();
     res.status(200).send(savedgroup);
   } catch (err) {
-    console.log("err ", err);
+
     res.send({ message: err, status: 400 });
   }
 };
@@ -45,8 +45,14 @@ exports.getChannel = async (req, res) => {
 };
 
 exports.createBidApartment = async (req, res) => {
-  let image = req.files.map((file) => file.filename);
+  let image = req.files.map((file) => {
+    return {
+      filename: file.filename,
+      mimetype: file.mimetype,
+    };
+  });
   let bids = [];
+
   const data = {
     ...req.body,
     image,
@@ -60,6 +66,61 @@ exports.createBidApartment = async (req, res) => {
       message: "Property created successfully",
     });
   } catch (error) {
+
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.updateBidApartment = async (req, res) => {
+  const { id } = req.params;
+
+
+
+  // Handle image files if there are any
+  let image = [];
+  if (req.files?.length !== 0) {
+    image = req.files.map((file) => {
+      return {
+        filename: file.filename,
+        mimetype: file.mimetype,
+      };
+    });
+  }
+
+  // Prepare the updated data
+  let updatedData = { ...req.body };
+
+  // Conditionally add image to updatedData
+  if (image.length > 0) {
+    updatedData.image = image;
+  }
+
+
+
+  try {
+    // Find the existing bid apartment by ID
+    let bidApartment = await bidAppartmint.findById(id);
+
+    if (!bidApartment) {
+      return res.status(404).json({
+        status: "Error",
+        message: "Bid apartment not found",
+      });
+    }
+
+    // Update the bid apartment with the new data
+    bidApartment = await bidAppartmint.findByIdAndUpdate(
+      id,
+      { $set: updatedData },
+      { new: true }
+    );
+
+    res.status(200).json({
+      status: "Success",
+      message: "Bid apartment updated successfully",
+      data: bidApartment,
+    });
+  } catch (error) {
+
     res.status(500).json({ message: error.message });
   }
 };
@@ -75,12 +136,12 @@ exports.getAllBidApartments = async (req, res) => {
     }
 
     const totalCount = await bidAppartmint.countDocuments({
-      status: { $ne: "Archive" },
+      status: { $nin: ["Archive", "Under Review", "rejected"] },
     });
 
     // Fetch paginated bid apartments
     const bidApartments = await bidAppartmint
-      .find({ status: { $ne: "Archive" } })
+      .find({ status: { $nin: ["Archive", "Under Review", "rejected"] } })
       .sort({ createdAt: -1 })
       .skip((page - 1) * perPage)
       .limit(perPage)
@@ -112,16 +173,16 @@ exports.getAllBidApartments = async (req, res) => {
 exports.updateProjectStatus = async (req, res) => {
   try {
     const id = req.params.id;
-    const status = req.body?.status;
+    const updateFields = req.body;
 
-    if (!id || !status) {
+    if (!id || !updateFields) {
       return res.status(400).json({ error: "Invalid input parameters" });
     }
 
     const updatedProject = await bidAppartmint.findByIdAndUpdate(
       id,
-      { status: status },
-      { new: true } // Return the updated item
+      { $set: updateFields },
+      { new: true }
     );
 
     if (!updatedProject) {
@@ -129,12 +190,12 @@ exports.updateProjectStatus = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Project status updated successfully",
+      message: "Project updated successfully",
       project: updatedProject,
     });
   } catch (error) {
     // Handle errors
-    console.error("Error updating project status:", error);
+    console.error("Error updating project:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -341,5 +402,100 @@ exports.fetchClosedBidApartments = async (req, res) => {
     // Handle errors
     console.error("Error fetching closed bidApartments:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getapprtmentdBidReport = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const project = await bidAppartmint.findById(id).populate({
+      path: "bids",
+      populate: {
+        path: "bidOn",
+        model: "bidApartment",
+        select:
+          "ProjectName PropertyType  description bedrooms price  unit biddingTime",
+      },
+      select: "bidBy bidOn bidPrice bidTime",
+    });
+
+  } catch (error) {}
+};
+
+exports.getUnderReviewApartments = async (req, res) => {
+  try {
+    const perPage = parseInt(req.query.perPage) || 10;
+    const page = parseInt(req.query.page) || 1;
+    if (isNaN(perPage) || isNaN(page) || perPage <= 0 || page <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid perPage or page parameters" });
+    }
+
+    const totalCount = await bidAppartmint.countDocuments({
+      status: "Archive", // Filter by status "Archive"
+    });
+
+    const bidApartments = await bidAppartmint
+      .find({ status: "Under Review" })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .populate({
+        path: "bids",
+        populate: {
+          path: "bidOn",
+          model: "bidApartment",
+          select:
+            "ProjectName PropertyType description bedrooms price unit biddingTime",
+        },
+        select: "bidBy bidOn bidPrice bidTime",
+      })
+      .populate({
+        path: "winner",
+        select: "bidBy bidOn bidPrice bidTime",
+      })
+      .populate({
+        path: "from",
+        select: "fullName phoneNumber profile type expoPushToken",
+      });
+
+    // Send response with paginated bid apartments
+    res.status(200).json({
+      status: "Success",
+      totalCount,
+      page,
+      perPage,
+      data: bidApartments,
+    });
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching bid apartments:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateGroupPic = async (req, res) => {
+  const { id } = req.params;
+  const { groupPic } = req.body;
+
+  try {
+    const updatedChannel = await Channel.findByIdAndUpdate(
+      id,
+      { $set: { groupPic } },
+      { new: true }
+    );
+
+    if (!updatedChannel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Group picture updated successfully", updatedChannel });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

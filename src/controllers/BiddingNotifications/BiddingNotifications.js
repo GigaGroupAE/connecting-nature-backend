@@ -2,8 +2,6 @@ const notification = require("../../models/CrmNotification");
 const { Expo } = require("expo-server-sdk");
 
 exports.addcrmNotifications = async (req, res) => {
-  console.log("Adding notification...");
-  console.log(req.body);
   const requestData = req.body.data || {};
   const newNotification = new notification({
     user: req.body.user,
@@ -41,6 +39,12 @@ exports.addcrmNotifications = async (req, res) => {
       } else if (req.body.data.title === "bid-winner") {
         title = "Bid Winner Announced";
         message = `${req.body.body.user.fullName} has won the bid on a property. Congratulations!`;
+      } else if (req.body.data.title === "property-Approved") {
+        title = "Property Approved";
+        message = `Your property has been successfully approved and is now live on the channel`;
+      } else if (req.body.data.title === "property-Rejected") {
+        title = "Property Rejected";
+        message = `Your property has been rejected. Please review the reason provided for the rejection.`;
       }
 
       const messageData = {
@@ -52,16 +56,16 @@ exports.addcrmNotifications = async (req, res) => {
 
       try {
         const tickets = await expo.sendPushNotificationsAsync([messageData]);
-        console.log("Notification sent:", tickets);
+     
       } catch (error) {
-        console.log("Error sending notification:", error);
+   
       }
     }
 
     const savedNotification = await newNotification.save();
     return res.json({ success: true, savedNotification });
   } catch (err) {
-    console.log("Error:", err);
+
     return res.status({
       success: false,
       message: "An error occurred while processing the request",
@@ -119,9 +123,9 @@ exports.notifynewBid = async (req, res) => {
         try {
           await expo.sendPushNotificationsAsync([messageData]);
           const savedNotification = await newNotification.save();
-          console.log("Notification sent to:", user.fullName);
+
         } catch (error) {
-          console.log("Error sending notification to", user.fullName, error);
+         
         }
       }
     }
