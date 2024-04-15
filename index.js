@@ -25,6 +25,7 @@ const orderRoutes = require("./src/routes/orderRoutes");
 const campaignsRoutes = require("./src/routes/campaignRoutes");
 const taskRoutes = require("./src/routes/tasksRoutes");
 const bucketRoutes = require("./src/routes/bucketRoutes");
+const BidsChaneel = require("./src/routes/ChannelBid");
 
 const decorations = require("./src/routes/decorationsRoutes");
 
@@ -57,6 +58,9 @@ const {
   sendGroupMessageNotifications,
 } = require("./src/services/sendGroupMessageNotifications");
 const { updatePoints } = require("./src/services/updateCampaignPoints");
+const sendBidMessage = require("./src/services/SendBid");
+const updatePrice = require("./src/services/UpdateBidPrice");
+const { handleAnnouncement } = require("./src/services/BidAnnouncement");
 
 //server configuration
 const app = express();
@@ -113,6 +117,7 @@ app.use("/campaigns", campaignsRoutes);
 app.use("/task", taskRoutes);
 app.use("/buckets", bucketRoutes);
 app.use("/decorations", decorations);
+app.use("/bidChannel", BidsChaneel);
 
 client.use(socketauth);
 //socket apis
@@ -128,8 +133,35 @@ client.on("connection", (socket) => {
   socket.on("chat", () => {});
   socket.on("update_points", async (data) => {
     const result = await updatePoints(data);
-
     client.to(data.group).emit("receive_points", result);
+  });
+
+  socket.on("send_bid", async (data, id) => {
+    try {
+    } catch (error) {
+      console.error("Error sending group message notifications:", error);
+    }
+
+    const result = await sendBidMessage(data);
+    client.emit("receive_bid", result.bids[result.bids.length - 1], id);
+  });
+
+  socket.on("update_bid", async (data, id) => {
+    //here send notifications
+    try {
+    } catch (error) {}
+    const result = await updatePrice(data);
+    client.emit("updated_bid", result, id);
+  });
+  socket.on("bid_announcement", async (data, id) => {
+    // here send notifications
+    try {
+    } catch (error) {}
+    const result = await handleAnnouncement(data);
+
+    const lastAnnouncement =
+      result.announcement[result.announcement.length - 1];
+    client.emit("receive_announcement", lastAnnouncement, id);
   });
 
   socket.on("send_message", async (data) => {
@@ -138,8 +170,6 @@ client.on("connection", (socket) => {
       //sendGroupMessageNotifications(data);
     } catch (error) {}
     const result = await sendmessage(data);
-    // console.log("result is ", result);
-    //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
       .emit("receive_message", result.messages[result.messages.length - 1]);
