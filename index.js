@@ -60,6 +60,7 @@ const {
 const { updatePoints } = require("./src/services/updateCampaignPoints");
 const sendBidMessage = require("./src/services/SendBid");
 const updatePrice = require("./src/services/UpdateBidPrice");
+const { handleAnnouncement } = require("./src/services/BidAnnouncement");
 
 //server configuration
 const app = express();
@@ -135,22 +136,32 @@ client.on("connection", (socket) => {
     client.to(data.group).emit("receive_points", result);
   });
 
-  socket.on("send_bid", async (data) => {
-    //here send notifications
+  socket.on("send_bid", async (data, id) => {
     try {
-      //sendGroupMessageNotifications(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error sending group message notifications:", error);
+    }
+
     const result = await sendBidMessage(data);
-    // console.log("result is ", result.bids[result.bids.length - 1]);
-    //this is the line causing the issue because .to is not working on it
-    client.emit("receive_bid", result.bids[result.bids.length - 1]);
+    client.emit("receive_bid", result.bids[result.bids.length - 1], id);
   });
-  socket.on("update_bid", async (data) => {
+
+  socket.on("update_bid", async (data, id) => {
     //here send notifications
     try {
     } catch (error) {}
     const result = await updatePrice(data);
-    client.emit("updated_bid", result);
+    client.emit("updated_bid", result, id);
+  });
+  socket.on("bid_announcement", async (data, id) => {
+    // here send notifications
+    try {
+    } catch (error) {}
+    const result = await handleAnnouncement(data);
+
+    const lastAnnouncement =
+      result.announcement[result.announcement.length - 1];
+    client.emit("receive_announcement", lastAnnouncement, id);
   });
 
   socket.on("send_message", async (data) => {
@@ -159,8 +170,6 @@ client.on("connection", (socket) => {
       //sendGroupMessageNotifications(data);
     } catch (error) {}
     const result = await sendmessage(data);
-    // console.log("result is ", result);
-    //this is the line causing the issue because .to is not working on it
     client
       .to(data.group)
       .emit("receive_message", result.messages[result.messages.length - 1]);

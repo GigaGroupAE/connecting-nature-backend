@@ -10,6 +10,9 @@ const {
   updateGroupMembers,
   removeSubscriber,
   fetchClosedBidApartments,
+  getapprtmentdBidReport,
+  getUnderReviewApartments,
+  updateBidApartment,
 } = require("../controllers/BIdChannel/CreateChaneel");
 const verify = require("../middlewares/Auth");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
@@ -35,18 +38,29 @@ router.post(
   upload.array("image", 5),
   createBidApartment
 );
+
+router.patch(
+  "/update-project/:id",
+  upload.array("image", 5),
+  verify,
+  updateBidApartment
+);
 router.get("/get-projects", verify, getAllBidApartments);
 router.patch("/update-status/:id", verify, updateProjectStatus);
-router.post("/create-subreq", verify, upload.single("image"), createRequest);
-router.get("/check-substatus", verify, checkSubscriptionStatus);
 router.get("/get-archiveProjects", verify, getArchiveApartments);
+router.get("/get-under-review", verify, getUnderReviewApartments);
 router.patch("/winner-announce/:id", verify, winnerAnnouncement);
+router.get("/download-report/:id", verify, getapprtmentdBidReport);
 router.patch("/add-member/:id", verify, updateGroupMembers);
 router.patch("/remove-member-chanel/:id", verify, removeSubscriber);
+router.get("/closed-bid-apartments", verify, fetchClosedBidApartments);
+
+// Routes for managing subscription
 router.get("/get-subscription-req", verify, getAllRequests);
 router.post("/approve-subscription", verify, approveSubscription);
 router.post("/reject-subscription", verify, rejectSubscription);
-router.get("/closed-bid-apartments", verify, fetchClosedBidApartments);
+router.post("/create-subreq", verify, upload.single("image"), createRequest);
+router.get("/check-substatus", verify, checkSubscriptionStatus);
 
 // Routes for managing notifications
 router.post("/add-crm-notification", verify, addcrmNotifications);
