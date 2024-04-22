@@ -1,6 +1,7 @@
 const subscriptionModal = require("../models/ChannelSubscription");
 
 const bidChannel = require("../models/BidChannel");
+const User = require("../models/Register");
 
 exports.createRequest = async (req, res) => {
   try {
@@ -10,7 +11,7 @@ exports.createRequest = async (req, res) => {
 
     // Check if there is an existing subscription request for the user
     const existingSubscription = await subscriptionModal.findOne({
-      userId,
+      requestedBy: userId,
       status: { $in: ["Pending", "approve"] }, // Check for "Pending" or "approve" status
     });
 
@@ -50,7 +51,7 @@ exports.checkSubscriptionStatus = async (req, res) => {
     const userId = req.user._id;
 
     const existingSubscription = await subscriptionModal.findOne({
-      userId,
+      requestedBy: userId,
       status: { $in: ["Pending", "approve"] },
     });
 
@@ -90,16 +91,19 @@ exports.approveSubscription = async (req, res) => {
   const { member, privilege, code, item } = req.body?.data;
 
   try {
-    console.log(item);
     // Find the subscription with the specified item
     const subscription = await subscriptionModal.findOneAndUpdate(
-      { _id: item }, // Assuming itemId is the unique identifier of the document you want to update
+      { _id: item },
       { status: "approve" },
       { new: true }
     );
 
     if (subscription) {
-      console.log("Subscription approved:", subscription);
+      const updateRole = await User.findOneAndUpdate(
+        { _id: member, type: "user" },
+        { type: "subscriber" },
+        { new: true }
+      );
 
       // Now update the channel's first item with the provided data
       const updatedChannel = await bidChannel.findOneAndUpdate(
@@ -128,18 +132,15 @@ exports.approveSubscription = async (req, res) => {
 exports.rejectSubscription = async (req, res) => {
   console.log(req.body.rejectReason);
   try {
-    const { id, denyingReason, status } = req.body.rejectReason || {}; // Ensure rejectReason exists
-    console.log(id, status, denyingReason, "inside");
-    // Find the subscription with the specified ID and update its status and denyingReason
+    const { id, denyingReason, status } = req.body.rejectReason || {};
+
     const subscription = await subscriptionModal.findOneAndUpdate(
       { id },
-      { status, denyingReason }, // Update status and denyingReason
-      { new: true } // Options object containing 'new' to return the updated document
+      { status, denyingReason },
+      { new: true }
     );
 
     if (subscription) {
-      console.log("Subscription rejected:", subscription);
-      // Send a response indicating success
       return res
         .status(200)
         .json({ message: "Subscription rejected successfully", subscription });

@@ -6,7 +6,6 @@ exports.handleAnnouncement = async (data) => {
     let bidApartment = await BidApartmentModel.findById(data.bidOn);
 
     if (!bidApartment) {
-      console.log("Bid apartment not found");
       return;
     }
 

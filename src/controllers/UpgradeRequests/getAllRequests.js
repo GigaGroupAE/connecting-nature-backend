@@ -2,9 +2,10 @@ const UpgradeRequests = require("../../models/accountUpgradeSchema");
 
 exports.getAllUpgradeRequests = async (req, res) => {
   try {
-    let requests = await UpgradeRequests.find({ status: "pending" }).populate(
-      "user"
-    );
+    let requests = await UpgradeRequests.find({ status: "pending" }).populate({
+      path: "user",
+      select: "fullName phoneNumber profile type expoPushToken",
+    });
     return res.json({ success: true, requests });
   } catch (error) {
     return res

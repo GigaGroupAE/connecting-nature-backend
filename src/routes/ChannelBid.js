@@ -13,6 +13,7 @@ const {
   getapprtmentdBidReport,
   getUnderReviewApartments,
   updateBidApartment,
+  makeLead,
 } = require("../controllers/BIdChannel/CreateChaneel");
 const verify = require("../middlewares/Auth");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
@@ -52,7 +53,6 @@ router.get("/get-under-review", verify, getUnderReviewApartments);
 router.patch("/winner-announce/:id", verify, winnerAnnouncement);
 router.get("/download-report/:id", verify, getapprtmentdBidReport);
 router.patch("/add-member/:id", verify, updateGroupMembers);
-router.patch("/remove-member-chanel/:id", verify, removeSubscriber);
 router.get("/closed-bid-apartments", verify, fetchClosedBidApartments);
 
 // Routes for managing subscription
@@ -61,6 +61,8 @@ router.post("/approve-subscription", verify, approveSubscription);
 router.post("/reject-subscription", verify, rejectSubscription);
 router.post("/create-subreq", verify, upload.single("image"), createRequest);
 router.get("/check-substatus", verify, checkSubscriptionStatus);
+router.patch("/remove-member-chanel/:id", verify, removeSubscriber);
+router.patch("/make-lead/:id", verify, makeLead);
 
 // Routes for managing notifications
 router.post("/add-crm-notification", verify, addcrmNotifications);

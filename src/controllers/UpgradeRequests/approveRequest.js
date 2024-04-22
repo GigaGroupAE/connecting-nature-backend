@@ -10,8 +10,13 @@ exports.approveRequest = async (req, res) => {
     //finding request
     let request = await UpgradeRequests.findById(id);
     if (!request) {
-      return res.json({ success: false, message: "request does not exist" });
+      return res.status(404).json({
+        success: false,
+        message:
+          "Upgrade request not found. Please ensure you've entered the correct ID.",
+      });
     }
+
     //updating user
     await Users.updateOne(
       { _id: request.user },
@@ -34,6 +39,10 @@ exports.approveRequest = async (req, res) => {
       message: "User type updated successfully",
     });
   } catch (error) {
-    return res.json({ success: false, message: "internal server error" });
+    return res.json({
+      success: false,
+      message:
+        "There was a problem upgrading your account. Please try again later.",
+    });
   }
 };

@@ -10,3 +10,4 @@ const getusers = async (req, res) => {
 };
 
 module.exports = getusers;
+

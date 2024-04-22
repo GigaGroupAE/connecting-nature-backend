@@ -2,6 +2,9 @@ const Channel = require("../../models/BidChannel");
 const bidAppartmint = require("../../models/bidApartments");
 const mongoose = require("mongoose");
 const subscriptionModal = require("../../models/ChannelSubscription");
+const { ObjectId } = require("mongoose").Types;
+
+const User = require("../../models/Register");
 
 exports.createChannel = async (req, res) => {
   let path = "";
@@ -24,7 +27,6 @@ exports.createChannel = async (req, res) => {
     const savedgroup = await newgroup.save();
     res.status(200).send(savedgroup);
   } catch (err) {
-
     res.send({ message: err, status: 400 });
   }
 };
@@ -66,14 +68,11 @@ exports.createBidApartment = async (req, res) => {
       message: "Property created successfully",
     });
   } catch (error) {
-
     res.status(500).json({ message: error.message });
   }
 };
 exports.updateBidApartment = async (req, res) => {
   const { id } = req.params;
-
-
 
   // Handle image files if there are any
   let image = [];
@@ -93,8 +92,6 @@ exports.updateBidApartment = async (req, res) => {
   if (image.length > 0) {
     updatedData.image = image;
   }
-
-
 
   try {
     // Find the existing bid apartment by ID
@@ -120,7 +117,6 @@ exports.updateBidApartment = async (req, res) => {
       data: bidApartment,
     });
   } catch (error) {
-
     res.status(500).json({ message: error.message });
   }
 };
@@ -374,6 +370,41 @@ exports.removeSubscriber = async (req, res) => {
   }
 };
 
+exports.makeLead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    if (!ObjectId.isValid(id) || !ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid group ID or user ID" });
+    }
+    const updatedGroup = await Channel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "members.$[elem].privilege": "Lead",
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            "elem.member": ObjectId(userId),
+          },
+        ],
+        new: true,
+      }
+    );
+
+    if (!updatedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 exports.fetchClosedBidApartments = async (req, res) => {
   try {
     // Fetch bidApartments with status "Closed" and sort by createdAt
@@ -419,7 +450,6 @@ exports.getapprtmentdBidReport = async (req, res) => {
       },
       select: "bidBy bidOn bidPrice bidTime",
     });
-
   } catch (error) {}
 };
 
@@ -497,5 +527,20 @@ exports.updateGroupPic = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.getUserType = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const userType = user.type;
+    res.status(200).send(userType);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error");
   }
 };
