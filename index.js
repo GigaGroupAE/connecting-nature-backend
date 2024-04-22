@@ -161,6 +161,7 @@ client.on("connection", (socket) => {
 
     const lastAnnouncement =
       result.announcement[result.announcement.length - 1];
+
     client.emit("receive_announcement", lastAnnouncement, id);
   });
 

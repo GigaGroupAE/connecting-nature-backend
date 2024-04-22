@@ -1,13 +1,11 @@
 const register = require("../../models/Register");
-const jwt  = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const signup = async (req, res) => {
-  console.log("signup called")
   let path = "";
-  let createObj = {}
-  if (req.body.location){
-
+  let createObj = {};
+  if (req.body.location) {
     let parsedLocation = JSON.parse(req.body.location);
-    createObj.location = parsedLocation
+    createObj.location = parsedLocation;
   }
   if (req.file === undefined) {
     path = "no-profile-picture-placeholder.png";
@@ -19,10 +17,11 @@ const signup = async (req, res) => {
     phoneNumber: req.body.phoneNumber,
     fullName: req.body.fullName,
     type: req.body.type,
-    expoPushToken:"",
+    expoPushToken: "",
+    gender: req.body.gender,
     //this picture shall be retrieve by sending network request to {HOSTNAME/images/:profile}
     profile: path, //saving the name of the file to the database
-    ...createObj
+    ...createObj,
   });
   const phoneExist = await register.findOne({
     phoneNumber: newuser.phoneNumber,
@@ -35,14 +34,13 @@ const signup = async (req, res) => {
     });
   }
   try {
-    console.log("inside try")
     const User = await newuser.save();
     //copy the login logic here
     const token = jwt.sign({ _id: User.id }, process.env.TOKEN_SECRET);
-    console.log("sending this back")
+
     res.header("auth_token", token).send(User);
   } catch (err) {
-    console.log("inside catch error is " , err)
+    console.log("inside catch error is ", err);
     res.status(400).json({ message: err, status: 400 });
   }
 };

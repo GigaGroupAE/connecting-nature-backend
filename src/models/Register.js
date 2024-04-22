@@ -38,6 +38,9 @@ const dbSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  gender: {
+    type: String,
+  },
   blockedUsers: [
     {
       type: mongoose.Schema.Types.ObjectId,

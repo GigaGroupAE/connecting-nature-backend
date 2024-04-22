@@ -22,14 +22,15 @@ const { getUserByPhone } = require("../controllers/user/getUserByPhone");
 const { awardPoints } = require("../controllers/user/awardPoints");
 const { getUserByQuery } = require("../controllers/user/getByQuery");
 const loginWeb = require("../controllers/user/LoginWeb");
+const { getUserType } = require("../controllers/BIdChannel/CreateChaneel");
 
 router.post("/login", login);
-router.post("/loginWeb",loginWeb)
+router.post("/loginWeb", loginWeb);
 router.post("/register", upload.single("profile"), signup);
 router.get("/getusers", verify, getusers);
 router.post("/otp", OTPGen);
 router.put("/updateUserExpoToken", verify, updateExpoPushToken);
-router.patch("/updateUser/:id",upload.single("profile"), updateuser);
+router.patch("/updateUser/:id", upload.single("profile"), updateuser);
 router.patch("/toggleFollow/:id", verify, followUnfollowUser);
 router.patch("/block-user/:id", verify, blockUser);
 router.patch("/unblock-user/:id", verify, unblockUser);
@@ -38,4 +39,5 @@ router.get("/get-user/:phoneNumber", verify, getUserByPhone);
 router.get("/get-blockedUsers", verify, getBlockedUsers);
 router.post("/award-points", verify, awardPoints);
 router.get("/get-by-query", verify, getUserByQuery);
+router.get("/get-userType/:id", verify, getUserType);
 module.exports = router;
