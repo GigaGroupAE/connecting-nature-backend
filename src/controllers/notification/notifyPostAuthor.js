@@ -9,7 +9,7 @@ exports.notifyPostAuthor = async (req, res) => {
     const pushToken = req.body.body.user.expoPushToken;
     let title = "";
     let message = "";
-    console.log(Expo.isExpoPushToken(pushToken));
+
     if (Expo.isExpoPushToken(pushToken)) {
       const expo = new Expo(); // Create an Expo SDK client
       if (req.body.data.title === "post-like") {
@@ -30,8 +30,7 @@ exports.notifyPostAuthor = async (req, res) => {
       } else if (req.body.data.title === "comment-reply") {
         title = "New Comment Like";
         message = `${req.body.body.user.fullName} has replied to your comment!`;
-      }
-
+      } 
       const messageData = {
         to: pushToken,
         sound: "default",

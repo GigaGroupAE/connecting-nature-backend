@@ -30,6 +30,10 @@ const dbSchema = new mongoose.Schema({
       },
     },
   },
+  createdAT: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const crmnotification = new mongoose.model("crmnotification", dbSchema);

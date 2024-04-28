@@ -2,10 +2,20 @@ const axios = require("axios");
 
 const SMsApi = async (req, res) => {
   const message = req.body.message;
+  console.log(req.body);
+
+  let phoneNumber;
+  if (req.body.phoneNumber?.length === 11) {
+    phoneNumber = "+92" + req.body.phoneNumber.substring(1);
+  } else {
+    phoneNumber === req.body.phoneNumber;
+  }
+
+  console.log(phoneNumber, "phone");
 
   const path =
-    "https://api.veevotech.com/sendsms?hash=f4f05f33e9fdf3c9ecc9f95db89b67af&receivernum=" +
-    req.body.phoneNumber +
+    "https://api.veevotech.com/sendsms?hash=31ed63e3a55c1b84877431ccfd532501&receivernum=" +
+    phoneNumber +
     "&screen_name=&sender_address=&textmessage=" +
     JSON.stringify(message) +
     "&sendernum=8583";

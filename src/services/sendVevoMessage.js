@@ -1,15 +1,17 @@
 const axios = require("axios");
 exports.sendVevoMessage = async (number, message) => {
+  const phoneNumber = "+92" + number.substring(1);
+  console.log(phoneNumber);
   try {
     const path =
-      "https://api.veevotech.com/sendsms?hash=f4f05f33e9fdf3c9ecc9f95db89b67af&receivernum=" +
-      number +
+      "https://api.veevotech.com/v3/sendsms?hash=31ed63e3a55c1b84877431ccfd532501&receivernum=" +
+      phoneNumber +
       "&screen_name=&sender_address=&textmessage=" +
       JSON.stringify(message) +
       "&sendernum=8583";
     let { data } = await axios.get(path);
-    console.log("data is ", data);
-    if (data.status === "ACCEPTED") {
+
+    if (data.status === "SUCCESSFUL") {
       return data.status;
     } else {
       throw new Error("Failed to send message to user");
