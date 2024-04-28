@@ -56,16 +56,12 @@ exports.addcrmNotifications = async (req, res) => {
 
       try {
         const tickets = await expo.sendPushNotificationsAsync([messageData]);
-     
-      } catch (error) {
-   
-      }
+      } catch (error) {}
     }
 
     const savedNotification = await newNotification.save();
     return res.json({ success: true, savedNotification });
   } catch (err) {
-
     return res.status({
       success: false,
       message: "An error occurred while processing the request",
@@ -102,19 +98,14 @@ exports.notifynewBid = async (req, res) => {
       title,
     };
 
+    const expo = new Expo();
+
     for (const user of users) {
-      // Check if the user has an Expo Push Token
       if (Expo.isExpoPushToken(user.expoPushToken)) {
-        const expo = new Expo();
-        const message = `${senderName} has placed a new bid on a ${groupTitle}. Stay updated with the latest bids!`;
-        const newNotification = new notification({
-          user: user?._id,
-          body,
-          data,
-        });
+        const message = `${senderName} has placed a new bid on ${groupTitle}. Stay updated with the latest bids!`;
 
         const messageData = {
-          to: user?.expoPushToken,
+          to: user.expoPushToken,
           sound: "default",
           title,
           body: message,
@@ -122,10 +113,21 @@ exports.notifynewBid = async (req, res) => {
 
         try {
           await expo.sendPushNotificationsAsync([messageData]);
-          const savedNotification = await newNotification.save();
-
         } catch (error) {
-         
+          console.log("Error sending push notification:", error);
+        }
+      } else {
+        // Create local notification if no Expo push token is available
+        const newNotification = new notification({
+          user: user?._id,
+          body,
+          data,
+        });
+
+        try {
+          const savedNotification = await newNotification.save();
+        } catch (error) {
+          console.log("Error saving local notification:", error);
         }
       }
     }
@@ -135,7 +137,7 @@ exports.notifynewBid = async (req, res) => {
       message: "Notifications sent successfully",
     });
   } catch (error) {
-    console.log("Error inside notifyGroup:", error);
+    console.log("Error inside notifynewBid:", error);
     return res.json({ success: false, error });
   }
 };
