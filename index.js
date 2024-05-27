@@ -77,6 +77,7 @@ app.use(
   cors({
     origin: "http://localhost:3001", // Allow requests from this origin
     origin: "http://localhost:5173",
+    origin: "https://admin.connectingnature.online",
   })
 );
 const server = http.createServer(app);

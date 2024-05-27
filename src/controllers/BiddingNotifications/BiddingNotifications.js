@@ -23,7 +23,9 @@ exports.addcrmNotifications = async (req, res) => {
     let message = "";
 
     if (Expo.isExpoPushToken(pushToken)) {
-      const expo = new Expo(); // Create an Expo SDK client
+      const expo = new Expo({
+        useFcmV1: true,
+      });
 
       if (req.body.data.title === "req-approve") {
         title = "Subscription Request Approved";
@@ -85,9 +87,10 @@ exports.getAllNotificationsForUser = async (req, res) => {
 exports.notifynewBid = async (req, res) => {
   try {
     const users = req.body.user;
-    const senderName = req.body.senderName;
-    const groupTitle = req.body.groupTitle;
-    const title = "New Bid Placed";
+
+    const { senderName, groupTitle, title } = req.body;
+
+    console.log(senderName, groupTitle, title);
 
     const body = {
       userCode: senderName,
@@ -98,7 +101,9 @@ exports.notifynewBid = async (req, res) => {
       title,
     };
 
-    const expo = new Expo();
+    const expo = new Expo({
+      useFcmV1: true,
+    });
 
     for (const user of users) {
       if (Expo.isExpoPushToken(user.expoPushToken)) {

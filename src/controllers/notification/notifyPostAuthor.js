@@ -3,7 +3,9 @@ const Users = require("../../models/Register");
 const Notifications = require("../../models/notification");
 const { sendNotifications } = require("../../services/sendNotifications");
 const { Expo } = require("expo-server-sdk");
-const expo = new Expo();
+const expo = new Expo({
+  useFcmV1: true,
+});
 exports.notifyPostAuthor = async (req, res) => {
   try {
     const pushToken = req.body.body.user.expoPushToken;
@@ -11,7 +13,9 @@ exports.notifyPostAuthor = async (req, res) => {
     let message = "";
 
     if (Expo.isExpoPushToken(pushToken)) {
-      const expo = new Expo(); // Create an Expo SDK client
+      const expo = new Expo({
+        useFcmV1: true,
+      }); // Create an Expo SDK client
       if (req.body.data.title === "post-like") {
         title = "New Like";
         message = `${req.body.body.user.fullName} liked your post!`;
@@ -30,7 +34,7 @@ exports.notifyPostAuthor = async (req, res) => {
       } else if (req.body.data.title === "comment-reply") {
         title = "New Comment Like";
         message = `${req.body.body.user.fullName} has replied to your comment!`;
-      } 
+      }
       const messageData = {
         to: pushToken,
         sound: "default",

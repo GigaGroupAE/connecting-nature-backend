@@ -1,7 +1,7 @@
 const axios = require("axios");
 exports.sendVevoMessage = async (number, message) => {
   const phoneNumber = "+92" + number.substring(1);
-  console.log(phoneNumber);
+
   try {
     const path =
       "https://api.veevotech.com/v3/sendsms?hash=31ed63e3a55c1b84877431ccfd532501&receivernum=" +

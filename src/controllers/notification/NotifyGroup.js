@@ -1,5 +1,7 @@
 const { Expo } = require("expo-server-sdk");
-const expo = new Expo();
+const expo = new Expo({
+  useFcmV1: true,
+});
 
 const notifyGroup = async (req, res) => {
   try {

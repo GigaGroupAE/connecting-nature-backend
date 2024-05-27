@@ -15,9 +15,14 @@ const {
 const {
   getArchiveCampaigns,
 } = require("../controllers/archivee/getArchiveCampaigns");
+const {
+  addArchivePostByAdmin,
+} = require("../controllers/archivee/DeleteByAdmin");
+const {
+  ArchiveStoryByAdmin,
+} = require("../controllers/archivee/DeleteStoryByAdmin");
 
 router.post("/addStoryArchive/:id", verify, addArchiveStory); //id is of some document from posts collection
-
 
 router.post("/addPostArchive/:id", verify, addArchivePost); //id is of some document from posts collection
 router.get("/getArchivePosts", verify, getArchivePosts); //will fetch archive posts of LOGGED IN USER
@@ -27,4 +32,6 @@ router.get("/get-disbanded-groups", verify, getDisbandedGroups); //will fetch us
 router.post("/undo-disband/:id", verify, undoDisband); // id is of some group from archives collection
 router.patch("/addArchiveCampaign/:id", verify, addArchiveCamapaign);
 router.get("/getArchiveCampaigns", getArchiveCampaigns);
+router.post("/archivedByAdmin/:id", verify, addArchivePostByAdmin);
+router.post("/storyArchiveByAdmin/:id", verify, ArchiveStoryByAdmin);
 module.exports = router;

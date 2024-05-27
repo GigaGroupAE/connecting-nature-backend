@@ -20,7 +20,11 @@ const commentController = require("../controllers/posts/UpdateComments");
 const {
   getPostsByCampaign,
 } = require("../controllers/posts/GetPostByCampaign");
-const { createReportPost } = require("../controllers/ReportPost");
+const {
+  createReportPost,
+  getReportPosts,
+  removeReportedPost,
+} = require("../controllers/ReportPost");
 
 router.post("/addpost", verify, upload.single("media"), addpost);
 router.get("/getposts", verify, getPosts);
@@ -40,4 +44,6 @@ router.post("/report-post", verify, createReportPost);
 router.patch("/updateposts/:id", verify, updatepost);
 
 router.post("/getPost", verify, getPost);
+router.get("/reported-posts", verify, getReportPosts);
+router.delete("/remove-reportedPost/:id", verify, removeReportedPost);
 module.exports = router;
