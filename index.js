@@ -84,7 +84,12 @@ const server = http.createServer(app);
 const client = new Server(server, {
   maxHttpBufferSize: 1e8,
   cors: {
-    origin: ["*", "https://admin.socket.io/", "http://localhost:3001"],
+    origin: [
+      "*",
+      "https://admin.socket.io/",
+      "http://localhost:3001",
+      "https://admin.connectingnature.online",
+    ],
     methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
   },
 });
