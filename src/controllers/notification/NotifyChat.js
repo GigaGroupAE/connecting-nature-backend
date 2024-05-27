@@ -2,7 +2,9 @@ const Posts = require("../../models/post");
 const Users = require("../../models/Register");
 const Notifications = require("../../models/notification");
 const { Expo } = require("expo-server-sdk");
-const expo = new Expo();
+const expo = new Expo({
+  useFcmV1: true,
+});
 const notifyChat = async (req, res) => {
   try {
     const pushToken = req.body.expoPushtoken;

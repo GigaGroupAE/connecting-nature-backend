@@ -5,7 +5,9 @@ const { Expo } = require("expo-server-sdk");
 exports.sendNotifications = (somePushTokens, title) => {
   // Create a new Expo SDK client
   // optionally providing an access token if you have enabled push security
-  let expo = new Expo();
+  const expo = new Expo({
+    useFcmV1: true,
+  });
 
   // Create the messages that you want to send to clients
   let messages = [];

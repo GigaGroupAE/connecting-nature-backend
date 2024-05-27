@@ -14,7 +14,7 @@ const reportReasonSchema = new mongoose.Schema({
 const reportPostSchema = new mongoose.Schema({
   postId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Post",
+    ref: "post",
     required: true,
   },
 

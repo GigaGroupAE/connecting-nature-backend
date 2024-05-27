@@ -28,7 +28,9 @@ exports.approveRequest = async (req, res) => {
       }
     );
     if (Expo.isExpoPushToken(token)) {
-      const expo = new Expo(); // Create an Expo SDK client
+      const expo = new Expo({
+        useFcmV1: true,
+      }); // Create an Expo SDK client
 
       const messageData = {
         to: token,

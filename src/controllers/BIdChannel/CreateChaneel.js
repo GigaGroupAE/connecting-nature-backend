@@ -318,22 +318,23 @@ exports.updateGroupMembers = async (req, res) => {
 exports.removeSubscriber = async (req, res) => {
   try {
     const { id } = req.params;
-    const { memberId, userId } = req.body;
+    const { userId } = req.body;
     const user = req.user._id;
+
     // Validate group ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid group ID" });
     }
 
     // Validate member ID
-    if (!memberId || !mongoose.Types.ObjectId.isValid(memberId)) {
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid member ID" });
     }
 
     // Remove subscriber from the group
     const updatedGroup = await Channel.findByIdAndUpdate(
       id,
-      { $pull: { members: { _id: memberId } } },
+      { $pull: { members: { member: userId } } },
       { new: true }
     ).populate({
       path: "members.member",
@@ -368,6 +369,11 @@ exports.removeSubscriber = async (req, res) => {
     console.error("Error removing subscriber:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
+
+exports.UnsubscribeChannel = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
 exports.makeLead = async (req, res) => {
