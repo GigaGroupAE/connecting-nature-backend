@@ -41,7 +41,6 @@ const dbSchema = new mongoose.Schema(
     },
     bedrooms: {
       type: String,
-      required: true,
     },
     price: {
       type: String,
@@ -49,7 +48,6 @@ const dbSchema = new mongoose.Schema(
     },
     unit: {
       type: String,
-      required: true,
     },
     winner: {
       type: mongoose.Schema.Types.ObjectId,

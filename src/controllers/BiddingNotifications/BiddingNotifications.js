@@ -90,8 +90,6 @@ exports.notifynewBid = async (req, res) => {
 
     const { senderName, groupTitle, title } = req.body;
 
-    console.log(senderName, groupTitle, title);
-
     const body = {
       userCode: senderName,
       projectTitle: groupTitle,
@@ -104,10 +102,12 @@ exports.notifynewBid = async (req, res) => {
     const expo = new Expo({
       useFcmV1: true,
     });
-
     for (const user of users) {
       if (Expo.isExpoPushToken(user.expoPushToken)) {
-        const message = `${senderName} has placed a new bid on ${groupTitle}. Stay updated with the latest bids!`;
+        const message =
+          title === "Bidding has started. Place your bids now!"
+            ? title
+            : `${senderName} has placed a new bid on ${groupTitle}. Stay updated with the latest bids!`;
 
         const messageData = {
           to: user.expoPushToken,

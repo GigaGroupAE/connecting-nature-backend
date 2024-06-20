@@ -24,7 +24,8 @@ const dbSchema = new mongoose.Schema({
           this.data.title === "req-denied" ||
           this.data.title === "req-approve" ||
           this.data.title === "new-bid" ||
-          this.data.title === "winning-bid"
+          this.data.title === "winning-bid" ||
+          this.data.title === "start-bidding"
         )
           return "subscription";
       },
