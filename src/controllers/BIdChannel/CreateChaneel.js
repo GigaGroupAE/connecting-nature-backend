@@ -1,4 +1,6 @@
 const Channel = require("../../models/BidChannel");
+const auctionSections = require("../../models/AuctionSection");
+
 const bidAppartmint = require("../../models/bidApartments");
 const mongoose = require("mongoose");
 const subscriptionModal = require("../../models/ChannelSubscription");
@@ -63,6 +65,26 @@ exports.createBidApartment = async (req, res) => {
 
   try {
     const newBidApartment = await bidAppartmint.create(data);
+    const isAlreduRunning = await bidAppartmint.find({
+      status: "Started",
+    });
+    if (req.body.status === "Starting Soon" && isAlreduRunning.length !== 0) {
+      const updateNewProjectStatus = await bidAppartmint.findByIdAndUpdate(
+        newBidApartment?._id,
+        { status: "Started" },
+        { new: true }
+      );
+
+      const lastAuctionSection = await auctionSections
+        .findOne()
+        .sort({ _id: -1 });
+
+      if (lastAuctionSection) {
+        lastAuctionSection.projectItems.push(newBidApartment._id);
+        await lastAuctionSection.save();
+      }
+    }
+
     res.status(201).json({
       status: "Success",
       message: "Property created successfully",
@@ -193,6 +215,54 @@ exports.updateProjectStatus = async (req, res) => {
     // Handle errors
     console.error("Error updating project:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.handleApprove = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+    const isAlreadyAuctionActive = await bidAppartmint.find({
+      status: "Started",
+    });
+
+    console.log(isAlreadyAuctionActive, "status");
+
+    if (isAlreadyAuctionActive?.length > 0) {
+      const updateNewProjectStatus = await bidAppartmint.findByIdAndUpdate(
+        id,
+        { status: "Started" },
+        { new: true }
+      );
+
+      const lastAuctionSection = await auctionSections
+        .findOne()
+        .sort({ _id: -1 });
+
+      if (lastAuctionSection) {
+        lastAuctionSection.projectItems.push(id);
+        await lastAuctionSection.save();
+      }
+      res.status(201).json({
+        status: "Success",
+        message: "Property created successfully",
+      });
+    } else {
+      await bidAppartmint.findByIdAndUpdate(
+        id,
+        { status: "Starting Soon" },
+        { new: true }
+      );
+      res.status(201).json({
+        status: "Success",
+        message: "Property created successfully",
+      });
+    }
+  } catch (error) {
+    logger.error("Error handling approval:", error);
+    res.status(500).json({
+      status: "Error",
+      message: "An error occurred while processing your request",
+    });
   }
 };
 

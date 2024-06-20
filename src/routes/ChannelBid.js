@@ -14,6 +14,7 @@ const {
   getUnderReviewApartments,
   updateBidApartment,
   makeLead,
+  handleApprove,
 } = require("../controllers/BIdChannel/CreateChaneel");
 const verify = require("../middlewares/Auth");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
@@ -30,6 +31,10 @@ const {
   getAllNotificationsForUser,
   notifynewBid,
 } = require("../controllers/BiddingNotifications/BiddingNotifications");
+const {
+  createSection,
+  getAuctions,
+} = require("../controllers/AuctionSections/AuctionSections");
 
 router.post("/createchannel", verify, upload.single("groupPic"), createChannel);
 router.get("/get-channel", verify, getChannel);
@@ -54,6 +59,7 @@ router.patch("/winner-announce/:id", verify, winnerAnnouncement);
 router.get("/download-report/:id", verify, getapprtmentdBidReport);
 router.patch("/add-member/:id", verify, updateGroupMembers);
 router.get("/closed-bid-apartments", verify, fetchClosedBidApartments);
+router.post("/approve-property", verify, handleApprove);
 
 // Routes for managing subscription
 router.get("/get-subscription-req", verify, getAllRequests);
@@ -68,5 +74,8 @@ router.patch("/make-lead/:id", verify, makeLead);
 router.post("/add-crm-notification", verify, addcrmNotifications);
 router.get("/get-crm-notifications", verify, getAllNotificationsForUser);
 router.post("/notify-new-bid", verify, notifynewBid);
+// Routes for managing Auction Sections
 
+router.post("/create-section", verify, createSection);
+router.get("/get-auctions", verify, getAuctions);
 module.exports = router;
