@@ -1,4 +1,6 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const bodyParser = require("body-parser");
 //admin-ui setup
 const { instrument } = require("@socket.io/admin-ui");
@@ -8,6 +10,7 @@ const { instrument } = require("@socket.io/admin-ui");
 const postModal = require("./src/models/post");
 const storyModal = require("./src/models/story");
 const campaignModal = require("./src/models/campaignsSchema");
+const mongoose = require("mongoose");
 
 //Routes
 const authroutes = require("./src/routes/userroutes");
@@ -38,6 +41,8 @@ const sendmessageCN = require("./src/services/sendMessageCN");
 //TEMPORARY IMPORTS
 const TEMPORARY_ROUTES = require("./src/routes/temporaryRoutes");
 
+require("./src/services/scheduler");
+
 //Models
 const GroupModel = require("./src/models/groups");
 const MessageModel = require("./src/models/messageSchema");
@@ -64,6 +69,9 @@ const { handleAnnouncement } = require("./src/services/BidAnnouncement");
 
 //server configuration
 const app = express();
+
+// Log every incoming request in "dev" format
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
@@ -191,57 +199,88 @@ client.on("connection", (socket) => {
       .emit("receive_message", result.messages[result.messages.length - 1]);
   });
   socket.on("Delete_messageCN", async (data) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      let chat = await ChatModel.findOne({ _id: data.chat });
-      if (!chat) {
-        return;
-      }
-      chat.messages = chat.messages.filter(
-        (item) => item?._id.toString() !== data.id
-      );
-      await chat.save();
-      await MessageModel.findByIdAndDelete({ _id: data.id });
-      chat = await ChatModel.findOne({ _id: data.chat });
-      const messageIds = chat?.messages;
-      const messages = await MessageModel.find({ _id: { $in: messageIds } });
-      client
-        .to(data.chat, messages)
-        .emit("Deleted_messageCN", data.id, messages);
+      const { chat: chatId, id: messageId, userId } = data;
+
+      const message = await MessageModel.findById(messageId).session(session);
+      if (!message) throw new Error("Message not found");
+
+      const chat = await ChatModel.findByIdAndUpdate(
+        chatId,
+        { $pull: { messages: messageId } },
+        { new: true, session }
+      ).lean();
+
+      if (!chat) throw new Error("Chat not found");
+      await MessageModel.findByIdAndDelete(messageId).session(session);
+
+      await session.commitTransaction();
+      session.endSession();
+
+      const messages = await MessageModel.find({
+        _id: { $in: chat.messages },
+      }).lean();
+
+      client.to(chatId).emit("Deleted_messageCN", messageId, messages);
     } catch (error) {
-      console.error(error);
+      await session.abortTransaction();
+      session.endSession();
+      console.error("Delete_messageCN error:", error);
+      socket.emit("Delete_message_ack", {
+        success: false,
+        error: error.message,
+      });
     }
   });
 
   socket.on("Delete_message", async (data) => {
+    console.log(data, "data");
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      const group = await GroupModel.findOne({ _id: data.groupId });
-
-      if (!group) {
-        return;
+      if (!data?.groupId || !data?.id) {
+        throw new Error("Invalid request: Missing required fields");
       }
-      group.messages = group.messages.filter(
-        (item) => item?._id.toString() !== data.id
+
+      const { groupId, id: messageId, userId } = data;
+      const message = await GroupMessageModel.findById(messageId).session(
+        session
       );
+      if (!message) throw new Error("Message not found");
 
-      await group.save();
-      await GroupMessageModel.findByIdAndDelete({ _id: data.id });
+      if (message.from.toString() !== userId.toString()) {
+        throw new Error("Unauthorized: You can only delete your own messages");
+      }
 
-      const updatedGroup = await GroupModel.findOne({ _id: data.groupId });
-      const messageIds = updatedGroup?.messages;
-      const messages = await GroupMessageModel.find({
-        _id: { $in: messageIds },
-      })
-        .populate({
-          path: "from",
-          select:
-            "profile fullName phoneNumber type expoPushToken additionalField", // Add the additional fields you want to select
-        })
-        .exec();
+      const group = await GroupModel.findByIdAndUpdate(
+        groupId,
+        { $pull: { messages: messageId } },
+        { new: true, session }
+      ).lean();
+
+      if (!group) throw new Error("Group not found");
+
+      await GroupMessageModel.findByIdAndDelete(messageId).session(session);
+
+      await session.commitTransaction();
+
+      const updatedMessages = await GroupMessageModel.find(
+        { _id: { $in: group.messages } },
+        { text: 1, from: 1, createdAt: 1 }
+      ).lean();
+
       client
-        .to(data.groupId, messages)
-        .emit("Delete_message", data.id, messages);
+        .to(groupId)
+        .emit("Message_deleted", { messageId, updatedMessages });
     } catch (error) {
-      console.error(error);
+      await session.abortTransaction();
+      console.error(`Delete_message failed (User: ${data.userId}):`, error);
+    } finally {
+      session.endSession();
     }
   });
 

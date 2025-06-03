@@ -55,8 +55,11 @@ const updategroup = async (req, res) => {
       res.status(200).send({ path: outputFileName });
     } else if (mimeType.startsWith("image/")) {
       // Image compression logic
-      const outputImageName =
-        uploadedFile.filename.replace(/\.[^/.]+$/, "") + "_compressed.jpg";
+      const originalName = req.file.originalname.replace(/\.[^/.]+$/, "");
+      const safeName = originalName
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9_-]/g, "");
+      const outputImageName = Date.now() + safeName + "_compressed.jpg";
       const outputImagePath = path.join(
         __dirname,
         "../../../uploads/messageMedia",

@@ -10,7 +10,10 @@ const upload = require("../middlewares/ImageUploader/ImageUploader");
 const uploadmedia = require("../middlewares/MessageMediaUploader/MessageMediaUploader");
 const { getGroupMessages } = require("../controllers/Groups/getGroupMessages");
 const { groupMessages } = require("../controllers/Groups/groupMessages");
-const { addMembers } = require("../controllers/Groups/addMembers");
+const {
+  addMembers,
+  updateUserPrivilege,
+} = require("../controllers/Groups/addMembers");
 const { removeMember } = require("../controllers/Groups/removeMember");
 const notifyGroup = require("../controllers/notification/NotifyGroup");
 const updategroupPicture = require("../controllers/Groups/updateGroupPicture");
@@ -28,6 +31,7 @@ router.patch("/add-member/:groupId", verify, addMembers);
 router.patch("/remove-member/:groupId", verify, removeMember);
 router.post("/notifyGroup", verify, notifyGroup);
 router.get("/group-media/:id", verify, getgroupMedia);
+router.patch("/update-userPrivilege", verify, updateUserPrivilege);
 router.patch(
   "/updateGroupPicture/:id",
   verify,
