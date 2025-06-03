@@ -1,7 +1,7 @@
 const Archives = require("../../models/archivesSchema");
 const Storys = require("../../models/story");
 
-exports.addArchiveStory= async (req, res) => {
+exports.addArchiveStory = async (req, res) => {
   try {
     let user = req.user._id;
     if (!req.params.id) {

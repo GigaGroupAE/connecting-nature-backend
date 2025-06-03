@@ -20,10 +20,12 @@ const addpost = async (req, res) => {
 
     if (req.file) {
       if (req.file.mimetype === "video/mp4") {
-        // Video compression logic (unchanged)
         const inputFilePath = req.file.path;
-        const outputFileName =
-          req.file.filename.replace(/\.[^/.]+$/, "") + "_compressed.mp4";
+        const originalName = req.file.originalname.replace(/\.[^/.]+$/, "");
+        const safeName = originalName
+          .replace(/\s+/g, "_")
+          .replace(/[^a-zA-Z0-9_-]/g, "");
+        const outputFileName = Date.now() + "_" + safeName + "_compressed.mp4";
         const outputFilePath = path.join(
           __dirname,
           "../../../uploads",
@@ -38,18 +40,17 @@ const addpost = async (req, res) => {
             .audioCodec("aac")
             .on("end", () => {
               media = {
-                name: req.file.filename,
+                name: outputFileName, // use new compressed name
                 type: req.file.mimetype,
-                compressedPath: "/videos/compressed/" + req.file.filename, // Use a relative path or URL
+                compressedPath: "/videos/compressed/" + outputFileName,
               };
 
-              // Replace the original file with the compressed video
-              fs.rename(outputFilePath, inputFilePath, (err) => {
+              // Delete the original uploaded file
+              fs.unlink(inputFilePath, (err) => {
                 if (err) {
-                  reject(err);
-                } else {
-                  resolve();
+                  console.error("Error deleting original video:", err);
                 }
+                resolve();
               });
             })
             .on("error", (err) => {
@@ -60,8 +61,11 @@ const addpost = async (req, res) => {
       } else if (req.file.mimetype.startsWith("image/")) {
         // Image compression logic
         const inputImagePath = req.file.path;
-        const outputImageName =
-          req.file.filename.replace(/\.[^/.]+$/, "") + "_compressed.jpg";
+        const originalName = req.file.originalname.replace(/\.[^/.]+$/, "");
+        const safeName = originalName
+          .replace(/\s+/g, "_")
+          .replace(/[^a-zA-Z0-9_-]/g, "");
+        const outputImageName = Date.now() + safeName + "_compressed.jpg";
 
         await new Promise((resolve, reject) => {
           sharp(inputImagePath)
