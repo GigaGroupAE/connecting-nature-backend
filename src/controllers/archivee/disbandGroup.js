@@ -8,7 +8,6 @@ exports.disbandGroup = async (req, res) => {
       return res.json({ success: false, message: "invalid id " });
     }
 
-    
     let user = req.user._id;
     let archive = await Archives.create({
       user,

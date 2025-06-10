@@ -23,6 +23,7 @@ exports.addArchiveCamapaign = async (req, res) => {
     await Archives.create({
       type: "campaign",
       data: archive,
+      user: req?.user?._id,
     });
     await CampaignModel.findByIdAndUpdate(
       { _id: archive._id },
