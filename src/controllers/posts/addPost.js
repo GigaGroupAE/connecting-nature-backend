@@ -1,124 +1,65 @@
 const sharp = require("sharp");
 const fs = require("fs");
+const path = require("path");
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
-ffmpeg.setFfmpegPath(ffmpegPath);
-
+const { Upload } = require("@aws-sdk/lib-storage");
+const s3 = require("../../config/s3Client");
 const Posts = require("../../models/post");
 const UserModel = require("../../models/Register");
-const path = require("path");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
 
-const videoOptions = {
-  codec: "libx264",
-  bitrate: "300k",
-  size: "720x1280",
+ffmpeg.setFfmpegPath(ffmpegPath);
+
+const bucketName = process.env.AWS_BUCKET_NAME;
+
+const uploadFileToS3 = async (filePath, fileName, mimeType) => {
+  const fileStream = fs.createReadStream(filePath);
+
+  const uploadParams = {
+    Bucket: bucketName,
+    Key: `uploads/${fileName}`,
+    Body: fileStream,
+    ContentType: mimeType,
+  };
+
+  const uploader = new Upload({
+    client: s3,
+    params: uploadParams,
+  });
+
+  await uploader.done();
+
+  return `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/uploads/${fileName}`;
 };
 
 const addpost = async (req, res) => {
   try {
     let media = {};
-
     if (req.file) {
-      if (req.file.mimetype === "video/mp4") {
-        const inputFilePath = req.file.path;
-        const originalName = req.file.originalname.replace(/\.[^/.]+$/, "");
-        const safeName = originalName
-          .replace(/\s+/g, "_")
-          .replace(/[^a-zA-Z0-9_-]/g, "");
-        const outputFileName = Date.now() + "_" + safeName + "_compressed.mp4";
-        const outputFilePath = path.join(
-          __dirname,
-          "../../../uploads",
-          outputFileName
-        );
-
-        await new Promise((resolve, reject) => {
-          ffmpeg(inputFilePath)
-            .videoCodec(videoOptions.codec)
-            .videoBitrate(videoOptions.bitrate)
-            .size(videoOptions.size)
-            .audioCodec("aac")
-            .on("end", () => {
-              media = {
-                name: outputFileName, // use new compressed name
-                type: req.file.mimetype,
-                compressedPath: "/videos/compressed/" + outputFileName,
-              };
-
-              // Delete the original uploaded file
-              fs.unlink(inputFilePath, (err) => {
-                if (err) {
-                  console.error("Error deleting original video:", err);
-                }
-                resolve();
-              });
-            })
-            .on("error", (err) => {
-              reject(err);
-            })
-            .save(outputFilePath);
-        });
-      } else if (req.file.mimetype.startsWith("image/")) {
-        // Image compression logic
-        const inputImagePath = req.file.path;
-        const originalName = req.file.originalname.replace(/\.[^/.]+$/, "");
-        const safeName = originalName
-          .replace(/\s+/g, "_")
-          .replace(/[^a-zA-Z0-9_-]/g, "");
-        const outputImageName = Date.now() + safeName + "_compressed.jpg";
-
-        await new Promise((resolve, reject) => {
-          sharp(inputImagePath)
-            .resize(800, null, { fit: "inside" })
-            .toFile(
-              path.join(__dirname, "../../../uploads", outputImageName), // Save in the same location
-              (err, info) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  media = {
-                    name: outputImageName, // Change the name here
-                    type: req.file.mimetype,
-                    compressedPath: "/images/compressed/" + outputImageName, // Use a relative path or URL
-                  };
-
-                  // Delete the original image file
-                  fs.unlink(inputImagePath, (err) => {
-                    if (err) {
-                      console.error("Error deleting original image:", err);
-                    }
-                  });
-
-                  resolve();
-                }
-              }
-            );
-        });
-      }
+      media = await processAndUploadMedia(req.file);
     }
 
-    let parsed = JSON.parse(req.body.postedby);
-    const { description } = req.body;
+    const parsed = JSON.parse(req.body.postedby);
+    const { description, ref, sharedBy } = req.body;
 
-    const savedpost = await Posts.create({
+    const savedPost = await Posts.create({
       postedby: parsed,
       description,
+      media,
       reactions: [],
       comments: [],
       shares: [],
-      media: media,
-      ref: req.body.ref,
-      sharedBy: req.body.sharedBy,
+      ref,
+      sharedBy,
     });
 
-    await UserModel.findByIdAndUpdate(req.user._id, {
-      $inc: { points: 5 },
-    });
+    await UserModel.findByIdAndUpdate(req.user._id, { $inc: { points: 5 } });
 
-    res.send(savedpost);
+    res.status(201).send(savedPost);
   } catch (err) {
-    console.error("Error:", err);
-    res.status(400).send(err);
+    console.error("❌ Error in addpost:", err);
+    res.status(500).send("Internal Server Error");
   }
 };
 

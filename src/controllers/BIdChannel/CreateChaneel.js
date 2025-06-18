@@ -7,11 +7,13 @@ const subscriptionModal = require("../../models/ChannelSubscription");
 const { ObjectId } = require("mongoose").Types;
 
 const User = require("../../models/Register");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
 
 exports.createChannel = async (req, res) => {
   let path = "";
   if (req.file === undefined) {
-    path = "no-profile-picture-placeholder.png";
+    path =
+      "https://connecting-nature-media.s3.ap-south-1.amazonaws.com/uploads/no-profile-picture-placeholder.png";
   } else {
     path = req.file.filename;
   }
@@ -49,18 +51,21 @@ exports.getChannel = async (req, res) => {
 };
 
 exports.createBidApartment = async (req, res) => {
-  let image = req.files.map((file) => {
-    return {
-      filename: file.filename,
-      mimetype: file.mimetype,
-    };
-  });
+  const processedImages = await Promise.all(
+    req.files.map(async (file) => {
+      const uploaded = await processAndUploadMedia(file);
+      return {
+        filename: uploaded.name,
+        mimetype: uploaded.type,
+      };
+    })
+  );
   let bids = [];
 
   const data = {
     ...req.body,
-    image,
-    bids,
+    image: processedImages,
+    bids: [],
   };
 
   try {

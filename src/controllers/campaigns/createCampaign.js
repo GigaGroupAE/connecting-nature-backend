@@ -15,7 +15,7 @@ exports.createCampaign = async (req, res, next) => {
     volunteers,
     color,
     location,
-    venue
+    venue,
   } = req.body;
 
   const session = await mongoose.startSession();
@@ -28,7 +28,8 @@ exports.createCampaign = async (req, res, next) => {
         {
           title: campaignName,
           type: "campaign",
-          groupPic: "no-profile-picture-placeholder.png",
+          groupPic:
+            "https://connecting-nature-media.s3.ap-south-1.amazonaws.com/uploads/no-profile-picture-placeholder.png",
           members: [{ member: req.user._id, privilege: "Owner" }],
           messages: [],
         },
@@ -50,7 +51,7 @@ exports.createCampaign = async (req, res, next) => {
           volunteers,
           color,
           location,
-          venue
+          venue,
         },
       ],
       { session }
@@ -85,7 +86,6 @@ exports.createCampaign = async (req, res, next) => {
         model: "NewUsers",
       })
       .session(session);
-
 
     await session.commitTransaction();
     session.endSession();

@@ -1,4 +1,10 @@
 const DecorProduct = require("../../models/decoreProduct");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
+
+const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const s3 = require("../../config/s3Client");
+
+const bucketName = process.env.AWS_BUCKET_NAME;
 
 exports.getDecorProducts = async (req, res) => {
   try {
@@ -29,22 +35,24 @@ exports.getDecorProductswithTitle = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
     const { title, price } = req.body;
-    const image = req.file;
+    const file = req.file;
 
-    if (!title || !price || !image) {
+    if (!title || !price || !file) {
       return res
         .status(400)
         .json({ error: "Title, price, and image are required" });
     }
 
+    // Upload and compress image
+    const uploaded = await processAndUploadMedia(file, "postMedia");
+
     const newProduct = new DecorProduct({
       title,
       price,
-      image: image.filename,
+      image: uploaded.name,
     });
 
     const savedProduct = await newProduct.save();
-
     res.status(201).json(savedProduct);
   } catch (error) {
     console.error("Error adding product:", error);
@@ -56,9 +64,9 @@ exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     const { title, price } = req.body;
-    const image = req.file;
+    const file = req.file;
 
-    if (!title && !price) {
+    if (!title && !price && !file) {
       return res.status(400).json({
         error:
           "At least one field (title, price, image) is required for update",
@@ -66,23 +74,35 @@ exports.updateProduct = async (req, res) => {
     }
 
     const product = await DecorProduct.findById(productId);
-
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    if (title) {
-      product.title = title;
-    }
-    if (price) {
-      product.price = price;
-    }
-    if (image) {
-      product.image = image.filename;
+    if (title) product.title = title;
+    if (price) product.price = price;
+
+    if (file) {
+      // Delete old image from S3 if it exists
+      if (product.image) {
+        const oldKey = product.image.split(".com/")[1];
+        if (oldKey) {
+          await s3.send(
+            new DeleteObjectCommand({
+              Bucket: bucketName,
+              Key: oldKey,
+            })
+          );
+        }
+      }
+
+      // Upload and set new image
+      const uploaded = await processAndUploadMedia(file, "postMedia");
+
+      console.log(uploaded, "uploaded");
+      product.image = uploaded.name;
     }
 
     const updatedProduct = await product.save();
-
     res.status(200).json(updatedProduct);
   } catch (error) {
     console.error("Error updating product:", error);

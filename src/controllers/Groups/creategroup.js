@@ -1,11 +1,13 @@
 const group = require("../../models/groups");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
 
 const createchat = async (req, res) => {
-  let path = "";
-  if (req.file === undefined) {
-    path = "no-profile-picture-placeholder.png";
-  } else {
-    path = req.file.filename;
+  let groupPicUrl =
+    "https://connecting-nature-media.s3.ap-south-1.amazonaws.com/uploads/no-profile-picture-placeholder.png";
+
+  if (req.file !== undefined) {
+    const uploaded = await processAndUploadMedia(req.file);
+    groupPicUrl = uploaded.name;
   }
 
   const newgroup = new group({
@@ -13,7 +15,7 @@ const createchat = async (req, res) => {
     type: req.body.type,
     title: req.body.title,
     members: JSON.parse(req.body.members),
-    groupPic: path,
+    groupPic: groupPicUrl,
   });
   if (!newgroup) {
     res.send({ message: "Invalid data body", status: 400 });
