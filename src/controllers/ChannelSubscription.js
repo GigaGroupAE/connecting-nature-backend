@@ -2,11 +2,17 @@ const subscriptionModal = require("../models/ChannelSubscription");
 
 const bidChannel = require("../models/BidChannel");
 const User = require("../models/Register");
+const { processAndUploadMedia } = require("../services/mediaProcessor");
 
 exports.createRequest = async (req, res) => {
   try {
     const userId = req.user._id;
     const { fullName, phoneNumber } = req.body;
+    let imageUrl = "";
+    if (req.file) {
+      const processed = await processAndUploadMedia(req.file);
+      imageUrl = processed.name; // This is the S3 URL
+    }
     const image = req.file.filename;
 
     // Check if there is an existing subscription request for the user
@@ -33,7 +39,7 @@ exports.createRequest = async (req, res) => {
       requestedBy: userId,
       fullName,
       phoneNumber,
-      image,
+      image: imageUrl,
       status: "Pending",
     });
 

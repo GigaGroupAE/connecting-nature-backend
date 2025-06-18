@@ -1,5 +1,7 @@
 const posts = require("../../models/post");
 const Users = require("../../models/Register");
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 exports.getPosts = async (req, res) => {
   const getposts = await posts
@@ -103,9 +105,32 @@ exports.getPosts = async (req, res) => {
 // };
 
 // Controller: postsExperiment
+
+// AWS S3 client setup
+const s3Client = new S3Client({
+  region: "ap-south-1",
+  // credentials: {
+  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  //   sessionToken: process.env.AWS_SESSION_TOKEN,
+  // },
+});
+
+// Generate signed URL
+const generateSignedUrl = async (key) => {
+  console.log("run");
+  const command = new GetObjectCommand({
+    Bucket: "connecting-nature-media",
+    Key: key,
+  });
+
+  return await getSignedUrl(s3Client, command, { expiresIn: 60 * 60 }); // 1 hour
+};
+
 exports.postsExperiment = async (req, res) => {
   const page = Math.max(1, parseInt(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+
   try {
     const user = await Users.findById(req.user._id)
       .select("blockedUsers blockedByUsers")
@@ -152,6 +177,7 @@ exports.postsExperiment = async (req, res) => {
 
       posts.countDocuments({ postedby: { $nin: blockedUserIds } }),
     ]);
+
     const totalPages = Math.ceil(totalPosts / limit);
     const hasMore = page < totalPages;
 

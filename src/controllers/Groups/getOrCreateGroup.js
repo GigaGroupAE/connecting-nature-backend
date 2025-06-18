@@ -34,7 +34,8 @@ exports.getOrCreateGroup = async (req, res) => {
       title: "test", // You can customize this
       type: "individual",
       members: [{ member: userId }, { member: id }],
-      groupPic: "no-profile-picture-placeholder.png",
+      groupPic:
+        "https://connecting-nature-media.s3.ap-south-1.amazonaws.com/uploads/no-profile-picture-placeholder.png",
     });
 
     const savedGroup = await newGroup.save();

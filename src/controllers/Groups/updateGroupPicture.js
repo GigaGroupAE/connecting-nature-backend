@@ -9,7 +9,8 @@ const updategroupPicture = async (req, res) => {
       // console.log(req.body.members);
       let path = "";
       if (req.file === undefined) {
-        path = "no-profile-picture-placeholder.png";
+        path =
+          "https://connecting-nature-media.s3.ap-south-1.amazonaws.com/uploads/no-profile-picture-placeholder.png";
       } else {
         path = req.file.filename;
       }

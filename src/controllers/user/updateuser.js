@@ -1,38 +1,49 @@
+const mongoose = require("mongoose");
 const model = require("../../models/Register");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
+
 const updateuser = async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).send("Invalid id");
-    
-  } else {
-    try {
-      console.log("Inside else")
-      if(req.file!==undefined){
-        const updateduser = await model.findByIdAndUpdate({_id:req.params.id}, {
-          profile: req.file.filename
-        }, {
-          new: true,
-        });
-        console.log(updateduser);
-        if (!updateduser) {
-          res.status(500).send("internal server error");
-        } else {
-          res.status(200).send(updateduser);
-        }
-      }
-      else{
-        const _id = req.params.id;
-      const updateduser = await model.findByIdAndUpdate({_id:req.params.id}, req.body, {
-        new: true,
-      });
-      if (!updateduser) {
-        res.status(500).send("internal server error");
-      } else {
-        res.status(200).send(updateduser);
-      }
-      }
-    } catch (e) {
-      res.status(400).send("Invalid data body");
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send("Invalid user ID format");
+  }
+
+  try {
+    const updateFields = {};
+
+    if (
+      typeof req.body.fullName === "string" &&
+      req.body.fullName.trim() !== ""
+    ) {
+      updateFields.fullName = req.body.fullName.trim();
     }
+
+    if (req.file) {
+      const processed = await processAndUploadMedia(req.file);
+      updateFields.profile = processed.name;
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).send("No valid fields provided for update");
+    }
+
+    const updatedUser = await model.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send("User not found");
+    }
+
+    return res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Update error:", err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
