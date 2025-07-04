@@ -18,8 +18,6 @@ exports.blockUser = async (req, res) => {
     let blockedUsersList = userWhoIsBlocking.blockedUsers || [];
     let blockedByUsersList = userToBlock.blockedByUsers || [];
 
-    console.log(userToBlock._id);
-    console.log(userWhoIsBlocking._id);
     //add the user to the blocked list
     blockedUsersList.push(userToBlock._id);
     blockedByUsersList.push(userWhoIsBlocking._id);
