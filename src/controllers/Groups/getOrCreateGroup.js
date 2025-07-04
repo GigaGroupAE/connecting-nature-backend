@@ -3,7 +3,6 @@ const Group = require("../../models/groups");
 exports.getOrCreateGroup = async (req, res) => {
   const userId = req.user._id;
   const { id } = req.params;
-  console.log(userId, id);
 
   try {
     const existingGroup = await Group.findOne({

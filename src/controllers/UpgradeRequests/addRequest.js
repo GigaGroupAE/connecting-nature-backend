@@ -1,20 +1,29 @@
 const UpgradeRequests = require("../../models/accountUpgradeSchema");
+const { processAndUploadMedia } = require("../../services/mediaProcessor");
 
-// ROUTE-1 FOR USER
 exports.addRequest = async (req, res) => {
   try {
     let user = req.user._id;
-    let cnicFront;
-    let cnicBack;
-    let utililtyBill;
+    let cnicFront = null;
+    let cnicBack = null;
+    let utililtyBill = null;
+
     if (req?.files?.cnicFront) {
-      cnicFront = req?.files?.cnicFront[0]?.filename;
+      const file = req.files.cnicFront[0];
+      const uploaded = await processAndUploadMedia(file, "kycDocuments");
+      cnicFront = uploaded.name;
     }
+
     if (req?.files?.cnicBack) {
-      cnicBack = req?.files?.cnicBack[0]?.filename;
+      const file = req.files.cnicBack[0];
+      const uploaded = await processAndUploadMedia(file, "kycDocuments");
+      cnicBack = uploaded.name;
     }
+
     if (req?.files?.utililtyBill) {
-      utililtyBill = req?.files?.utililtyBill[0]?.filename;
+      const file = req.files.utililtyBill[0];
+      const uploaded = await processAndUploadMedia(file, "kycDocuments");
+      utililtyBill = uploaded.name;
     }
 
     const data = {
@@ -24,13 +33,15 @@ exports.addRequest = async (req, res) => {
       utililtyBill,
       user,
     };
+
     await UpgradeRequests.create(data);
+
     return res.json({
       success: true,
       message: "Request submitted successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error submitting upgrade request:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
