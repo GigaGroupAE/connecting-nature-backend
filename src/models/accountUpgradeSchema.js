@@ -104,7 +104,7 @@ const accountUpgradeSchema = new Schema({
   requestedRole: {
     type: String,
     required: true,
-    enum: ["Celebrity", "Special Volunteer", "Vendor"],
+    enum: ["celebrity", "Special Volunteer", "Vendor"],
   },
   status: {
     type: String,
